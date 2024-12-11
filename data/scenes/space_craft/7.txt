@@ -1,0 +1,10 @@
+Vous entrez dans une immense salle, probablement le centre de contrôle du vaisseau. Une énorme créature mécanique vous barre la route, ses yeux rouges fixés sur vous.
+
+*COMBAT*
+Sentinelle
+50
+10
+
+Après une bataille acharnée, vous trouvez une clé pour activer la capsule de sauvetage. C'est votre seule chance de survie.
+
+*VICTOIRE*

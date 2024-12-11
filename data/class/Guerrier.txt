@@ -1,0 +1,25 @@
+Guerrier
+
+PV
+100
+PM
+30
+ARM
+5
+
+COMP
+Charge
+    Attaque
+    +
+    20
+    5
+Défense Renforcée
+    Protection
+    %
+    50
+    15
+Frappe de Base
+    Attaque
+    +
+    10
+    0

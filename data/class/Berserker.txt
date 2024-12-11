@@ -1,0 +1,30 @@
+Berserker
+
+PV
+150
+PM
+20
+ARM
+10
+
+COMP
+Rage Incontrôlable
+    Attaque
+    +
+    40
+    15
+Fureur Défensive
+    Protection
+    +
+    20
+    10
+Hurlement Intimidant
+    Protection
+    %
+    50
+    5
+Coup Sauvage
+    Attaque
+    +
+    30
+    0

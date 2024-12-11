@@ -1,0 +1,9 @@
+En fouillant les étagères, vous trouvez une vieille combinaison de protection. Elle semble encore fonctionnelle et pourrait vous protéger contre des menaces à venir.
+
+*ARMURE*
+Combinaison de protection
+7
+
+*PATH*
+1 Retourner au couloir.
+7 Avancer vers une salle inconnue.

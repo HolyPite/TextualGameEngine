@@ -1,0 +1,18 @@
+L'objet qui ressemblait a un coffre commence a se mouvoir. Il vous attaque.
+
+*COMBAT*
+Mimic
+15
+3
+
+Le Mimic laisse tomber dans sa mort une arme.
+
+*ARME*
+Lumiere
+2
+
+Apres ce rude combat, vous choisissez de continuer votre route.
+
+*PATH*
+5
+5

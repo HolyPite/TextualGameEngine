@@ -1,0 +1,3 @@
+Le terminal contient des informations sur le réacteur principal du vaisseau. Vous apprenez que l'explosion est imminente si vous ne quittez pas le vaisseau rapidement.
+
+*GO*

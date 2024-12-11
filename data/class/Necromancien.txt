@@ -1,0 +1,30 @@
+Nécromancien
+
+PV
+80
+PM
+60
+ARM
+10
+
+COMP
+Invocation de Squelette
+    Attaque
+    +
+    20
+    10
+Drain de Vie
+    Attaque
+    %
+    10
+    15
+Bouclier d'Ombre
+    Protection
+    +
+    15
+    20
+Malédiction
+    Attaque
+    %
+    15
+    25

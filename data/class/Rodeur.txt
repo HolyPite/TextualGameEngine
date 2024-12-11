@@ -1,0 +1,30 @@
+Rodeur
+
+PV
+80
+PM
+40
+ARM
+15
+
+COMP
+Tir Précis
+    Attaque
+    +
+    20
+    10
+Flèche Empoisonnée
+    Attaque
+    +
+    15
+    5
+Camouflage
+    Protection
+    %
+    100
+    20
+Coup de Dague
+    Attaque
+    +
+    8
+    0

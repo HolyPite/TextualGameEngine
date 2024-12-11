@@ -1,0 +1,8 @@
+En avancant sur le chemin de gauche vous remarquez que le temple a l'air d'avoir subis de nombreux tremblements de terre dans cette section. Le sol commence a se fissurer et a bouger sous vos pas. Cependant vous arrivez a appercevoir au loin une faible lueur, serait-ce la relique ?
+
+1. Continuer jusqu'a la lumiere
+2. Faire demi-tour
+
+*PATH*
+101
+1

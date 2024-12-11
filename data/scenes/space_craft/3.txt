@@ -1,0 +1,8 @@
+Le laboratoire est plongé dans l'obscurité. Des éprouvettes brisées jonchent le sol, et une étrange odeur chimique emplit l'air. Vous remarquez un terminal encore actif dans un coin.
+
+1. Examiner le terminal.
+2. Fouiller les étagères.
+
+*PATH*
+5
+6

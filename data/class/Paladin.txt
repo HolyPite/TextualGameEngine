@@ -1,0 +1,30 @@
+Paladin
+
+PV
+120
+PM
+40
+ARM
+25
+
+COMP
+Frappe Divine
+    Attaque
+    +
+    30
+    15
+Bouclier Sacré
+    Protection
+    +
+    20
+    20
+Soin Sacré
+    Soin
+    %
+    15
+    10
+Écrasement
+    Attaque
+    +
+    25
+    0

@@ -1,0 +1,8 @@
+Vous voyez une salle sombre sur votre gauche.
+
+1. Allez dans cette salle
+2. Continuez votre chemin.
+
+*PATH*
+6
+7

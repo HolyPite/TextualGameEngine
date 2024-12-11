@@ -1,0 +1,5 @@
+Apres un long voyage a travers la jungle de l'ile d'Oracle vous arrivez enfin devant l'entree du temple que vous cherchiez. La relique doit etre ici, elle ne peut qu'etre ici. Le temple est use par le passage du temps, et c'est avec un peu d'apprehension que vous decidez d'entrer dans le temple.
+
+*PATH*
+1
+1

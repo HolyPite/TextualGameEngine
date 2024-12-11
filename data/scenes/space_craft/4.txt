@@ -1,0 +1,19 @@
+Les conduits d'aération sont étroits et sombres. Vous avancez lentement, mais vous entendez quelque chose ramper derrière vous. Une créature jaillit soudainement pour vous attaquer !
+
+*COMBAT*
+Parasite
+25
+6
+
+Après avoir éliminé la menace, vous trouvez un kit de réparation laissé par un membre de l'équipage précédent.
+
+*ARMURE*
+Kit de réparation
+5
+
+1. Sortir des conduits vers la salle des machines.
+2. Continuer plus profondément dans les conduits.
+
+*PATH*
+1
+7

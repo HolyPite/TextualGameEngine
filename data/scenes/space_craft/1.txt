@@ -1,0 +1,8 @@
+Vous entrez dans un couloir sombre. Des câbles pendent du plafond, et une lumière vacillante éclaire à peine le chemin. Deux portes s'offrent à vous :
+
+1. La porte de gauche, avec une inscription indiquant "Salle des Machines".
+2. La porte de droite, marquée "Laboratoire".
+
+*PATH*
+2
+3
