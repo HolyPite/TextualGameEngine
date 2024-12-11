@@ -34,7 +34,6 @@ public:
     virtual ~Entite() {}
 
     const std::string& getNom() const { return nom; }
-    const int getProtectionUtilisee() const { return protectionUtilisee;}
 
     virtual void defendre(int degats) {
         int defenseTotale = defenseBase + valeurArmure + defenseBoost;
