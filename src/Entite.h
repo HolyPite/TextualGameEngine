@@ -121,13 +121,21 @@ public:
         }
     }
 
-    void utiliserCompetence(int index, Entite& cible) {
-        if (index < 0 || index >= static_cast<int>(competences.size())) return;
+    void reinitialiserProtection() {
+        protectionUtilisee = false;
+        defenseBoost = 0;             // Réinitialise le bonus de protection
+    }
+
+    bool utiliserCompetence(int index, Entite& cible) {
+        if (index < 0 || index >= static_cast<int>(competences.size())) return false;
 
         auto& [nom, type, typeValeur, valeur, coutMana] = competences[index];
         if (PM < coutMana) {
             std::cout << "Pas assez de mana pour utiliser " << nom << " !\n";
-            return;
+            return false;
+        } else if (type == "Protection" && protectionUtilisee) {
+            std::cout << "Vous avez déjà utilisé une compétence de protection pour ce combat.\n";
+            return false;
         }
 
         PM -= coutMana;
@@ -139,6 +147,7 @@ public:
         } else if (type == "Protection") {
             proteger(typeValeur, valeur);
         }
+        return true;
     }
 
     size_t getNombreCompetences() const { return competences.size(); }

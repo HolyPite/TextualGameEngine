@@ -15,6 +15,14 @@ void Histoire::jouer() {
     std::cout << "Fin du jeu." << std::endl;
 }
 
+void Histoire::afficherDescription(std::string& description) {
+    if (!description.empty()) {
+        std::cout << "\n\n******************************\n\n" << description << std::endl;
+        description.clear(); // Efface la description après affichage
+    }
+}
+
+
 void Histoire::chargerScene() {
     std::ifstream fichier(sceneActuelle);
     if (!fichier.is_open()) {
@@ -36,9 +44,8 @@ void Histoire::chargerScene() {
             std::getline(fichier, nom);
             fichier >> pv >> attaque;
             fichier.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << description << std::endl;
+            afficherDescription(description);
             gererCombat(nom, pv, attaque);
-            description.clear();
         } else if (ligne.find("*ARME*") != std::string::npos || ligne.find("*ARMURE*") != std::string::npos) {
             std::string type = ligne.find("*ARME*") != std::string::npos ? "arme" : "armure";
             std::string nom;
@@ -46,15 +53,10 @@ void Histoire::chargerScene() {
             std::getline(fichier, nom);
             fichier >> valeur;
             fichier.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << description << std::endl;
+            afficherDescription(description);
             gererEquipement(type, nom, valeur);
-            description.clear();
         } else if (ligne.find("*PATH*") != std::string::npos) {
-            if (!description.empty()) {
-                std::cout << description << std::endl;
-                description.clear();
-            }
-
+            afficherDescription(description);
             int id;
             std::string chemin;
             while (fichier >> id) {
@@ -68,7 +70,7 @@ void Histoire::chargerScene() {
             }
 
             while (true) {
-                std::cout << "Choisissez une option ou appuyez sur 'I' pour afficher les statistiques : ";
+                std::cout << "\nChoisissez une option('I' pour les stats): ";
                 std::string input;
                 std::cin >> input;
 
@@ -89,12 +91,12 @@ void Histoire::chargerScene() {
                 }
             }
         } else if (ligne.find("*GO*") != std::string::npos) {
-            std::cout << description << std::endl;
+            afficherDescription(description);
             std::cout << "C'est la fin de votre aventure...\n";
             sceneActuelle = "";
             return;
         } else if (ligne.find("*VICTOIRE*") != std::string::npos) {
-            std::cout << description << std::endl;
+            afficherDescription(description);
             std::cout << "Felicitations, vous avez terminé l'aventure avec succès !\n";
             sceneActuelle = "";
             return;
@@ -102,15 +104,12 @@ void Histoire::chargerScene() {
             description += ligne + "\n";
         }
     }
-
-    if (!description.empty()) {
-        std::cout << description << std::endl;
-    }
+    afficherDescription(description);
 }
 
 void Histoire::gererCombat(const std::string& nomMonstre, int pv, int attaque) {
     Entite monstre(nomMonstre, pv, 0, attaque);
-    std::cout << "Un combat commence contre " << nomMonstre << " !\n";
+    std::cout << "\nUn combat commence contre " << nomMonstre << " !\n";
 
     while (hero->estVivant() && monstre.estVivant()) {
         std::cout << "C'est votre tour !\n";
@@ -121,10 +120,10 @@ void Histoire::gererCombat(const std::string& nomMonstre, int pv, int attaque) {
             std::cout << "Choisissez une compétence :\n";
             hero->afficherCompetences();
             int choix;
+            std::cout << "Compétence à utiliser:";
             std::cin >> choix;
 
-            if (choix > 0 && choix <= hero->getNombreCompetences()) {
-                hero->utiliserCompetence(choix - 1, monstre);
+            if (choix > 0 && choix <= hero->getNombreCompetences() && hero->utiliserCompetence(choix - 1, monstre)) {
                 actionValide = true; // Action valide effectuée, on sort de la boucle
             } else {
                 std::cout << "Choix invalide, veuillez réessayer.\n";
@@ -144,6 +143,8 @@ void Histoire::gererCombat(const std::string& nomMonstre, int pv, int attaque) {
             sceneActuelle = "";
         }
     }
+
+    hero->reinitialiserProtection();
 }
 
 void Histoire::gererEquipement(const std::string& type, const std::string& nom, int valeur) {

@@ -20,6 +20,7 @@ public:
 
 private:
     void chargerScene();
+    void afficherDescription(std::string& description);
     void gererCombat(const std::string& nomMonstre, int pv, int attaque);
     void gererEquipement(const std::string& type, const std::string& nom, int valeur);
 };

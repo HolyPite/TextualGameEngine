@@ -40,6 +40,7 @@ int main() {
     }
 
     int choixClasse;
+    std::cout << "\nVotre Choix:";
     std::cin >> choixClasse;
 
     std::unique_ptr<Entite> hero;
