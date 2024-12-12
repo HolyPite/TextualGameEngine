@@ -118,12 +118,9 @@ Termine l’histoire abruptement (défaite, abandon, etc.).
 ```
 Vous commencez dans une forêt dense. Deux sentiers s’offrent à vous.
 
-1. Prendre à gauche.
-2. Prendre à droite.
-
 *PATH*
-1
-2
+1 Prendre à gauche.
+2 Prendre à droite.
 ```
 
 **Fichier 1.txt :**
@@ -141,7 +138,6 @@ Vous vainquez le loup et trouvez une épée rouillée.
 Epée Rouillée
 2
 
-1. Continuer.
 *PATH*
 3
 ```
@@ -154,12 +150,9 @@ Vous débouchez sur une clairière ensoleillée. Au centre, une armure scintille
 Armure Légère
 3
 
-1. Revenir sur vos pas.
-2. Avancer plus loin.
-
 *PATH*
-0
-4
+0 Revenir sur vos pas.
+4 Avancer plus loin.
 ```
 
 ---
