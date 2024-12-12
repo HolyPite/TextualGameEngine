@@ -123,6 +123,7 @@ void Histoire::gererCombat(const std::string& nomMonstre, int pv, int attaque, i
             int choix;
             std::cout << "Compétence à utiliser:";
             std::cin >> choix;
+            std::cout << "\n";
 
             if (choix > 0 && choix <= hero->getNombreCompetences() && hero->utiliserCompetence(choix - 1, monstre)) {
                 actionValide = true; // Action valide effectuée, on sort de la boucle

@@ -82,6 +82,20 @@ public:
     void ajouterCompetence(const std::string& nom, const std::string& type, char typeValeur, int valeur, int coutMana) {
         competences.emplace_back(nom, type, typeValeur, valeur, coutMana);
     }
+        
+    void supprimerCompetence(const std::string& nomCompetence) {
+        auto it = std::remove_if(competences.begin(), competences.end(),
+            [&nomCompetence](const auto& competence) {
+                return std::get<0>(competence) == nomCompetence; // Vérifie si le nom correspond
+            });
+
+        if (it != competences.end()) {
+            competences.erase(it, competences.end()); // Supprime les éléments correspondants
+            //std::cout << "La compétence \"" << nomCompetence << "\" a été supprimée avec succès.\n";
+        } else {
+            std::cout << "La compétence \"" << nomCompetence << "\" n'existe pas.\n";
+        }
+    }
 
     void afficherCompetences() const {
         for (size_t i = 0; i < competences.size(); ++i) {
@@ -106,7 +120,7 @@ public:
     }
 
     void soigner(char typeValeur, int valeur) {
-        int soin = (typeValeur == '%') ? PV * valeur / 100 : valeur;
+        int soin = (typeValeur == '%') ? PVmax * valeur / 100 : valeur;
         PV = std::min(PV + soin, PVmax);
         std::cout << nom << " restaure " << soin << " PV !\n";
     }
