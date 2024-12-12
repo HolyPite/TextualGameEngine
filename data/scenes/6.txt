@@ -3,6 +3,7 @@ Vous continuez le long du ruisseau. Plus loin, le ruisseau se jette dans un mar�
 *COMBAT*
 Slime
 5
+0
 1
 
 En vainquant le Slime, vous trouvez une épée abîmée.
@@ -11,9 +12,6 @@ En vainquant le Slime, vous trouvez une épée abîmée.
 Epée Abimée
 2
 
-1. Traverser le marécage.
-2. Revenir vers la forêt.
-
 *PATH*
-11
-0
+11 Traverser le marécage.
+0 Revenir vers la forêt.

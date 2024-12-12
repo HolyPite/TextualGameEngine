@@ -40,6 +40,7 @@ Initie un combat contre un monstre.
 *COMBAT*
 Nom_du_Monstre
 Points_de_vie
+Points_d'armure
 Points_d'attaque
 ```
 
@@ -48,6 +49,7 @@ Points_d'attaque
 *COMBAT*
 Mimic
 15
+1
 3
 ```
 
@@ -130,6 +132,7 @@ Un loup se dresse devant vous, prêt à attaquer.
 *COMBAT*
 Loup
 10
+0
 3
 
 Vous vainquez le loup et trouvez une épée rouillée.

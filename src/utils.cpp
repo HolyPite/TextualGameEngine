@@ -55,8 +55,7 @@ std::unique_ptr<Entite> chargerClasse(const std::string& cheminFichier) {
     }
 
     // Création de l'entité et ajout des compétences
-    auto classe = std::make_unique<Entite>("Guerrier", pv, pm, 0);
-    classe->changerDefenceBase(armure);
+    auto classe = std::make_unique<Entite>("Guerrier", pv, pm, armure);
 
     for (const auto& comp : competences) {
         classe->ajouterCompetence(

@@ -1,8 +1,5 @@
-Vous fouillez la cabane. Vous trouvez quelques herbes médicinales, ce qui pourra peut-être vous aider à survivre plus longtemps. (Effet purement narratif).
-
-1. Sortir et reprendre la route.
-2. Tenter d’interroger le vieil homme à nouveau.
+Vous fouillez la cabane. Vous trouvez quelques herbes médicinales (effet narratif).
 
 *PATH*
-4
-12
+4 Sortir et reprendre la route.
+12 Tenter d’interroger le vieil homme à nouveau.

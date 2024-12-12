@@ -11,9 +11,6 @@ Après l’avoir défait, vous trouvez une cape de mailles fines.
 Cape de Mailles
 2
 
-1. Continuer dans le couloir.
-2. Revenir dans la cour.
-
 *PATH*
-22
-13
+22 Continuer dans le couloir.
+13 Revenir dans la cour.

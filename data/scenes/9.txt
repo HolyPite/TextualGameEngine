@@ -6,9 +6,6 @@ Bouclier Léger
 
 "Allez... sauvez la princesse."
 
-1. Quitter la tour et continuer à l’Est.
-2. Retourner en arrière.
-
 *PATH*
-10
-1
+10 Quitter la tour et continuer à l’Est.
+1 Retourner en arrière.

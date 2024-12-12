@@ -40,12 +40,12 @@ void Histoire::chargerScene() {
 
         if (ligne.find("*COMBAT*") != std::string::npos) {
             std::string nom;
-            int pv, attaque;
+            int pv,def,attaque;
             std::getline(fichier, nom);
-            fichier >> pv >> attaque;
+            fichier >> pv >> def >> attaque;
             fichier.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             afficherDescription(description);
-            gererCombat(nom, pv, attaque);
+            gererCombat(nom, pv, attaque,def);
         } else if (ligne.find("*ARME*") != std::string::npos || ligne.find("*ARMURE*") != std::string::npos) {
             std::string type = ligne.find("*ARME*") != std::string::npos ? "arme" : "armure";
             std::string nom;
@@ -107,11 +107,12 @@ void Histoire::chargerScene() {
     afficherDescription(description);
 }
 
-void Histoire::gererCombat(const std::string& nomMonstre, int pv, int attaque) {
-    Entite monstre(nomMonstre, pv, 0, attaque);
+void Histoire::gererCombat(const std::string& nomMonstre, int pv, int attaque, int defense) {
+    Entite monstre(nomMonstre, pv, 0, defense);
     std::cout << "\nUn combat commence contre " << nomMonstre << " !\n";
 
     while (hero->estVivant() && monstre.estVivant()) {
+        monstre.afficherStats();
         std::cout << "C'est votre tour !\n";
         hero->afficherStats();
 

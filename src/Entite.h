@@ -15,7 +15,6 @@ protected:
     int PVmax;
     int PM;
     int PMmax;
-    int attaque;
     int defenseBase;
     int defenseBoost;
     bool protectionUtilisee;
@@ -27,8 +26,8 @@ protected:
     std::vector<std::tuple<std::string, std::string, char, int, int>> competences;
 
 public:
-    Entite(const std::string& nom, int pv, int pm,int atk)
-        : nom(nom), PV(pv), PVmax(pv), PM(pm), PMmax(pm), attaque(atk), defenseBase(0), defenseBoost(0),
+    Entite(const std::string& nom, int pv, int pm,int def)
+        : nom(nom), PV(pv), PVmax(pv), PM(pm), PMmax(pm), defenseBase(def), defenseBoost(0),
           protectionUtilisee(false), arme("Aucune"), valeurArme(0), armure("Aucune"), valeurArmure(0) {}
 
     virtual ~Entite() {}
@@ -45,20 +44,25 @@ public:
     }
 
     virtual void afficherStats() const {
-        std::string enluminure = "~~~~~~~~~~~ Stats ~~~~~~~~~~~";
-
         std::cout << "\n" // Ligne vide pour l'espace
-                << enluminure << "\n"
-                << "Nom: " << nom << "\n"
-                << "PV: " << PV << "/" << PVmax << "\n"
-                << "Mana: " << PM << "/" << PMmax << "\n"
-                << "Defence: " << defenseBase << "\n";
+                << "~~~~~~~~~~~ Stats : "<< nom <<" ~~~~~~~~~~~" << "\n"
+                << "PV: " << PV << "/" << PVmax << "\n";
+        if (!(PMmax == 0)){
+            std::cout << "Mana: " << PM << "/" << PMmax << "\n";
+        }
+        if (!(defenseBase == 0)){
+            std::cout << "Defence: " << defenseBase << "\n";
+        }
         if (protectionUtilisee){
             std::cout << "Boost de defence: " << defenseBoost << "\n";
         }
-        std::cout << "Arme: " << arme << " (+ " << valeurArme << ")\n"
-                << "Armure: " << armure << " (+ " << valeurArmure << ")\n"
-                << enluminure << "\n\n";
+        if (!(valeurArme == 0)){
+            std::cout << "Arme: " << arme << " (+ " << valeurArme << ")\n";
+        }
+        if (!(valeurArmure == 0)){
+            std::cout << "Armure: " << armure << " (+ " << valeurArmure << ")\n";
+        }
+        std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << "\n\n";
     }
 
     void changerArme(const std::string& nomArme, int valeur) {

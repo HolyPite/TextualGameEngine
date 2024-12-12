@@ -1,10 +1,6 @@
 Vous pénétrez dans une clairière humide, où une vieille cabane délabrée se dresse. Une odeur de mousse et de champignons flotte dans l’air.
 
-1. Entrer dans la cabane.
-2. Ignorer la cabane et continuer votre route.
-3. Revenir sur vos pas.
-
 *PATH*
-3
-4
-0
+3 Entrer dans la cabane.
+4 Ignorer la cabane et continuer votre route.
+0 Revenir sur vos pas.

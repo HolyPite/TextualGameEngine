@@ -4,11 +4,7 @@ Vous entrez dans la cabane. A l’intérieur, un vieil homme est assis sur un ta
 
 Vous obtenez une information précieuse : la princesse est retenue au Château du Dragon, à l’Est.
 
-1. Le remercier et sortir.
-2. Tenter de fouiller la cabane.
-3. L’attaquer (par méfiance).
-
 *PATH*
-4
-7
-8
+4 Le remercier et sortir.
+7 Tenter de fouiller la cabane.
+8 L’attaquer (par méfiance).

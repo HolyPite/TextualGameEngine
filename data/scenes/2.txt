@@ -3,6 +3,7 @@ Le sentier longe un ruisseau cristallin. Vous entendez un bruit de pas légers d
 *COMBAT*
 Gobelin
 8
+1
 2
 
 Après avoir vaincu le Gobelin, vous trouvez un petit poignard rouillé.
@@ -11,9 +12,6 @@ Après avoir vaincu le Gobelin, vous trouvez un petit poignard rouillé.
 Poignard Rouillé
 1
 
-1. Continuer le long du ruisseau.
-2. Remonter vers la forêt.
-
 *PATH*
-6
-0
+6 Continuer le long du ruisseau.
+0 Remonter vers la forêt.

@@ -40,6 +40,7 @@ Initiates a battle against a monster.
 *COMBAT*
 Monster_Name
 Health_Points
+Armor_Points
 Attack_Points
 ```
 
@@ -48,6 +49,7 @@ Attack_Points
 *COMBAT*
 Mimic
 15
+1
 3
 ```
 
@@ -130,6 +132,7 @@ A wolf stands before you, ready to attack.
 *COMBAT*
 Wolf
 10
+1
 3
 
 You defeat the wolf and find a rusty sword.

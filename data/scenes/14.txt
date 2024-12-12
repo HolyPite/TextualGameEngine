@@ -3,13 +3,11 @@ Vous contournez le château. Sur le côté, une petite entrée de service est ga
 *COMBAT*
 Loup de Garde
 10
+2
 3
 
 Après votre victoire, vous pénétrez dans le château par la porte de service.
 
-1. Avancer dans un couloir sombre.
-2. Revenir en arrière (peu judicieux).
-
 *PATH*
-19
-10
+19 Avancer dans un couloir sombre.
+10 Revenir en arrière (peu judicieux).
