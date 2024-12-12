@@ -22,6 +22,16 @@ Y
 ```
 Où `X` et `Y` sont les numéros des fichiers vers lesquels mènent les choix (ex: `1.txt`, `2.txt`).
 
+**Exemple :**
+```
+1. Prendre à gauche.
+2. Prendre à droite.
+
+*PATH*
+6
+7
+```
+
 ### COMBAT
 Initie un combat contre un monstre.
 
