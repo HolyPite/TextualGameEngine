@@ -32,7 +32,7 @@ Le programme lit ces fichiers, interprète leur contenu et exécute l’aventure
 3. Le programme charge automatiquement les classes et scènes disponibles.
 4. Choisissez votre classe, suivez les instructions à l’écran, prenez des décisions, et profitez de l’aventure.
 
-## Personnalisation([**GUIDE**]())
+## Personnalisation([**GUIDE**](https://github.com/PGarn/jeu-cpp/tree/main/guides))
 - **Ajouter de nouvelles scènes** : Créez un fichier `.txt` dans `data/scene/` et suivez le format défini dans le guide.
 - **Ajouter de nouvelles classes** : Créez un fichier `.txt` dans `data/class/` et définissez PV, PM, ARM, COMP. La classe sera automatiquement proposée lors du choix initial.
 
