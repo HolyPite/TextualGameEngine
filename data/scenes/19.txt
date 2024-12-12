@@ -1,0 +1,19 @@
+Vous avancez dans un couloir sombre. Un guerrier squelettique s’approche, brandissant une hache rouillée.
+
+*COMBAT*
+Guerrier Squelette
+12
+3
+
+Après l’avoir défait, vous trouvez une cape de mailles fines.
+
+*ARMURE*
+Cape de Mailles
+2
+
+1. Continuer dans le couloir.
+2. Revenir dans la cour.
+
+*PATH*
+22
+13

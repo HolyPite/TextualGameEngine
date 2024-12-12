@@ -1,6 +1,10 @@
 Vous vous réveillez au milieu d'une forêt brumeuse. Le chant des oiseaux est étouffé, et une vieille route de terre se divise devant vous. Vous avez entendu parler d’un château lointain où la princesse Elwen est retenue captive par le Dragon Sombre.
 
+1. Prendre le sentier sur la gauche, menant vers une clairière.
+2. Suivre le sentier sur la droite, longeant un ruisseau.
+3. Faire demi-tour pour explorer les environs plus en détail.
+
 *PATH*
-1 Prendre le sentier sur la gauche, menant vers une clairière.
-2 Suivre le sentier sur la droite, longeant un ruisseau.
-5 Faire demi-tour pour explorer les environs plus en détail.
+1
+2
+5

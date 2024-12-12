@@ -1,0 +1,14 @@
+La tour de garde est délabrée. A l’intérieur, vous rencontrez un chevalier mourant, qui vous remet un bouclier léger.
+
+*ARMURE*
+Bouclier Léger
+2
+
+"Allez... sauvez la princesse."
+
+1. Quitter la tour et continuer à l’Est.
+2. Retourner en arrière.
+
+*PATH*
+10
+1

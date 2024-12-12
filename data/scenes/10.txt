@@ -1,0 +1,15 @@
+Vous avancez vers l’Est. La silhouette d’un château sombre apparaît à l’horizon. Le pont-levis est relevé, et deux gardes orcs montent la garde.
+
+*COMBAT*
+Orc Garde
+15
+4
+
+Après avoir vaincu l’orc, l’autre s’enfuit. Vous pouvez désormais entrer dans la cour du château.
+
+1. Entrer dans la cour du château.
+2. Faire le tour du château.
+
+*PATH*
+13
+14

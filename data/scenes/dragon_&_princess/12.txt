@@ -1,0 +1,8 @@
+Vous tentez d’interroger le vieil homme, mais il est silencieux. Soudain, il se lève et disparaît en un éclair de lumière. Mystérieux !
+
+1. Sortir de la cabane et reprendre le chemin.
+2. Rester là, perplexe.
+
+*PATH*
+4
+1

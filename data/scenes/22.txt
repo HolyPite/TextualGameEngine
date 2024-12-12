@@ -1,0 +1,10 @@
+Au bout du couloir, une porte mène dans une salle circulaire. Trois coffres y sont posés :
+
+1. Ouvrir le coffre de gauche.
+2. Ouvrir le coffre de centre.
+3. Ouvrir le coffre de droite.
+
+*PATH*
+23
+24
+25
