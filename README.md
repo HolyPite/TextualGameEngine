@@ -1,100 +1,110 @@
-# Guide de création d’une histoire par étapes
+# Guide de création d’une histoire par étapes (fichiers .txt)
 
-#### 1. Principe général
-- Chaque fichier .txt représente une scène de l’histoire.
-- Les fichiers sont numérotés et reliés entre eux par des choix.
-- Le joueur progresse en ouvrant les fichiers dans l’ordre dicté par ses décisions.
+## 1. Principe général
+- Chaque fichier `.txt` représente une scène de l’histoire.
+- Les fichiers sont numérotés et reliés entre eux par des choix (ex: `0.txt`, `1.txt`, `2.txt`…).
+- Le joueur progresse de fichier en fichier selon les décisions prises.
 
-#### 2. Mots-clés disponibles
-**Les mots-clés s’écrivent en majuscules, encadrés d’astérisques.**
+## 2. Mots-clés disponibles
+Les mots-clés s’écrivent en majuscules, encadrés d’astérisques. Ils servent à définir des actions spécifiques ou des éléments de jeu.
 
-1. **PATH**  
-   Permet de proposer un choix menant à un ou plusieurs fichiers suivants.  
-   *Exemple :*  
-   ```
-   1. Entrer dans la salle sombre.
-   2. Retourner sur vos pas.
+### PATH
+Propose un choix qui mène à d’autres scènes.
 
-   *PATH*
-   6
-   7
-   ```
-   Les numéros (6, 7) renvoient aux noms de fichiers correspondants (6.txt, 7.txt).
+**Format :**
+```
+1. Description du choix 1
+2. Description du choix 2
 
-2. **COMBAT**  
-   Initialise un combat contre un monstre.  
-   *Format :*
-   ```
-   *COMBAT*
-   Nom_du_monstre
-   Points_de_vie
-   Points_d’attaque
-   ```
-   *Exemple :*  
-   ```
-   *COMBAT*
-   Mimic
-   15
-   3
-   ```
+*PATH*
+X
+Y
+```
+Où `X` et `Y` sont les numéros des fichiers vers lesquels mènent les choix (ex: `1.txt`, `2.txt`).
 
-3. **ARME**  
-   Ajoute une arme à l’inventaire du joueur, améliorant son attaque.  
-   *Format :*
-   ```
-   *ARME*
-   Nom_de_l’Arme
-   Bonus_d’attaque
-   ```
-   *Exemple :*
-   ```
-   *ARME*
-   Epée Rouillée
-   2
-   ```
+### COMBAT
+Initie un combat contre un monstre.
 
-4. **ARMURE**  
-   Ajoute une armure à l’inventaire du joueur, améliorant sa protection.  
-   *Format :*
-   ```
-   *ARMURE*
-   Nom_de_l’Armure
-   Bonus_de_protection
-   ```
-   *Exemple :*
-   ```
-   *ARMURE*
-   Armure Légère
-   3
-   ```
+**Format :**
+```
+*COMBAT*
+Nom_du_Monstre
+Points_de_vie
+Points_d'attaque
+```
 
-5. **VICTOIRE**  
-   Indique la fin de l’histoire ou une victoire majeure.  
-   *Exemple :*
-   ```
-   *VICTOIRE*
-   ```
+**Exemple :**
+```
+*COMBAT*
+Mimic
+15
+3
+```
 
-6. **GO**  
-   Met fin à l’histoire de manière abrupte (défaite, abandon, etc.).  
-   *Exemple :*
-   ```
-   *GO*
-   ```
+### ARME
+Ajoute une arme à l’inventaire du joueur, augmentant son attaque.
 
-#### 3. Structure recommandée d’un fichier de scène
-- **Description** : Commencez par décrire la scène, l’environnement, les personnages ou objets présents.
-- **Événements** : S’il y a un combat, placez le bloc *COMBAT* après la description.
-- **Récompenses** : S’il y a une arme ou une armure à gagner, placez les blocs *ARME* ou *ARMURE* après le combat ou l’action liée.
-- **Choix de direction** : Proposez des options au joueur, puis utilisez *PATH* pour indiquer vers quels fichiers aller.
+**Format :**
+```
+*ARME*
+Nom_de_l'Arme
+Bonus_d'attaque
+```
 
-#### 4. Conseils de conception
-- Évitez les boucles sans fin : chaque choix doit mener à une nouvelle scène, une conclusion ou un retour en arrière cohérent.
-- Assurez-vous que la difficulté des combats correspond aux récompenses offertes.
-- Variez les ambiances, les descriptions et les types d’événements (combats, découvertes, récompenses) pour maintenir l’intérêt.
+**Exemple :**
+```
+*ARME*
+Epée Rouillée
+2
+```
 
-#### 5. Exemple de départ
-**Fichier 0.txt :**  
+### ARMURE
+Ajoute une armure à l’inventaire du joueur, augmentant sa protection.
+
+**Format :**
+```
+*ARMURE*
+Nom_de_l'Armure
+Bonus_de_protection
+```
+
+**Exemple :**
+```
+*ARMURE*
+Armure Légère
+3
+```
+
+### VICTOIRE
+Indique la fin de l’histoire ou une victoire majeure.
+
+**Format :**
+```
+*VICTOIRE*
+```
+
+### GO
+Termine l’histoire abruptement (défaite, abandon, etc.).
+
+**Format :**
+```
+*GO*
+```
+
+## 3. Structure recommandée d’un fichier de scène
+1. **Description de la scène :** Situez le joueur (environnement, ambiance).
+2. **Événements :** S’il y a un combat, placez le bloc `*COMBAT*` après la description.
+3. **Récompenses :** Après le combat, si une arme ou une armure est trouvée, utilisez `*ARME*` ou `*ARMURE*`.
+4. **Choix :** Proposez des options, puis `*PATH*` pour indiquer les chemins vers les autres fichiers.
+
+## 4. Conseils de conception
+- **Éviter les boucles infinies :** Chaque choix doit mener à une conclusion, un nouvel événement, ou un retour en arrière logique.
+- **Cohérence des récompenses :** Les armes et armures doivent être proportionnées à la difficulté.
+- **Varier les situations :** Combats, découvertes, récompenses, descriptions, pour maintenir l’intérêt du joueur.
+
+## 5. Exemple
+
+**Fichier 0.txt :**
 ```
 Vous commencez dans une forêt dense. Deux sentiers s’offrent à vous.
 
@@ -106,7 +116,7 @@ Vous commencez dans une forêt dense. Deux sentiers s’offrent à vous.
 2
 ```
 
-**Fichier 1.txt :**  
+**Fichier 1.txt :**
 ```
 Un loup se dresse devant vous, prêt à attaquer.
 
@@ -126,7 +136,7 @@ Epée Rouillée
 3
 ```
 
-**Fichier 2.txt :**  
+**Fichier 2.txt :**
 ```
 Vous débouchez sur une clairière ensoleillée. Au centre, une armure scintille.
 
@@ -136,6 +146,7 @@ Armure Légère
 
 1. Revenir sur vos pas.
 2. Avancer plus loin.
+
 *PATH*
 0
 4
@@ -143,4 +154,5 @@ Armure Légère
 
 ---
 
-Ce guide récapitulatif devrait vous aider à créer, structurer et lier vos fichiers d’histoire simplement et efficacement.
+Ce guide vous aidera à créer, structurer et lier vos fichiers d’histoire. Copiez-collez ce contenu dans un fichier `.md` pour votre dépôt GitHub.
+```
