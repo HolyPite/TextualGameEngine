@@ -20,10 +20,11 @@ Le programme lit ces fichiers, interprète leur contenu et exécute l’aventure
 ## Prérequis
 - Le dossier `data/` doit être présent dans le même répertoire que l’exécutable `.exe`.
 - Aucune installation supplémentaire n’est requise.
+- (A noter que le dossier `src/` contient les fichiers .h et .cpp. Ils ne sont **PAS NECESSAIRE** pour l'execution du projet. Ils sont fournis pour ceux qui souhaite voir et modifier les fonctionnement du projet.)
 
 ## Installation
-1. Téléchargez l’archive du projet et extrayez-la.
-2. Ajoutez ou modifiez vos fichiers de scènes dans `data/scene/` et vos fichiers de classes dans `data/class/`.
+1. Téléchargez projet a partir de la dernière release et extrayez-la.
+2. Ajoutez ou modifiez vos fichiers de scènes dans `data/scene/` et vos fichiers de classes dans `data/class/`(Des fichiers de base sont déjà présent pour donner un exemple de jeu).
 
 ## Utilisation
 1. Assurez-vous que le dossier `data/` se trouve dans le même répertoire que l’exécutable `.exe`.
