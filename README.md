@@ -13,23 +13,23 @@ Propose un choix qui mène à d’autres scènes.
 
 **Format :**
 ```
-1. Description du choix 1
-2. Description du choix 2
-
 *PATH*
-X
-Y
+X Description du choix 1
+Y Description du choix 2
 ```
 Où `X` et `Y` sont les numéros des fichiers vers lesquels mènent les choix (ex: `1.txt`, `2.txt`).
 
 **Exemple :**
 ```
+*PATH*
+7 Prendre à gauche.
+6 Prendre à droite.
+```
+
+**Affichage**
+```
 1. Prendre à gauche.
 2. Prendre à droite.
-
-*PATH*
-6
-7
 ```
 
 ### COMBAT
