@@ -23,7 +23,7 @@ Le programme lit ces fichiers, interprète leur contenu et exécute l’aventure
 - (A noter que le dossier `src/` contient les fichiers .h et .cpp. Ils ne sont **PAS NECESSAIRE** pour l'execution du projet. Ils sont fournis pour ceux qui souhaite voir et modifier les fonctionnement du projet.)
 
 ## Installation
-1. Téléchargez projet a partir de la dernière (**RELEASE**)[https://github.com/PGarn/jeu-cpp/releases/tag/pre-alpha] et extrayez-la.
+1. Téléchargez projet a partir de la dernière [**RELEASE**](https://github.com/PGarn/jeu-cpp/releases/tag/pre-alpha) et extrayez-la.
 2. Ajoutez ou modifiez vos fichiers de scènes dans `data/scene/` et vos fichiers de classes dans `data/class/`(Des fichiers de base sont déjà présent pour donner un exemple de jeu).
 
 ## Utilisation
