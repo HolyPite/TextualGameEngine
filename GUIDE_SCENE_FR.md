@@ -154,8 +154,3 @@ Armure Légère
 0 Revenir sur vos pas.
 4 Avancer plus loin.
 ```
-
----
-
-Ce guide vous aidera à créer, structurer et lier vos fichiers d’histoire. Copiez-collez ce contenu dans un fichier `.md` pour votre dépôt GitHub.
-```
