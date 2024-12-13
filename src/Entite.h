@@ -45,7 +45,7 @@ public:
 
     virtual void afficherStats() const {
         std::cout << "\n" // Ligne vide pour l'espace
-                << "~~~~~~~~~~~ Stats : "<< nom <<" ~~~~~~~~~~~" << "\n"
+                << "~~~~~~~~~ Stats : "<< nom <<" ~~~~~~~~~" << "\n"
                 << "PV: " << PV << "/" << PVmax << "\n";
         if (!(PMmax == 0)){
             std::cout << "Mana: " << PM << "/" << PMmax << "\n";
@@ -62,7 +62,7 @@ public:
         if (!(valeurArmure == 0)){
             std::cout << "Armure: " << armure << " (+ " << valeurArmure << ")\n";
         }
-        std::cout <<"\n\n\n";
+        std::cout <<"\n\n";
     }
 
     void changerArme(const std::string& nomArme, int valeur) {
