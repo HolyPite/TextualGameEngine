@@ -7,6 +7,7 @@
 #include <tuple>
 #include <optional>
 #include <algorithm>
+#include "Competence.h"
 
 class Entite {
 protected:
@@ -23,7 +24,7 @@ protected:
     int valeurArme;
     std::string armure;
     int valeurArmure;
-    std::vector<std::tuple<std::string, std::string, char, int, int>> competences;
+    std::vector<Competence> competences;
 
 public:
     Entite(const std::string& nom, int pv, int pm,int def)
@@ -79,36 +80,14 @@ public:
         valeurArmure = valeur;
     }
 
-    void ajouterCompetence(const std::string& nom, const std::string& type, char typeValeur, int valeur, int coutMana) {
-        competences.emplace_back(nom, type, typeValeur, valeur, coutMana);
-    }
-        
-    void supprimerCompetence(const std::string& nomCompetence) {
-        auto it = std::remove_if(competences.begin(), competences.end(),
-            [&nomCompetence](const auto& competence) {
-                return std::get<0>(competence) == nomCompetence; // Vérifie si le nom correspond
-            });
-
-        if (it != competences.end()) {
-            competences.erase(it, competences.end()); // Supprime les éléments correspondants
-            //std::cout << "La compétence \"" << nomCompetence << "\" a été supprimée avec succès.\n";
-        } else {
-            std::cout << "La compétence \"" << nomCompetence << "\" n'existe pas.\n";
-        }
+    void ajouterCompetence(const Competence& competence) {
+        competences.push_back(competence);
     }
 
     void afficherCompetences() const {
         for (size_t i = 0; i < competences.size(); ++i) {
-            const auto& [nom, type, typeValeur, valeur, coutMana] = competences[i];
-            std::cout << i + 1 << ". " << nom << " (" << type << "):\n";
-            if (type == "Attaque") {
-                std::cout << "    Dégât: " << (typeValeur == '+' ? "+" : "") << valeur << (typeValeur == '%' ? "%" : "") << "\n";
-            } else if (type == "Protection") {
-                std::cout << "    Bouclier: " << (typeValeur == '+' ? "+" : "") << valeur << (typeValeur == '%' ? "%" : "") << "\n";
-            } else if (type == "Soin") {
-                std::cout << "    Soin: " << (typeValeur == '+' ? "+" : "") << valeur << (typeValeur == '%' ? "%" : "") << "\n";
-            }
-            std::cout << "    Mana: " << coutMana << "\n";
+            std::cout << i + 1 << ". ";
+            competences[i].afficher();
         }
     }
 
@@ -147,23 +126,20 @@ public:
     bool utiliserCompetence(int index, Entite& cible) {
         if (index < 0 || index >= static_cast<int>(competences.size())) return false;
 
-        auto& [nom, type, typeValeur, valeur, coutMana] = competences[index];
-        if (PM < coutMana) {
-            std::cout << "Pas assez de mana pour utiliser " << nom << " !\n";
-            return false;
-        } else if (type == "Protection" && protectionUtilisee) {
-            std::cout << "Vous avez déjà utilisé une compétence de protection pour ce combat.\n";
+        const Competence& comp = competences[index];
+        if (PM < comp.getCoutMana()) {
+            std::cout << "Pas assez de mana pour utiliser " << comp.getNom() << " !\n";
             return false;
         }
 
-        PM -= coutMana;
+        PM -= comp.getCoutMana();
 
-        if (type == "Attaque") {
-            attaquer(cible, typeValeur, valeur);
-        } else if (type == "Soin") {
-            soigner(typeValeur, valeur);
-        } else if (type == "Protection") {
-            proteger(typeValeur, valeur);
+        if (comp.getType() == "Attaque") {
+            attaquer(cible, comp.getTypeValeur(), comp.getValeur());
+        } else if (comp.getType() == "Soin") {
+            soigner(comp.getTypeValeur(), comp.getValeur());
+        } else if (comp.getType() == "Protection") {
+            proteger(comp.getTypeValeur(), comp.getValeur());
         }
         return true;
     }

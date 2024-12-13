@@ -21,60 +21,46 @@ std::unique_ptr<Entite> chargerClasse(const std::string& cheminFichier) {
         throw std::runtime_error("Impossible d'ouvrir le fichier : " + cheminFichier);
     }
 
-    std::string ligne, nom;
+    std::string ligne, nomClasse;
     int pv = 0, pm = 0, armure = 0;
-    std::vector<std::tuple<std::string, std::string, char, int, int>> competences;
+    std::vector<Competence> competences;
 
     while (std::getline(fichier, ligne)) {
-        // Lecture des caractéristiques principales
-        if (ligne.find("PV") != std::string::npos) {
+        ligne = trim(ligne); // Nettoyer la ligne
+
+        if (ligne == "PV") {
             fichier >> pv;
             fichier.ignore();
-        } else if (ligne.find("PM") != std::string::npos) {
+        } else if (ligne == "PM") {
             fichier >> pm;
             fichier.ignore();
-        } else if (ligne.find("ARM") != std::string::npos) {
+        } else if (ligne == "ARM") {
             fichier >> armure;
             fichier.ignore();
-        }
-        // Lecture des compétences
-        else if (ligne.find("COMP") != std::string::npos) {
+        } else if (ligne == "COMP") {
             while (std::getline(fichier, ligne) && !ligne.empty()) {
-                std::string nomCompetence = trim(ligne); // Nettoie les espaces superflus
-                std::getline(fichier, ligne);
-                std::string type = trim(ligne);          // Nettoie les espaces superflus
+                std::string nomCompetence = trim(ligne);
+                std::string type;
                 char typeValeur;
                 int valeur, coutMana;
 
+                // Lire les détails de la compétence
+                std::getline(fichier, type);
                 fichier >> typeValeur >> valeur >> coutMana;
-                fichier.ignore(); // Ignore le saut de ligne restant
+                fichier.ignore();
 
-                competences.emplace_back(nomCompetence, type, typeValeur, valeur, coutMana);
+                competences.emplace_back(nomCompetence, trim(type), typeValeur, valeur, coutMana);
             }
         }
     }
 
-    // Création de l'entité et ajout des compétences
-    auto classe = std::make_unique<Entite>("Guerrier", pv, pm, armure);
+    // Créer l'entité avec les données lues
+    auto classe = std::make_unique<Entite>(nomClasse.empty() ? "Inconnu" : nomClasse, pv, pm, armure);
 
-    for (const auto& comp : competences) {
-        classe->ajouterCompetence(
-            std::get<0>(comp), // Nom
-            std::get<1>(comp), // Type
-            std::get<2>(comp), // TypeValeur
-            std::get<3>(comp), // Valeur
-            std::get<4>(comp)  // Consommation de mana
-        );
+    // Ajouter les compétences à l'entité
+    for (const auto& competence : competences) {
+        classe->ajouterCompetence(competence);
     }
-
-    // Débogage : Affichage des données lues
-    //std::cout << "Classe chargée : " << "Guerrier" << "\n";
-    //std::cout << "PV : " << pv << ", PM : " << pm << ", Armure : " << armure << "\n";
-    //for (const auto& comp : competences) {
-    //    std::cout << "Compétence : " << std::get<0>(comp) << ", Type : " << std::get<1>(comp)
-    //              << ", TypeValeur : " << std::get<2>(comp) << ", Valeur : " << std::get<3>(comp)
-    //              << ", Mana : " << std::get<4>(comp) << "\n";
-    //}
 
     return classe;
 }
