@@ -62,7 +62,7 @@ public:
         if (!(valeurArmure == 0)){
             std::cout << "Armure: " << armure << " (+ " << valeurArmure << ")\n";
         }
-        std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << "\n\n";
+        std::cout <<"\n\n\n";
     }
 
     void changerArme(const std::string& nomArme, int valeur) {
