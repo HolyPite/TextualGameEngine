@@ -40,22 +40,32 @@ int main() {
     }
 
     int choixClasse;
-    std::cout << "\nVotre Choix:";
-    std::cin >> choixClasse;
-
     std::unique_ptr<Entite> hero;
 
-    try {
-        if (choixClasse > 0 && choixClasse <= static_cast<int>(fichiersClasse.size())) {
-            hero = chargerClasse(dossierClasses + fichiersClasse[choixClasse - 1]);
+    // Boucle pour demander une saisie valide
+    while (true) {
+        std::cout << "\nVotre Choix:";
+        if (std::cin >> choixClasse) { // Vérifie que l'entrée est un entier
+            if (choixClasse > 0 && choixClasse <= static_cast<int>(fichiersClasse.size())) {
+                break; // Sort de la boucle si la saisie est valide
+            } else {
+                std::cout << "Choix invalide. Veuillez choisir un nombre entre 1 et " << fichiersClasse.size() << ".\n";
+            }
         } else {
-            std::cout << "Choix invalide, Guerrier par défaut.\n";
-            hero = chargerClasse(dossierClasses + "Guerrier.txt");
+            std::cout << "Entrée invalide. Veuillez entrer un nombre entier.\n";
+            std::cin.clear(); // Efface le flag d'erreur
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore la mauvaise saisie
         }
+    }
+
+    // Charge la classe sélectionnée
+    try {
+        hero = chargerClasse(dossierClasses + fichiersClasse[choixClasse - 1]);
     } catch (const std::exception& e) {
-        std::cerr << "Erreur : " << e.what() << "\n";
+        std::cerr << "Erreur lors du chargement de la classe : " << e.what() << "\n";
         return 1;
     }
+
 
     Histoire histoire(std::move(hero));
     histoire.jouer();
