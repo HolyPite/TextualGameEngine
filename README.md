@@ -27,10 +27,20 @@ Le programme lit ces fichiers, interprète leur contenu et exécute l’aventure
 2. Ajoutez ou modifiez vos fichiers de scènes dans `data/scene/` et vos fichiers de classes dans `data/class/`(Des fichiers de base sont déjà présent pour donner un exemple de jeu).
 
 ## Utilisation
-1. Assurez-vous que le dossier `data/` se trouve dans le même répertoire que l’exécutable `.exe`.
+### Option 1 : Télécharger et utiliser l'exécutable
+1. Assurez-vous que le dossier `data/` (avec les fichiers nécessaires) se trouve dans le même répertoire que l’exécutable `.exe`.
 2. Lancez simplement le fichier `.exe`.
 3. Le programme charge automatiquement les classes et scènes disponibles.
 4. Choisissez votre classe, suivez les instructions à l’écran, prenez des décisions, et profitez de l’aventure.
+
+### Option 2 : Télécharger le code source et compiler
+1. Téléchargez les fichiers sources du projet C++.
+2. Compilez le code en utilisant la commande suivante dans un terminal :  
+   ```bash
+    g++ -static -o jeu src/*.cpp -I .
+   ```
+3. Assurez-vous que le dossier `data/` se trouve dans le même répertoire que l’exécutable généré.
+4. Suivez les instructions à l’écran pour profiter de l’aventure.
 
 ## Personnalisation([**GUIDE**](https://github.com/PGarn/jeu-cpp/tree/main/guides))
 - **Ajouter de nouvelles scènes** : Créez un fichier `.txt` dans `data/scene/` et suivez le format défini dans le guide.
