@@ -37,7 +37,7 @@ Le programme lit ces fichiers, interprète leur contenu et exécute l’aventure
 1. Téléchargez les fichiers sources du projet C++.
 2. Compilez le code en utilisant la commande suivante dans un terminal :  
    ```bash
-    g++ -static -o jeu src/*.cpp -I .
+    g++ -static -o jeu src/main.cpp src/Histoire.cpp src/utils.cpp src/Competence.cpp -I .
    ```
 3. Assurez-vous que le dossier `data/` se trouve dans le même répertoire que l’exécutable généré.
 4. Suivez les instructions à l’écran pour profiter de l’aventure.
