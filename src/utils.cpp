@@ -24,10 +24,17 @@ std::unique_ptr<Entite> chargerClasse(const std::string& cheminFichier) {
     std::string ligne, nomClasse;
     int pv = 0, pm = 0, armure = 0;
     std::vector<Competence> competences;
+    bool nomClasseDefini = false; // Indique si nomClasse a été défini
 
     while (std::getline(fichier, ligne)) {
         ligne = trim(ligne); // Nettoyer la ligne
 
+        if (!nomClasseDefini && !ligne.empty()) {
+            // Définir nomClasse comme la première ligne non vide
+            nomClasse = ligne;
+            nomClasseDefini = true;
+            continue; // Passer à la ligne suivante après avoir défini nomClasse
+        }
         if (ligne == "PV") {
             fichier >> pv;
             fichier.ignore();
