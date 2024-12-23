@@ -76,6 +76,16 @@ void Histoire::chargerScene() {
 
                 if (input == "I" || input == "i") {
                     hero->afficherStats();
+                    std::cout << "\nOptions disponibles :\n";
+                    std::cout << "1. Retour au choix précédent\n";
+                    std::cout << "2. Afficher l'inventaire\n";
+
+                    std::string choix;
+                    std::cin >> choix;
+
+                    if (choix == "2") {
+                        hero->equiperObjet();
+                    }
                 } else {
                     try {
                         int choix = std::stoi(input);
@@ -150,10 +160,10 @@ void Histoire::gererCombat(const std::string& nomMonstre, int pv, int attaque, i
 }
 
 void Histoire::gererEquipement(const std::string& type, const std::string& nom, int valeur) {
-    std::cout << "Vous trouvez une " << type << " : " << nom << " (+ " << valeur << ").\n";
     if (type == "arme") {
-        hero->changerArme(nom, valeur);
+        hero->ajouterArme(nom, valeur);
     } else if (type == "armure") {
-        hero->changerArmure(nom, valeur);
+        hero->ajouterArmure(nom, valeur);
     }
 }
+

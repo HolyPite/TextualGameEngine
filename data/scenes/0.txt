@@ -1,5 +1,29 @@
 Vous vous réveillez au milieu d'une forêt brumeuse. Le chant des oiseaux est étouffé, et une vieille route de terre se divise devant vous. Vous avez entendu parler d’un château lointain où la princesse Elwen est retenue captive par le Dragon Sombre.
 
+*ARME*
+Poignard Rouillé
+1
+
+*ARME*
+Dague cassée
+3
+
+*ARME*
+Epee Sacrée
+7
+
+*ARMURE*
+Ferraille Rouillé
+2
+
+*ARMURE*
+Cuir de peau
+4
+
+*ARMURE*
+Armure divine
+8
+
 *PATH*
 1 Prendre le sentier sur la gauche, menant vers une clairière.
 2 Suivre le sentier sur la droite, longeant un ruisseau.
