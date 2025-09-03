@@ -3,24 +3,20 @@
 
 #include <string>
 
-enum class SkillType { Attack, Heal, Protection };
-
-const char* toString(SkillType type);
-
 class Competence {
 private:
     std::string nom;
-    SkillType type;    // Attack, Heal, Protection
-    char typeValeur;   // '+' ou '%'
+    std::string type; // "Attaque", "Soin", "Protection"
+    char typeValeur;  // '+' ou '%'
     int valeur;
     int coutMana;
 
 public:
-    Competence(const std::string& nom, SkillType type, char typeValeur, int valeur, int coutMana)
+    Competence(const std::string& nom, const std::string& type, char typeValeur, int valeur, int coutMana)
         : nom(nom), type(type), typeValeur(typeValeur), valeur(valeur), coutMana(coutMana) {}
 
     const std::string& getNom() const { return nom; }
-    SkillType getType() const { return type; }
+    const std::string& getType() const { return type; }
     char getTypeValeur() const { return typeValeur; }
     int getValeur() const { return valeur; }
     int getCoutMana() const { return coutMana; }
