@@ -1,7 +1,0 @@
-Vous traversez le marécage et tombez sur une petite hutte sur pilotis. Un personnage mystérieux s’y tient, vous proposant un marché.
-
-"Donnez-moi quelque chose en échange, et je vous offrirai une armure meilleure."
-
-*PATH*
-15 Donner une arme (si vous en avez plusieurs, sacrifice narratif).
-16 Refuser et partir.

@@ -1,15 +1,18 @@
-Vous contournez le château. Sur le côté, une petite entrée de service est gardée par un loup de garde.
+Vous contournez le chǽteau. Sur le c��tǸ, une petite entrǸe de service est gardǸe par un loup de garde.
 
 *COMBAT*
 Loup de Garde
 10
+2
 3
 
-Après votre victoire, vous pénétrez dans le château par la porte de service.
-
-1. Avancer dans un couloir sombre.
-2. Revenir en arrière (peu judicieux).
+Apr��s votre victoire, vous pǸnǸtrez dans le chǽteau par la porte de service.
 
 *PATH*
-19
-10
+19 Avancer dans un couloir sombre.
+10 Revenir en arri��re (peu judicieux).
+
+*REMOVE*
+10 PATH 14
+this COMBAT Loup de Garde
+

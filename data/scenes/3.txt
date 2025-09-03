@@ -1,10 +1,19 @@
-Vous entrez dans la cabane. A l’intérieur, un vieil homme est assis sur un tabouret, son visage caché sous une capuche. Il vous tend un parchemin.
+Les caves sont sombres. Des tuyaux sifflent. Vous trouvez un outil utile sous un tas de ferraille.
 
-"Prenez ceci," dit-il, "La route vers le château est semée d’embûches."
-
-Vous obtenez une information précieuse : la princesse est retenue au Château du Dragon, à l’Est.
+*ARME*
+Pied-de-biche
+3
 
 *PATH*
-4 Le remercier et sortir.
-7 Tenter de fouiller la cabane.
-8 L’attaquer (par méfiance).
+2 Remonter au marche.
+
+*REMOVE*
+this ARME Pied-de-biche
+
+*ADD*
+2 PATH
+*PATH*
+4 Ouvrir la grille de l'atelier (grace au pied-de-biche).
+
+*REMOVE*
+2 PATH 6

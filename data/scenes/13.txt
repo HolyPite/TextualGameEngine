@@ -1,5 +1,0 @@
-Vous entrez dans la cour du château. Des armures brisées jonchent le sol. Une porte mène vers l’intérieur du donjon.
-
-*PATH*
-17 Entrer dans le donjon.
-18 Fouiller la cour.

@@ -1,5 +1,13 @@
-Vous sortez de la cabane et poursuivez votre chemin vers l'Est. Le sentier devient rocailleux. Au loin, vous apercevez une tour de garde en ruines.
+Vous forcez la grille et penetrez dans l'atelier. Des plans epingles montrent un ascenseur vers le toit.
+
+*ARMURE*
+Plastron d'airain
+3
 
 *PATH*
-9 Explorer la tour de garde.
-10 Continuer vers l'Est en direction du château.
+7 Prendre l'ascenseur vers le toit.
+2 Revenir au marche.
+
+*REMOVE*
+this ARMURE Plastron d'airain
+

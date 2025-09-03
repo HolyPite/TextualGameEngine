@@ -1,6 +1,20 @@
-Vous pénétrez dans une clairière humide, où une vieille cabane délabrée se dresse. Une odeur de mousse et de champignons flotte dans l’air.
+L'entrepot sent l'huile et la poussiere. Des caisses eventrees laissent filer des pieces d'engrenages et des traces de morsures.
+
+*COMBAT*
+Rat geant
+10
+2
+3
+
+*ARME*
+Couteau de chasse
+1
 
 *PATH*
-3 Entrer dans la cabane.
-4 Ignorer la cabane et continuer votre route.
-0 Revenir sur vos pas.
+2 Rattraper la rumeur du marche.
+0 Revenir vers les portes.
+
+*REMOVE*
+this COMBAT Rat geant
+this ARME Couteau de chasse
+

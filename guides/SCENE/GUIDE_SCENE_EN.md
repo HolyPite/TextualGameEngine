@@ -1,159 +1,125 @@
-# Step-by-Step Story Creation Guide (Text Files)
+# Scene Authoring Guide (text files)
 
-## 1. General Principle
-- Each `.txt` file represents one scene of the story.
-- The files are numbered and linked together by choices (e.g., `0.txt`, `1.txt`, `2.txt`…).
-- The player progresses from file to file based on their decisions.
+This guide explains how to write scenes the engine can read, and how to use dynamic directives REMOVE/ADD.
 
-## 2. Available Keywords
-Keywords are written in uppercase, enclosed in asterisks. They define specific actions or game elements.
+## 1. Basics
+- Each `.txt` file is a scene; the file name (e.g. `12.txt`) is its id.
+- Scenes are linked by choices declared with `*PATH*`.
+- Blocks start with `*...*`. The engine reads a block until a blank line or the next `*...*` marker.
+- Put a blank line between description and blocks for readability.
+
+Expected folder: `data/scenes/` next to the executable.
+
+## 2. Available blocks
 
 ### PATH
-Offers a choice leading to other scenes.
-
-**Format:**
+List options to other scenes.
 ```
 *PATH*
-X Choice description 1
-Y Choice description 2
-```
-Where `X` and `Y` are the file numbers that the choices lead to (e.g., `1.txt`, `2.txt`).
-
-**Example:**
-```
-*PATH*
-7 Take the left path.
-6 Take the right path.
-```
-
-**Display:**
-```
-1. Take the left path.
-2. Take the right path.
+<id> <text>
+<id> <text>
 ```
 
 ### COMBAT
-Initiates a battle against a monster.
-
-**Format:**
+Trigger a battle.
 ```
 *COMBAT*
-Monster_Name
-Health_Points
-Armor_Points
-Attack_Points
+<Name>
+<HP>
+<DEF>
+<ATK>
 ```
 
-**Example:**
-```
-*COMBAT*
-Mimic
-15
-1
-3
-```
-
-### ARME (Weapon)
-Adds a weapon to the player’s inventory, increasing their attack power.
-
-**Format:**
+### ARME / ARMURE (Weapon / Armor)
+Add an equipment item.
 ```
 *ARME*
-Weapon_Name
-Attack_Bonus
-```
+<Name>
+<Value>
 
-**Example:**
-```
-*ARME*
-Rusty Sword
-2
-```
-
-### ARMURE (Armor)
-Adds an armor piece to the player’s inventory, increasing their protection.
-
-**Format:**
-```
 *ARMURE*
-Armor_Name
-Protection_Bonus
+<Name>
+<Value>
 ```
 
-**Example:**
+### VICTOIRE / GO
+End of story (victory) or abrupt end.
+
+## 3. Dynamic directives
+
+### REMOVE
+Remove a PATH option, a COMBAT, or a loot.
 ```
-*ARMURE*
-Light Armor
-3
+*REMOVE*
+<sceneId|this> <TYPE> <param>
 ```
+- TYPE = PATH, param = target id.
+- TYPE = COMBAT, param = exact monster name.
+- TYPE = ARME/ARMURE, param = exact item name.
 
-### VICTOIRE (Victory)
-Indicates the end of the story or a major victory.
-
-**Format:**
+Examples:
 ```
-*VICTOIRE*
+*REMOVE*
+4 PATH 9
+this ARMURE Light Shield
 ```
+Place `*REMOVE*` after events so it gets applied before leaving the scene.
 
-### GO
-Abruptly ends the story (defeat, abandonment, etc.).
-
-**Format:**
+### ADD
+Add content to a target scene.
 ```
-*GO*
-```
-
-## 3. Recommended Scene File Structure
-1. **Scene Description:** Set the scene (environment, ambiance).
-2. **Events:** If there is a battle, place the `*COMBAT*` block after the description.
-3. **Rewards:** After the battle, if a weapon or armor is found, use `*ARME*` or `*ARMURE*`.
-4. **Choices:** Offer options, then use `*PATH*` to indicate paths to other files.
-
-## 4. Design Tips
-- **Avoid infinite loops:** Each choice should lead to a conclusion, a new event, or a logical way back.
-- **Consistent rewards:** Weapons and armor should be balanced with the difficulty.
-- **Variety in situations:** Include battles, discoveries, rewards, and descriptions to maintain player interest.
-
-## 5. Example
-
-**File 0.txt:**
-```
-You start in a dense forest. Two paths lie before you.
-
+*ADD*
+<this|sceneId> PATH
 *PATH*
-1 Take the left path.
-2 Take the right path.
-```
+<id> <text>
 
-**File 1.txt:**
+<this|sceneId> COMBAT
+*COMBAT*
+<Name>
+<HP>
+<DEF>
+<ATK>
+
+<this|sceneId> ARME  # or ARMURE
+*ARME*
+<Name>
+<Value>
 ```
-A wolf stands before you, ready to attack.
+Notes:
+- Additions are merged with the target scene content.
+- `*REMOVE*` also applies to added content.
+
+## 4. Best practices
+- Recommended order: Description -> COMBAT -> ARME/ARMURE -> PATH -> REMOVE/ADD.
+- Separate blocks with blank lines.
+- Avoid dead loops; always offer a way back or a conclusion.
+- To make a loot one-shot: add `*REMOVE* this ARME/ARMURE <Name>` right after the block.
+- To replace a path: use `*ADD*` (new PATH) + `*REMOVE*` (old PATH).
+
+## 5. Full example
+```
+You enter the workshop. Plans cover the table.
 
 *COMBAT*
-Wolf
-10
-1
+Auto Guard
+14
 3
-
-You defeat the wolf and find a rusty sword.
-
-*ARME*
-Rusty Sword
-2
-
-*PATH*
-3
-```
-
-**File 2.txt:**
-```
-You emerge into a sunny clearing. In the center, you see a shining piece of armor.
+4
 
 *ARMURE*
-Light Armor
+Bronze Cuirass
 3
 
 *PATH*
-0 Go back.
-4 Move forward.
+7 Take the lift to the roof.
+2 Return to the market.
+
+*REMOVE*
+this ARMURE Bronze Cuirass
+2 PATH 6
+
+*ADD*
+2 PATH
+*PATH*
+4 Open the bent gate.
 ```

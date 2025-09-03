@@ -1,9 +1,0 @@
-Vous donnez une arme à l’étranger. En échange, il vous tend une armure renforcée.
-
-*ARMURE*
-Armure Renforcée
-3
-
-*PATH*
-0 Quitter la hutte et revenir au marécage.
-20 Chercher un autre chemin.

@@ -1,17 +1,7 @@
-Le sentier longe un ruisseau cristallin. Vous entendez un bruit de pas légers derrière vous. Une créature apparaît : un Gobelin affamé vous attaque !
-
-*COMBAT*
-Gobelin
-8
-1
-2
-
-Après avoir vaincu le Gobelin, vous trouvez un petit poignard rouillé.
-
-*ARME*
-Poignard Rouillé
-1
+Le marche regorge de camelots et d'echoppes. Un artisan vous parle d'un atelier ferme par une grille pliee.
 
 *PATH*
-6 Continuer le long du ruisseau.
-0 Remonter vers la forêt.
+6 Examiner l'atelier ferme.
+0 Revenir vers les portes.
+3 Descendre vers les caves.
+

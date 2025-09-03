@@ -5,11 +5,10 @@ Un dragon surgit ! Le Dragon Sombre vous bloque la route !
 *COMBAT*
 Dragon Sombre
 30
+6
 8
 
 Si vous vainquez le Dragon, vous pouvez libérer la princesse.
 
-1. Libérer la princesse.
-
 *PATH*
-21
+21 Libérer la princesse.

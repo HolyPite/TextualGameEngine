@@ -1,159 +1,128 @@
-# Guide de création d’une histoire par étapes (fichiers .txt)
+# Guide de creation de scenes (fichiers .txt)
 
-## 1. Principe général
-- Chaque fichier `.txt` représente une scène de l’histoire.
-- Les fichiers sont numérotés et reliés entre eux par des choix (ex: `0.txt`, `1.txt`, `2.txt`…).
-- Le joueur progresse de fichier en fichier selon les décisions prises.
+Ce guide explique comment ecrire des scenes lisibles par le moteur, et comment utiliser les directives dynamiques REMOVE/ADD.
 
-## 2. Mots-clés disponibles
-Les mots-clés s’écrivent en majuscules, encadrés d’astérisques. Ils servent à définir des actions spécifiques ou des éléments de jeu.
+## 1. Principes
+- Chaque fichier `.txt` represente une scene; le nom du fichier (ex: `12.txt`) est son identifiant.
+- Les scenes sont reliees par des choix declares avec `*PATH*`.
+- Les blocs commencent par `*...*`. Le moteur lit un bloc jusqu'a une ligne vide ou une nouvelle balise `*...*`.
+- Placez une ligne vide entre description et blocs pour la lisibilite.
+
+Repertoire attendu: `data/scenes/` au meme niveau que l'executable.
+
+## 2. Blocs disponibles
 
 ### PATH
-Propose un choix qui mène à d’autres scènes.
+Liste des options vers d'autres scenes.
 
-**Format :**
+Format:
 ```
 *PATH*
-X Description du choix 1
-Y Description du choix 2
-```
-Où `X` et `Y` sont les numéros des fichiers vers lesquels mènent les choix (ex: `1.txt`, `2.txt`).
-
-**Exemple :**
-```
-*PATH*
-7 Prendre à gauche.
-6 Prendre à droite.
-```
-
-**Affichage**
-```
-1. Prendre à gauche.
-2. Prendre à droite.
+<id> <texte>
+<id> <texte>
 ```
 
 ### COMBAT
-Initie un combat contre un monstre.
-
-**Format :**
+Declenche un combat.
 ```
 *COMBAT*
-Nom_du_Monstre
-Points_de_vie
-Points_d'armure
-Points_d'attaque
+<Nom>
+<PV>
+<DEF>
+<ATK>
 ```
 
-**Exemple :**
-```
-*COMBAT*
-Mimic
-15
-1
-3
-```
-
-### ARME
-Ajoute une arme à l’inventaire du joueur, augmentant son attaque.
-
-**Format :**
+### ARME / ARMURE
+Ajoute un equipement.
 ```
 *ARME*
-Nom_de_l'Arme
-Bonus_d'attaque
-```
+<Nom>
+<Valeur>
 
-**Exemple :**
-```
-*ARME*
-Epée Rouillée
-2
-```
-
-### ARMURE
-Ajoute une armure à l’inventaire du joueur, augmentant sa protection.
-
-**Format :**
-```
 *ARMURE*
-Nom_de_l'Armure
-Bonus_de_protection
+<Nom>
+<Valeur>
 ```
 
-**Exemple :**
+### VICTOIRE / GO
+Fin de l'histoire (victoire) ou fin immediate.
+
+## 3. Directives dynamiques
+
+### REMOVE
+Supprime une option PATH, un COMBAT, ou un loot.
 ```
-*ARMURE*
-Armure Légère
-3
+*REMOVE*
+<sceneId|this> <TYPE> <param>
+```
+- TYPE = PATH, param = id de la cible.
+- TYPE = COMBAT, param = nom exact du monstre.
+- TYPE = ARME/ARMURE, param = nom exact de l'objet.
+
+Exemples:
+```
+*REMOVE*
+4 PATH 9
+this ARMURE Bouclier leger
 ```
 
-### VICTOIRE
-Indique la fin de l’histoire ou une victoire majeure.
+Placez `*REMOVE*` apres les evenements pour qu'il soit pris en compte avant le changement de scene.
 
-**Format :**
+### ADD
+Ajoute du contenu a une scene cible.
 ```
-*VICTOIRE*
-```
-
-### GO
-Termine l’histoire abruptement (défaite, abandon, etc.).
-
-**Format :**
-```
-*GO*
-```
-
-## 3. Structure recommandée d’un fichier de scène
-1. **Description de la scène :** Situez le joueur (environnement, ambiance).
-2. **Événements :** S’il y a un combat, placez le bloc `*COMBAT*` après la description.
-3. **Récompenses :** Après le combat, si une arme ou une armure est trouvée, utilisez `*ARME*` ou `*ARMURE*`.
-4. **Choix :** Proposez des options, puis `*PATH*` pour indiquer les chemins vers les autres fichiers.
-
-## 4. Conseils de conception
-- **Éviter les boucles infinies :** Chaque choix doit mener à une conclusion, un nouvel événement, ou un retour en arrière logique.
-- **Cohérence des récompenses :** Les armes et armures doivent être proportionnées à la difficulté.
-- **Varier les situations :** Combats, découvertes, récompenses, descriptions, pour maintenir l’intérêt du joueur.
-
-## 5. Exemple
-
-**Fichier 0.txt :**
-```
-Vous commencez dans une forêt dense. Deux sentiers s’offrent à vous.
-
+*ADD*
+<this|sceneId> PATH
 *PATH*
-1 Prendre à gauche.
-2 Prendre à droite.
-```
+<id> <texte>
 
-**Fichier 1.txt :**
+<this|sceneId> COMBAT
+*COMBAT*
+<Nom>
+<PV>
+<DEF>
+<ATK>
+
+<this|sceneId> ARME  # ou ARMURE
+*ARME*
+<Nom>
+<Valeur>
 ```
-Un loup se dresse devant vous, prêt à attaquer.
+Notes:
+- Les ajouts sont fusionnes avec le contenu existant de la scene cible.
+- Les suppressions `*REMOVE*` s'appliquent aussi aux ajouts.
+
+## 4. Bonnes pratiques
+- Ordre recommande: Description -> COMBAT -> ARME/ARMURE -> PATH -> REMOVE/ADD.
+- Separez les blocs par des lignes vides.
+- Evitez les boucles sans issue; offrez toujours un retour possible.
+- Pour rendre un loot unique: ajoutez `*REMOVE* this ARME/ARMURE <Nom>` juste apres le bloc.
+- Pour remplacer un chemin: `*ADD*` (nouveau PATH) + `*REMOVE*` (ancien PATH).
+
+## 5. Exemple complet
+```
+Vous entrez dans l'atelier. Une table croule sous les plans.
 
 *COMBAT*
-Loup
-10
-0
+Garde automatique
+14
 3
-
-Vous vainquez le loup et trouvez une épée rouillée.
-
-*ARME*
-Epée Rouillée
-2
-
-*PATH*
-3
-```
-
-**Fichier 2.txt :**
-```
-Vous débouchez sur une clairière ensoleillée. Au centre, une armure scintille.
+4
 
 *ARMURE*
-Armure Légère
+Plastron d'airain
 3
 
 *PATH*
-0 Revenir sur vos pas.
-4 Avancer plus loin.
+7 Prendre l'ascenseur vers le toit.
+2 Revenir au marche.
+
+*REMOVE*
+this ARMURE Plastron d'airain
+2 PATH 6
+
+*ADD*
+2 PATH
+*PATH*
+4 Ouvrir la grille de l'atelier.
 ```

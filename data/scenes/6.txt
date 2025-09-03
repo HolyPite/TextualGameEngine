@@ -1,17 +1,5 @@
-Vous continuez le long du ruisseau. Plus loin, le ruisseau se jette dans un marécage glauque. Le sol est spongieux et une créature à la peau visqueuse vous barre la route.
-
-*COMBAT*
-Slime
-5
-0
-1
-
-En vainquant le Slime, vous trouvez une épée abîmée.
-
-*ARME*
-Epée Abimée
-2
+L'atelier est ferme par une grille tordue. Sans outil, il sera difficile d'entrer.
 
 *PATH*
-11 Traverser le marécage.
-0 Revenir vers la forêt.
+2 Revenir au marche.
+

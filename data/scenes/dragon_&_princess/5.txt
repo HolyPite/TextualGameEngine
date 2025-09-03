@@ -4,9 +4,6 @@ Vous faites demi-tour et explorez les environs. Vous trouvez un arbre creux renf
 Armure de Cuir
 1
 
-1. Retourner au point de départ et prendre le chemin de gauche.
-2. Retourner au point de départ et prendre le chemin de droite.
-
 *PATH*
-1
-2
+1 Retourner au point de départ et prendre le chemin de gauche.
+2 Retourner au point de départ et prendre le chemin de droite.

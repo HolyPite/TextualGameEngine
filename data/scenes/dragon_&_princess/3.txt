@@ -1,14 +1,28 @@
-Vous entrez dans la cabane. A l’intérieur, un vieil homme est assis sur un tabouret, son visage caché sous une capuche. Il vous tend un parchemin.
+Vous entrez dans la cabane. A l�?TintǸrieur, un vieil homme est assis sur un tabouret, son visage cachǸ sous une capuche. Il vous tend un parchemin.
 
-"Prenez ceci," dit-il, "La route vers le château est semée d’embûches."
+"Prenez ceci," dit-il, "La route vers le chǽteau est semǸe d�?Tembǯches."
 
-Vous obtenez une information précieuse : la princesse est retenue au Château du Dragon, à l’Est.
-
-1. Le remercier et sortir.
-2. Tenter de fouiller la cabane.
-3. L’attaquer (par méfiance).
+Vous obtenez une information prǸcieuse : la princesse est retenue au Chǽteau du Dragon, �� l�?TEst.
 
 *PATH*
-4
-7
+4 Le remercier et sortir.
+7 Tenter de fouiller la cabane.
+8 L�?Tattaquer (par mǸfiance).
+
+*ADD*
+4 PATH
+*PATH*
+12 Revenir discuter avec le vieil homme.
+
+this COMBAT
+*COMBAT*
+Bandit embusqué
 8
+2
+3
+
+this ARMURE
+*ARMURE*
+Cape poussiéreuse
+1
+

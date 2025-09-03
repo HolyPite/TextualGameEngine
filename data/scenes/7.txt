@@ -1,5 +1,12 @@
-Vous fouillez la cabane. Vous trouvez quelques herbes médicinales (effet narratif).
+Le toit de la Cite d'Airain offre une vue sur les toits et cheminées. Le Chef des Voleurs vous attend, arme d'un sabre et d'un bouclier scintillant.
 
-*PATH*
-4 Sortir et reprendre la route.
-12 Tenter d’interroger le vieil homme à nouveau.
+*COMBAT*
+Chef des voleurs
+18
+4
+5
+
+"Vous avez gravi les rouages. Voyons si vous tenez la cadence."
+
+*VICTOIRE*
+
