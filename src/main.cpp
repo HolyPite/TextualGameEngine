@@ -6,6 +6,7 @@
 #include "utils.h"
 #include "Histoire.h"
 #include "Entite.h"
+#include <limits>
 
 namespace fs = std::filesystem;
 

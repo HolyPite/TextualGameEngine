@@ -7,6 +7,7 @@
 #include <iostream> // Pour affichage de débogage
 #include <algorithm>
 #include <cctype>
+#include <limits>
 
 // Supprime les espaces en début et en fin de chaîne
 std::string trim(const std::string& str) {
@@ -54,9 +55,20 @@ std::unique_ptr<Entite> chargerClasse(const std::string& cheminFichier) {
                 // Lire les détails de la compétence
                 std::getline(fichier, type);
                 fichier >> typeValeur >> valeur >> coutMana;
-                fichier.ignore();
+                fichier.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-                competences.emplace_back(nomCompetence, trim(type), typeValeur, valeur, coutMana);
+                // Mapper type string -> enum SkillType
+                std::string t = trim(type);
+                SkillType st = SkillType::Attack;
+                if (t == "Attaque") st = SkillType::Attack;
+                else if (t == "Soin") st = SkillType::Heal;
+                else if (t == "Protection") st = SkillType::Protection;
+                else {
+                    // défaut raisonnable
+                    st = SkillType::Attack;
+                }
+
+                competences.emplace_back(nomCompetence, st, typeValeur, valeur, coutMana);
             }
         }
     }

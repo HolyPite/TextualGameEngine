@@ -11,7 +11,7 @@ Le programme lit ces fichiers, interprète leur contenu et exécute l’aventure
 
 ## Fonctionnalités
 
-- **Scènes dynamiques** : Les scènes, définies dans `data/scene/`, sont reliées par des chemins (`*PATH*`), permettant au joueur de naviguer dans l’histoire.
+- **Scènes dynamiques** : Les scènes, définies dans `data/scenes/`, sont reliées par des chemins (`*PATH*`), permettant au joueur de naviguer dans l'histoire.
 - **Combats** : Les ennemis, définis par `*COMBAT*`, affrontent le joueur selon leurs statistiques.
 - **Équipement** : Les armes (`*ARME*`) et armures (`*ARMURE*`) améliorent les capacités du joueur.
 - **Fin de l’histoire** : `*VICTOIRE*` et `*GO*` marquent la fin de l’aventure (victoire, défaite, etc.).
@@ -24,7 +24,7 @@ Le programme lit ces fichiers, interprète leur contenu et exécute l’aventure
 
 ## Installation
 1. Téléchargez projet a partir de la dernière [**RELEASE**](https://github.com/PGarn/jeu-cpp/releases) et extrayez-la.
-2. Ajoutez ou modifiez vos fichiers de scènes dans `data/scene/` et vos fichiers de classes dans `data/class/`(Des fichiers de base sont déjà présent pour donner un exemple de jeu).
+2. Ajoutez ou modifiez vos fichiers de scènes dans `data/scenes/` et vos fichiers de classes dans `data/class/` (des fichiers de base sont déjà présents pour donner un exemple de jeu).
 
 ## Utilisation
 ### Option 1 : Télécharger et utiliser l'exécutable
@@ -43,7 +43,7 @@ Le programme lit ces fichiers, interprète leur contenu et exécute l’aventure
 4. Suivez les instructions à l’écran pour profiter de l’aventure.
 
 ## Personnalisation([**GUIDE**](https://github.com/PGarn/jeu-cpp/tree/main/guides))
-- **Ajouter de nouvelles scènes** : Créez un fichier `.txt` dans `data/scene/` et suivez le format défini dans le guide.
+- **Ajouter de nouvelles scènes** : Créez un fichier `.txt` dans `data/scenes/` et suivez le format défini dans le guide.
 - **Ajouter de nouvelles classes** : Créez un fichier `.txt` dans `data/class/` et définissez PV, PM, ARM, COMP. La classe sera automatiquement proposée lors du choix initial.
 
 ## Contributions

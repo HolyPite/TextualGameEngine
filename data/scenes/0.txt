@@ -1,19 +1,19 @@
-Vous vous réveillez au milieu d'une forêt brumeuse. Le chant des oiseaux est étouffé, et une vieille route de terre se divise devant vous. Vous avez entendu parler d’un château lointain où la princesse Elwen est retenue captive par le Dragon Sombre.
+Vous vous rǸveillez au milieu d'une forǦt brumeuse. Le chant des oiseaux est ǸtouffǸ, et une vieille route de terre se divise devant vous. Vous avez entendu parler d�?Tun chǽteau lointain o�� la princesse Elwen est retenue captive par le Dragon Sombre.
 
 *ARME*
-Poignard Rouillé
+Poignard RouillǸ
 1
 
 *ARME*
-Dague cassée
+Dague cassǸe
 3
 
 *ARME*
-Epee Sacrée
+Epee SacrǸe
 7
 
 *ARMURE*
-Ferraille Rouillé
+Ferraille RouillǸ
 2
 
 *ARMURE*
@@ -25,6 +25,14 @@ Armure divine
 8
 
 *PATH*
-1 Prendre le sentier sur la gauche, menant vers une clairière.
+1 Prendre le sentier sur la gauche, menant vers une clairi��re.
 2 Suivre le sentier sur la droite, longeant un ruisseau.
-5 Faire demi-tour pour explorer les environs plus en détail.
+5 Faire demi-tour pour explorer les environs plus en dǸtail.
+
+*REMOVE*
+this ARME Poignard RouillǸ
+this ARME Dague cassǸe
+this ARME Epee SacrǸe
+this ARMURE Ferraille RouillǸ
+this ARMURE Cuir de peau
+this ARMURE Armure divine

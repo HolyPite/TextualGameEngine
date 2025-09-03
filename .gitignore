@@ -1,0 +1,33 @@
+# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Objects and intermediate files
+*.o
+*.obj
+*.pdb
+*.ilk
+*.pch
+*.dep
+
+# Build directories
+build/
+out/
+bin/
+lib/
+dist/
+Debug/
+Release/
+*/build/
+src/build/
+
+# IDE/editor folders
+.vs/
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
+.DS_Store
