@@ -3,21 +3,24 @@
 
 #include <string>
 
+enum class SkillType { Attaque, Soin, Protection };
+enum class ValueType { Flat, Percent };
+
 class Competence {
 private:
     std::string nom;
-    std::string type; // "Attaque", "Soin", "Protection"
-    char typeValeur;  // '+' ou '%'
+    SkillType type;      // Attaque, Soin, Protection
+    ValueType valType;   // Flat(+) ou Percent(%)
     int valeur;
     int coutMana;
 
 public:
-    Competence(const std::string& nom, const std::string& type, char typeValeur, int valeur, int coutMana)
-        : nom(nom), type(type), typeValeur(typeValeur), valeur(valeur), coutMana(coutMana) {}
+    Competence(const std::string& nom, SkillType type, ValueType valType, int valeur, int coutMana)
+        : nom(nom), type(type), valType(valType), valeur(valeur), coutMana(coutMana) {}
 
     const std::string& getNom() const { return nom; }
-    const std::string& getType() const { return type; }
-    char getTypeValeur() const { return typeValeur; }
+    SkillType getType() const { return type; }
+    ValueType getValueType() const { return valType; }
     int getValeur() const { return valeur; }
     int getCoutMana() const { return coutMana; }
 

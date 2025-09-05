@@ -1,0 +1,96 @@
+#ifndef SCENE_H
+#define SCENE_H
+
+#include <string>
+#include <vector>
+#include <optional>
+#include <variant>
+
+// Strong types for scene content
+enum class ItemType { Arme, Armure };
+enum class EffectKind { None, DOT, BuffDef };
+
+struct EffectSpec {
+    EffectKind kind{EffectKind::None};
+    std::string label; // optional display label
+    int duration{0};   // 0 = passive (for BuffDef)
+    int value{0};
+};
+
+struct ItemSpec {
+    ItemType type{ItemType::Arme};
+    std::string name;
+    int value{0};
+    std::optional<EffectSpec> effect; // optional effect
+};
+
+struct CombatEnemy {
+    std::string name;
+    int hp{0};
+    int def{0};
+    int atk{0};
+    int gold{0}; // butin récupéré à la victoire
+};
+
+struct PathOption {
+    int id{0};
+    std::string text; // empty => default label
+};
+
+struct ShopItem {
+    ItemSpec item;
+    int price{0};
+};
+
+enum class RemoveType { Path, Combat, Arme, Armure, Gold, Shop };
+struct RemoveRule {
+    bool isThis{true};
+    int sceneId{0};
+    RemoveType type{RemoveType::Path};
+    std::string param; // path id (as string), monster name or item name
+};
+
+enum class AddType { Path, Combat, Item, Gold, Shop };
+struct AddRule {
+    bool isThis{true};
+    int sceneId{0};
+    AddType type{AddType::Path};
+    // Payloads
+    std::vector<PathOption> paths;
+    std::vector<CombatEnemy> combats;
+    std::vector<ItemSpec> items;
+    int goldDelta{0};
+    std::vector<ShopItem> shopItems;
+};
+
+// Blocks in original order
+struct BlockDescription { std::string text; };
+struct BlockCombat { std::vector<CombatEnemy> enemies; };
+struct BlockItems { std::vector<ItemSpec> items; };
+struct BlockPath { std::vector<PathOption> options; };
+struct BlockGold { int delta{0}; };
+struct BlockShop { std::vector<ShopItem> items; };
+struct BlockRemove { std::vector<RemoveRule> rules; };
+struct BlockAdd { std::vector<AddRule> rules; };
+struct BlockVictory {};
+struct BlockGo {};
+
+using SceneBlock = std::variant<
+    BlockDescription,
+    BlockCombat,
+    BlockItems,
+    BlockPath,
+    BlockGold,
+    BlockShop,
+    BlockRemove,
+    BlockAdd,
+    BlockVictory,
+    BlockGo
+>;
+
+struct Scene {
+    std::string path; // source file path
+    std::vector<SceneBlock> blocks; // in order
+};
+
+#endif // SCENE_H

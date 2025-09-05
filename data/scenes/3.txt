@@ -1,8 +1,8 @@
 Les caves sont sombres. Des tuyaux sifflent. Vous trouvez un outil utile sous un tas de ferraille.
 
-*ARME*
-Pied-de-biche
-3
+*ITEM*
+ARME;Pied-de-biche;3
+ARMURE;Gants huiles;1
 
 *PATH*
 2 Remonter au marche.

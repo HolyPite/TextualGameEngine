@@ -1,0 +1,16 @@
+Vous entrez.
+
+*COMBAT*
+Gob;10;1;2
+
+*ITEM*
+ARME;Epee;3;DOT;Poison;2;1
+
+*GOLD*
+5
+
+*SHOP*
+ARME;Dague;1;10
+
+*PATH*
+2 Continuer

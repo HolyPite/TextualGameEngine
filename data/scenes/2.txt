@@ -1,7 +1,11 @@
 Le marche regorge de camelots et d'echoppes. Un artisan vous parle d'un atelier ferme par une grille pliee.
 
+*SHOP*
+ARME;Couteau fin;2;12
+ARME;Marteau d'atelier;4;28
+ARMURE;Casque rivete;2;18
+
 *PATH*
 6 Examiner l'atelier ferme.
 0 Revenir vers les portes.
 3 Descendre vers les caves.
-

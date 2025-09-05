@@ -1,15 +1,25 @@
 #include "Competence.h"
 #include <iostream>
 
-void Competence::afficher() const {
-    std::cout << nom << " (" << type << "): \n";
-    if (type == "Attaque") {
-        std::cout << "    Dégât: ";
-    } else if (type == "Protection") {
-        std::cout << "    Bouclier: ";
-    } else if (type == "Soin") {
-        std::cout << "    Soin: ";
+static const char* skillTypeToLabel(SkillType t) {
+    switch (t) {
+        case SkillType::Attaque: return "Attaque";
+        case SkillType::Soin: return "Soin";
+        case SkillType::Protection: return "Protection";
     }
-    std::cout << (typeValeur == '+' ? "+" : "") << valeur << (typeValeur == '%' ? "%" : "") << "\n";
+    return "";
+}
+
+void Competence::afficher() const {
+    std::cout << nom << " (" << skillTypeToLabel(type) << "): \n";
+    switch (type) {
+        case SkillType::Attaque: std::cout << "    Degat: "; break;
+        case SkillType::Protection: std::cout << "    Bouclier: "; break;
+        case SkillType::Soin: std::cout << "    Soin: "; break;
+    }
+    if (getValueType() == ValueType::Flat) std::cout << "+" << valeur;
+    else std::cout << valeur << "%";
+    std::cout << "\n";
     std::cout << "    Mana: " << coutMana << "\n";
 }
+

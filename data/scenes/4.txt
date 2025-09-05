@@ -1,8 +1,8 @@
 Vous forcez la grille et penetrez dans l'atelier. Des plans epingles montrent un ascenseur vers le toit.
 
-*ARMURE*
-Plastron d'airain
-3
+*ITEM*
+ARMURE;Plastron d'airain;3;BUFF_DEF;Airain;0;1
+ARMURE;Bottes a clous;1;NONE;None;0;0
 
 *PATH*
 7 Prendre l'ascenseur vers le toit.
@@ -10,4 +10,3 @@ Plastron d'airain
 
 *REMOVE*
 this ARMURE Plastron d'airain
-

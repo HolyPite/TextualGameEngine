@@ -1,0 +1,15 @@
+*REMOVE*
+this PATH 2
+this COMBAT Gob
+this GOLD *
+this SHOP *
+
+*ADD*
+this GOLD
+*GOLD*
+10
+
+this SHOP
+*SHOP*
+ARME;Hache;2;20
+

@@ -4,9 +4,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <tuple>
 #include <optional>
 #include <algorithm>
+#include <unordered_map>
 #include "Competence.h"
 
 class Entite {
@@ -19,6 +19,13 @@ protected:
     int defenseBase;
     int defenseBoost;
     bool protectionUtilisee;
+    int gold = 0;
+    // Effets rudimentaires
+    enum class EffectType { None, DOT, BUFF_DEF };
+    struct EffectDef { EffectType type; std::string label; int value; int duration; };
+    struct ActiveEffect { EffectType type; std::string label; int value; int remaining; };
+    std::vector<ActiveEffect> activeEffects;
+    std::unordered_map<std::string, EffectDef> itemEffects;
 
     std::vector<std::pair<std::string, int>> inventaireArmes;
     std::vector<std::pair<std::string, int>> inventaireArmures;
@@ -27,6 +34,8 @@ protected:
 
 
 public:
+    // Effets exposes pour l'exterieur
+    enum class ItemEffectType { None, DOT, BUFF_DEF };
     Entite(const std::string& nom, int pv, int pm, int def)
         : nom(nom), PV(pv), PVmax(pv), PM(pm), PMmax(pm), defenseBase(def), defenseBoost(0),
           protectionUtilisee(false) {
@@ -39,7 +48,13 @@ public:
     const std::string& getNom() const { return nom; }
 
     virtual void defendre(int degats) {
-        int defenseTotale = defenseBase + equipements[1].second + defenseBoost;
+        int buffDef = 0;
+        for (const auto& e : activeEffects) if (e.type == EffectType::BUFF_DEF) buffDef += e.value;
+        int passive = 0; {
+            auto itEff = itemEffects.find(equipements[1].first);
+            if (itEff != itemEffects.end() && itEff->second.type == EffectType::BUFF_DEF && itEff->second.duration == 0) passive = itEff->second.value;
+        }
+        int defenseTotale = defenseBase + equipements[1].second + defenseBoost + passive + buffDef;
         int degatsReduits = std::max(degats - defenseTotale, 0);
         PV -= degatsReduits;
         if (PV < 0) PV = 0;
@@ -50,7 +65,8 @@ public:
         std::cout << "\n~~~~~~~~~ Stats : " << nom << " ~~~~~~~~~\n"
                   << "PV: " << PV << "/" << PVmax << "\n"
                   << "Mana: " << PM << "/" << PMmax << "\n"
-                  << "Défense: " << defenseBase << "\n";
+                  << "Défense: " << defenseBase << "\n"
+                  << "Or: " << gold << "\n";
         if (protectionUtilisee) {
             std::cout << "Boost de défense: " << defenseBoost << "\n";
         }
@@ -58,9 +74,16 @@ public:
                   << "Armure: " << equipements[1].first << " (+ " << equipements[1].second << ")\n\n";
     }
 
-    void changerDefenceBase(int valeur) {
-        defenseBase = valeur;
+    
+
+    // Or / Economie
+    void ajouterOr(int delta) {
+        gold += delta;
+        if (gold < 0) gold = 0;
+        if (delta > 0) std::cout << "+" << delta << " or obtenu.\n";
+        else if (delta < 0) std::cout << delta << " or depense.\n";
     }
+    int getOr() const { return gold; }
 
 // Competences
 
@@ -101,6 +124,7 @@ public:
         std::cout << "Armure ajoutée : " << nom << " (+ " << valeur << ").\n";
     }
 
+#if 0 // removed unused function
     void enleverArme(const std::string& nom) {
         auto it = std::find_if(inventaireArmes.begin(), inventaireArmes.end(),
             [&nom](const std::pair<std::string, int>& arme) {
@@ -114,7 +138,9 @@ public:
             std::cout << "Arme " << nom << " non trouvée dans l'inventaire.\n";
         }
     }
+#endif
 
+#if 0 // removed unused function
     void enleverArmure(const std::string& nom) {
         auto it = std::find_if(inventaireArmures.begin(), inventaireArmures.end(),
             [&nom](const std::pair<std::string, int>& armure) {
@@ -128,6 +154,7 @@ public:
             std::cout << "Armure " << nom << " non trouvée dans l'inventaire.\n";
         }
     }
+#endif
 
     void equiperArme(const std::string& nom, int valeur) {
         equipements[0] = {nom, valeur};
@@ -190,6 +217,15 @@ public:
         degats += equipements[0].second; // Bonus d'attaque de l'arme
         std::cout << nom << " inflige " << degats << " dégâts à " << cible.getNom() << " !\n";
         cible.defendre(degats);
+        // Effet d'arme: appliquer DOT si défini pour l'arme équipée
+        auto __itEffW = itemEffects.find(equipements[0].first);
+        if (__itEffW != itemEffects.end() && __itEffW->second.type == EffectType::DOT && __itEffW->second.value > 0 && __itEffW->second.duration > 0) {
+            cible.activeEffects.push_back({EffectType::DOT, __itEffW->second.label, __itEffW->second.value, __itEffW->second.duration});
+            if (!__itEffW->second.label.empty()) {
+                std::cout << cible.getNom() << " est affecté par " << __itEffW->second.label
+                          << " (" << __itEffW->second.value << ", " << __itEffW->second.duration << " tours).\n";
+            }
+        }
     }
 
     void soigner(char typeValeur, int valeur) {
@@ -228,18 +264,54 @@ public:
 
         PM -= comp.getCoutMana();
 
-        if (comp.getType() == "Attaque") {
-            attaquer(cible, comp.getTypeValeur(), comp.getValeur());
-        } else if (comp.getType() == "Soin") {
-            soigner(comp.getTypeValeur(), comp.getValeur());
-        } else if (comp.getType() == "Protection") {
-            proteger(comp.getTypeValeur(), comp.getValeur());
+        char tv = (comp.getValueType() == ValueType::Percent ? '%' : '+');
+        if (comp.getType() == SkillType::Attaque) {
+            attaquer(cible, tv, comp.getValeur());
+        } else if (comp.getType() == SkillType::Soin) {
+            soigner(tv, comp.getValeur());
+        } else if (comp.getType() == SkillType::Protection) {
+            proteger(tv, comp.getValeur());
         }
         return true;
     }
 
     size_t getNombreCompetences() const { return competences.size(); }
     bool estVivant() const { return PV > 0; }
+
+    // Effets: enregistrement et tick
+    void registerItemEffect(const std::string& itemName, const std::string& effName, int value, int duration) {
+        EffectType t = EffectType::None;
+        if (effName == "DOT") t = EffectType::DOT;
+        else if (effName == "BUFF_DEF") t = EffectType::BUFF_DEF;
+        itemEffects[itemName] = {t, effName, value, duration};
+    }
+    void registerItemEffect(const std::string& itemName, const std::string& effName, const std::string& displayName, int value, int duration) {
+        EffectType t = EffectType::None;
+        if (effName == "DOT") t = EffectType::DOT;
+        else if (effName == "BUFF_DEF") t = EffectType::BUFF_DEF;
+        itemEffects[itemName] = {t, displayName, value, duration};
+    }
+    void registerItemEffect(const std::string& itemName, ItemEffectType eff, int value, int duration) {
+        EffectType t = (eff == ItemEffectType::DOT ? EffectType::DOT : (eff == ItemEffectType::BUFF_DEF ? EffectType::BUFF_DEF : EffectType::None));
+        itemEffects[itemName] = {t, std::string(), value, duration};
+    }
+    void registerItemEffect(const std::string& itemName, ItemEffectType eff, const std::string& label, int value, int duration) {
+        EffectType t = (eff == ItemEffectType::DOT ? EffectType::DOT : (eff == ItemEffectType::BUFF_DEF ? EffectType::BUFF_DEF : EffectType::None));
+        itemEffects[itemName] = {t, label, value, duration};
+    }
+    void tickEffects() {
+        for (auto& e : activeEffects) {
+            if (e.remaining > 0) {
+                if (e.type == EffectType::DOT) {
+                    PV -= e.value;
+                    if (PV < 0) PV = 0;
+                    std::cout << nom << " subit " << e.value << " dégâts" << (e.label.empty()?"":(" ("+e.label+")")) << ".\n";
+                }
+                e.remaining -= 1;
+            }
+        }
+        activeEffects.erase(std::remove_if(activeEffects.begin(), activeEffects.end(), [](const ActiveEffect& e){ return e.remaining <= 0; }), activeEffects.end());
+    }
 };
 
 #endif // ENTITE_H

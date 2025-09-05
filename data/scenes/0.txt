@@ -1,12 +1,11 @@
 Vous vous reveillez aux portes de la Cite d'Airain, dans une brume cuivreuse. Devant vous, des ruelles menez vers un entrepot, un marche anime, et une vieille tour de guet.
 
-*ARME*
-Lame courte
-2
+*GOLD*
+50
 
-*ARMURE*
-Veste de cuir
-1
+*ITEM*
+ARME;Sabre ligotant;4;DOT;Poison;3;2
+ARMURE;Veste de cuir;1;BUFF_DEF;Cuir;0;1
 
 *PATH*
 1 Se faufiler vers l'entrepot.
@@ -16,4 +15,3 @@ Veste de cuir
 *REMOVE*
 this ARME Lame courte
 this ARMURE Veste de cuir
-

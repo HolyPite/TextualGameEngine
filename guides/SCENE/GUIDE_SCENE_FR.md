@@ -1,19 +1,19 @@
-# Guide de creation de scenes (fichiers .txt)
+# Guide de création de scènes (fichiers .txt)
 
-Ce guide explique comment ecrire des scenes lisibles par le moteur, et comment utiliser les directives dynamiques REMOVE/ADD.
+Ce guide explique comment écrire des scènes lisibles par le moteur, et comment utiliser les directives dynamiques REMOVE/ADD.
 
 ## 1. Principes
-- Chaque fichier `.txt` represente une scene; le nom du fichier (ex: `12.txt`) est son identifiant.
-- Les scenes sont reliees par des choix declares avec `*PATH*`.
-- Les blocs commencent par `*...*`. Le moteur lit un bloc jusqu'a une ligne vide ou une nouvelle balise `*...*`.
-- Placez une ligne vide entre description et blocs pour la lisibilite.
+- Chaque fichier `.txt` représente une scène; le nom du fichier (ex: `12.txt`) est son identifiant.
+- Les scènes sont reliées par des choix déclarés avec `*PATH*`.
+- Les blocs commencent par `*...*`. Le moteur lit un bloc jusqu'à une ligne vide ou une nouvelle balise `*...*`.
+- Placez une ligne vide entre description et blocs pour la lisibilité.
 
-Repertoire attendu: `data/scenes/` au meme niveau que l'executable.
+Répertoire attendu: `data/scenes/` au même niveau que l'exécutable.
 
 ## 2. Blocs disponibles
 
 ### PATH
-Liste des options vers d'autres scenes.
+Liste des options vers d'autres scènes.
 
 Format:
 ```
@@ -23,34 +23,51 @@ Format:
 ```
 
 ### COMBAT
-Declenche un combat.
+Déclenche un combat (syntaxe stricte par ligne).
 ```
 *COMBAT*
-<Nom>
-<PV>
-<DEF>
-<ATK>
+Nom;PV;DEF;ATK[;GOLD]
+Nom;PV;DEF;ATK[;GOLD]
 ```
+• `GOLD` est optionnel (butin gagné à la victoire, défaut 0).
 
-### ARME / ARMURE
-Ajoute un equipement.
+### ITEM (équipement)
+Ajoute un ou plusieurs équipements (syntaxe stricte 7 champs par ligne).
 ```
-*ARME*
-<Nom>
-<Valeur>
+*ITEM*
+Type;Nom;Valeur;Effet;NomEffet;Durée;ValeurEffet
+```
+- Type: `ARME` ou `ARMURE`
+- Effet: `DOT` ou `BUFF_DEF` ou `NONE`
+- NomEffet: libellé affiché (ex: Poison, Bénédiction)
+- Durée: 0 pour passif (BUFF_DEF), >0 pour temporaire
+- ValeurEffet: intensité de l'effet
 
-*ARMURE*
-<Nom>
-<Valeur>
+Exemples:
+```
+*ITEM*
+ARME;Sabre ligotant;4;DOT;Poison;3;2
+ARMURE;Veste de cuir;1;BUFF_DEF;Cuir;0;1
 ```
 
 ### VICTOIRE / GO
-Fin de l'histoire (victoire) ou fin immediate.
+Fin de l'histoire (victoire) ou fin immédiate.
+
+### GOLD / SHOP
+Gestion de l'or et boutique.
+```
+*GOLD*
+<+n|-n>
+
+*SHOP*
+ARME;Nom;Valeur;Prix
+ARMURE;Nom;Valeur;Prix
+```
 
 ## 3. Directives dynamiques
 
 ### REMOVE
-Supprime une option PATH, un COMBAT, ou un loot.
+Supprime une option PATH, un COMBAT, un item, etc.
 ```
 *REMOVE*
 <sceneId|this> <TYPE> <param>
@@ -63,13 +80,13 @@ Exemples:
 ```
 *REMOVE*
 4 PATH 9
-this ARMURE Bouclier leger
+this ARMURE Bouclier léger
 ```
 
-Placez `*REMOVE*` apres les evenements pour qu'il soit pris en compte avant le changement de scene.
+Placez `*REMOVE*` après les événements pour qu'il soit pris en compte avant le changement de scène.
 
 ### ADD
-Ajoute du contenu a une scene cible.
+Ajoute du contenu à une scène cible.
 ```
 *ADD*
 <this|sceneId> PATH
@@ -78,25 +95,21 @@ Ajoute du contenu a une scene cible.
 
 <this|sceneId> COMBAT
 *COMBAT*
-<Nom>
-<PV>
-<DEF>
-<ATK>
+Nom;PV;DEF;ATK[;GOLD]
 
-<this|sceneId> ARME  # ou ARMURE
-*ARME*
-<Nom>
-<Valeur>
+<this|sceneId> ITEM
+*ITEM*
+Type;Nom;Valeur;Effet;NomEffet;Durée;ValeurEffet
 ```
 Notes:
-- Les ajouts sont fusionnes avec le contenu existant de la scene cible.
+- Les ajouts sont fusionnés avec le contenu existant de la scène cible.
 - Les suppressions `*REMOVE*` s'appliquent aussi aux ajouts.
 
 ## 4. Bonnes pratiques
-- Ordre recommande: Description -> COMBAT -> ARME/ARMURE -> PATH -> REMOVE/ADD.
-- Separez les blocs par des lignes vides.
-- Evitez les boucles sans issue; offrez toujours un retour possible.
-- Pour rendre un loot unique: ajoutez `*REMOVE* this ARME/ARMURE <Nom>` juste apres le bloc.
+- Ordre recommandé: Description -> COMBAT -> ARME/ARMURE -> PATH -> REMOVE/ADD.
+- Séparez les blocs par des lignes vides.
+- Évitez les boucles sans issue; offrez toujours un retour possible.
+- Pour rendre un loot unique: ajoutez `*REMOVE* this ARME/ARMURE <Nom>` juste après le bloc.
 - Pour remplacer un chemin: `*ADD*` (nouveau PATH) + `*REMOVE*` (ancien PATH).
 
 ## 5. Exemple complet
@@ -104,18 +117,14 @@ Notes:
 Vous entrez dans l'atelier. Une table croule sous les plans.
 
 *COMBAT*
-Garde automatique
-14
-3
-4
+Garde automatique;14;3;4
 
-*ARMURE*
-Plastron d'airain
-3
+*ITEM*
+ARMURE;Plastron d'airain;3;BUFF_DEF;Airain;0;1
 
 *PATH*
 7 Prendre l'ascenseur vers le toit.
-2 Revenir au marche.
+2 Revenir au marché.
 
 *REMOVE*
 this ARMURE Plastron d'airain
@@ -126,3 +135,4 @@ this ARMURE Plastron d'airain
 *PATH*
 4 Ouvrir la grille de l'atelier.
 ```
+

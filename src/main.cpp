@@ -3,21 +3,40 @@
 #include <locale>
 #include <filesystem>
 #include <vector>
+#include <string>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 #include "utils.h"
 #include "Histoire.h"
 #include "Entite.h"
 
 namespace fs = std::filesystem;
 
-int main() {
-    std::setlocale(LC_ALL, "fr_FR.UTF-8");
+int main(int argc, char** argv) {
+#ifdef _WIN32
+    // Set Windows console to UTF-8
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+#endif
+    try { std::locale::global(std::locale("")); } catch (...) {}
 
     std::vector<std::string> fichiersClasse;
-    const std::string dossierClasses = "data/class/";
+
+    // Resolve data directory relative to executable
+    std::filesystem::path exePath;
+    try { exePath = std::filesystem::absolute(argv[0]); } catch (...) { exePath = std::filesystem::current_path() / "jeu"; }
+    std::filesystem::path baseDir = exePath.parent_path();
+    std::filesystem::path dataDir = baseDir / "data";
+    if (!std::filesystem::exists(dataDir)) {
+        // fallback to CWD/data
+        if (std::filesystem::exists("data")) dataDir = std::filesystem::path("data");
+    }
+    std::filesystem::path classesDir = dataDir / "class";
 
     // Recherche des fichiers dans le dossier
     try {
-        for (const auto& entry : fs::directory_iterator(dossierClasses)) {
+        for (const auto& entry : fs::directory_iterator(classesDir)) {
             if (entry.is_regular_file() && entry.path().extension() == ".txt") {
                 fichiersClasse.push_back(entry.path().filename().string());
             }
@@ -29,7 +48,7 @@ int main() {
 
     // Vérifie si des fichiers de classe existent
     if (fichiersClasse.empty()) {
-        std::cerr << "Aucune classe disponible dans le dossier " << dossierClasses << ".\n";
+        std::cerr << "Aucune classe disponible dans le dossier " << classesDir.string() << ".\n";
         return 1;
     }
 
@@ -44,7 +63,7 @@ int main() {
 
     // Boucle pour demander une saisie valide
     while (true) {
-        std::cout << "\nVotre Choix:";
+        std::cout << "\nVotre choix : ";
         if (std::cin >> choixClasse) { // Vérifie que l'entrée est un entier
             if (choixClasse > 0 && choixClasse <= static_cast<int>(fichiersClasse.size())) {
                 break; // Sort de la boucle si la saisie est valide
@@ -60,14 +79,23 @@ int main() {
 
     // Charge la classe sélectionnée
     try {
-        hero = chargerClasse(dossierClasses + fichiersClasse[choixClasse - 1]);
+        hero = chargerClasse((classesDir / fichiersClasse[choixClasse - 1]).string());
     } catch (const std::exception& e) {
         std::cerr << "Erreur lors du chargement de la classe : " << e.what() << "\n";
         return 1;
     }
 
+    // Optional start scene via CLI: --start=N
+    int startId = 0;
+    for (int i=1;i<argc;i++) {
+        std::string arg = argv[i];
+        const std::string pre = "--start=";
+        if (arg.rfind(pre,0)==0) {
+            try { startId = std::stoi(arg.substr(pre.size())); } catch (...) {}
+        }
+    }
 
-    Histoire histoire(std::move(hero));
+    Histoire histoire(std::move(hero), dataDir, startId);
     histoire.jouer();
 
     return 0;
