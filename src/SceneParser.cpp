@@ -35,6 +35,13 @@ EffectKind parseEffectKind(const std::string& ss) {
     return EffectKind::None;
 }
 
+EnemyReveal parseEnemyReveal(const std::string& ss) {
+    std::string s = ss; for (auto& c : s) c = (char)std::toupper((unsigned char)c);
+    if (s == "FULL") return EnemyReveal::Full;
+    if (s == "HIDE") return EnemyReveal::Hide;
+    return EnemyReveal::Min;
+}
+
 static ItemSpec parseItemLineGeneric(const std::vector<std::string>& parts) {
     // parts: Type;Nom;Valeur[;Effet;NomEffet;Duree;ValEff]
     ItemSpec it;
@@ -76,7 +83,7 @@ Scene parse(const std::string& filepath) {
         if (l.rfind("*COMBAT*", 0) == 0) {
             flushDesc();
             std::vector<CombatEnemy> enemies;
-            // Try strict multi-line Nom;PV;DEF;ATK[;GOLD] until blank or next tag
+            // Try strict multi-line Nom;PV;DEF;ATK[;GOLD[;SPD[;REVEAL]]] until blank or next tag
             std::streampos pos;
             while (true) {
                 pos = f.tellg();
@@ -90,6 +97,8 @@ Scene parse(const std::string& filepath) {
                     try{ e.def = std::stoi(parts[2]); }catch(...){ e.def=0; }
                     try{ e.atk = std::stoi(parts[3]); }catch(...){ e.atk=0; }
                     if (parts.size() >= 5) { try{ e.gold = std::stoi(parts[4]); }catch(...){ e.gold=0; } }
+                    if (parts.size() >= 6) { try{ e.spd  = std::stoi(parts[5]); }catch(...){ e.spd=10; } }
+                    if (parts.size() >= 7) { e.reveal = parseEnemyReveal(parts[6]); }
                     enemies.push_back(e);
                 }
             }
@@ -100,7 +109,7 @@ Scene parse(const std::string& filepath) {
                 f >> pv; f.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 f >> def; f.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 f >> atk; f.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                enemies.push_back(CombatEnemy{trim_copy(nom), pv, def, atk, 0});
+                enemies.push_back(CombatEnemy{trim_copy(nom), pv, def, atk, 0, 10});
             }
             scene.blocks.emplace_back(BlockCombat{enemies});
         } else if (l.rfind("*ARME*", 0) == 0 || l.rfind("*ARMURE*", 0) == 0) {
@@ -252,15 +261,17 @@ Scene parse(const std::string& filepath) {
                     rules.push_back(ar);
                 } else if (type=="COMBAT" && header.find("*COMBAT*")!=std::string::npos) {
                     ar.type = AddType::Combat;
-                    // inline payload allowed: *COMBAT* Nom;PV;DEF;ATK
+                    // inline payload allowed: *COMBAT* Nom;PV;DEF;ATK[;GOLD[;SPD[;REVEAL]]]
                     std::string pay = trim_copy(header.substr(header.find("*COMBAT*")+8));
                     if (!pay.empty()) {
                         auto parts = splitSemi(pay); if (parts.size()>=4) {
-                            CombatEnemy e{parts[0],0,0,0,0};
+                            CombatEnemy e{parts[0],0,0,0,0,10};
                             try{e.hp=std::stoi(parts[1]);}catch(...){e.hp=0;}
                             try{e.def=std::stoi(parts[2]);}catch(...){e.def=0;}
                             try{e.atk=std::stoi(parts[3]);}catch(...){e.atk=0;}
                             if (parts.size()>=5) { try{ e.gold = std::stoi(parts[4]); }catch(...){ e.gold = 0; } }
+                            if (parts.size()>=6) { try{ e.spd  = std::stoi(parts[5]); }catch(...){ e.spd  = 10; } }
+                            if (parts.size()>=7) { e.reveal = parseEnemyReveal(parts[6]); }
                             ar.combats.push_back(e);
                         }
                     } else {
@@ -269,7 +280,7 @@ Scene parse(const std::string& filepath) {
                         f >> pv; f.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); ++lineNo;
                         f >> def; f.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); ++lineNo;
                         f >> atk; f.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); ++lineNo;
-                        ar.combats.push_back(CombatEnemy{trim_copy(nom), pv, def, atk, 0});
+                        ar.combats.push_back(CombatEnemy{trim_copy(nom), pv, def, atk, 0, 10});
                     }
                     rules.push_back(ar);
                 } else if ((type=="ITEM" && header.find("*ITEM*")!=std::string::npos) || header.find("*ARME*")!=std::string::npos || header.find("*ARMURE*")!=std::string::npos) {

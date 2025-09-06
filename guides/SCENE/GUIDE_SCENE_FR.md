@@ -26,10 +26,15 @@ Format:
 Déclenche un combat (syntaxe stricte par ligne).
 ```
 *COMBAT*
-Nom;PV;DEF;ATK[;GOLD]
-Nom;PV;DEF;ATK[;GOLD]
+Nom;PV;DEF;ATK[;GOLD[;SPD[;REVEAL]]]
+Nom;PV;DEF;ATK[;GOLD[;SPD[;REVEAL]]]
 ```
-• `GOLD` est optionnel (butin gagné à la victoire, défaut 0).
+- `GOLD` (optionnel): butin gagné à la victoire (défaut 0)
+- `SPD` (optionnel): vitesse de l’ennemi (défaut 10). L’entité la plus rapide joue en premier
+- `REVEAL` (optionnel): contrôle l’affichage des stats de l’ennemi pendant le combat
+  - `MIN` (défaut): affiche seulement PV courant et max
+  - `FULL`: affiche toutes les stats (comme `afficherStats`)
+  - `HIDE`: n’affiche rien
 
 ### ITEM (équipement)
 Ajoute un ou plusieurs équipements (syntaxe stricte 7 champs par ligne).
@@ -95,7 +100,7 @@ Ajoute du contenu à une scène cible.
 
 <this|sceneId> COMBAT
 *COMBAT*
-Nom;PV;DEF;ATK[;GOLD]
+Nom;PV;DEF;ATK[;GOLD[;SPD[;REVEAL]]]
 
 <this|sceneId> ITEM
 *ITEM*
@@ -135,4 +140,3 @@ this ARMURE Plastron d'airain
 *PATH*
 4 Ouvrir la grille de l'atelier.
 ```
-

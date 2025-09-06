@@ -1,8 +1,8 @@
 L'entrepot sent l'huile et la poussiere. Des caisses eventrees laissent filer des pieces d'engrenages et des traces de morsures.
 
 *COMBAT*
-Rat geant;10;2;3
-Rongeur affame;8;1;4
+Rat geant;10;2;3;3
+Rongeur affame;8;1;4;2
 
 *ITEM*
 ARME;Couteau de chasse;1;NONE;None;0;0

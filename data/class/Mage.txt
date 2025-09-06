@@ -1,30 +1,12 @@
 Mage
 
-PV
-70
-PM
-50
-ARM
-0
+PV;70
+PM;50
+ARM;0
+ATK;6
+SPD;10
 
 COMP
-Soin Magique
-    Soin
-    %
-    20
-    10
-Explosion
-    Attaque
-    +
-    25
-    15
-Bouclier Magique
-    Protection
-    +
-    10
-    30
-Coup de bâton
-    Attaque
-    +
-    10
-    0
+Soin Magique;Soin;%;20;10
+Explosion;Attaque;+;25;15
+Bouclier Magique;Protection;+;10;30

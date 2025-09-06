@@ -1,4 +1,4 @@
-#ifndef ENTITE_H
+﻿#ifndef ENTITE_H
 #define ENTITE_H
 
 #include <iostream>
@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include "Competence.h"
+#include "ui.h"
 
 class Entite {
 protected:
@@ -18,6 +19,8 @@ protected:
     int PMmax;
     int defenseBase;
     int defenseBoost;
+    int atkBase{5};
+    int spdBase{10};
     bool protectionUtilisee;
     int gold = 0;
     // Effets rudimentaires
@@ -39,13 +42,20 @@ public:
     Entite(const std::string& nom, int pv, int pm, int def)
         : nom(nom), PV(pv), PVmax(pv), PM(pm), PMmax(pm), defenseBase(def), defenseBoost(0),
           protectionUtilisee(false) {
-        // Initialisation des emplacements d'équipement
+        // Initialisation des emplacements d'Ã©quipement
         equipements.resize(2, {"Aucun", 0}); // Index 0: Arme, Index 1: Armure
     }
 
     virtual ~Entite() {}
 
     const std::string& getNom() const { return nom; }
+    int getPV() const { return PV; }
+    int getPVmax() const { return PVmax; }
+    int getAtkBase() const { return atkBase; }
+    int getSpdBase() const { return spdBase; }
+    void setAtkBase(int v) { atkBase = std::max(0, v); }
+    void setSpdBase(int v) { spdBase = std::max(0, v); }
+    
 
     virtual void defendre(int degats) {
         int buffDef = 0;
@@ -58,17 +68,19 @@ public:
         int degatsReduits = std::max(degats - defenseTotale, 0);
         PV -= degatsReduits;
         if (PV < 0) PV = 0;
-        std::cout << nom << " subit " << degatsReduits << " dégâts après réduction par la défense.\n";
+        std::cout << nom << " subit " << degatsReduits << " dÃ©gÃ¢ts aprÃ¨s rÃ©duction par la dÃ©fense.\n";
     }
 
     virtual void afficherStats() const {
         std::cout << "\n~~~~~~~~~ Stats : " << nom << " ~~~~~~~~~\n"
                   << "PV: " << PV << "/" << PVmax << "\n"
                   << "Mana: " << PM << "/" << PMmax << "\n"
-                  << "Défense: " << defenseBase << "\n"
+                  << "DÃ©fense: " << defenseBase << "\n"
+                  << "ATK: " << atkBase << "\n"
+                  << "SPD: " << spdBase << "\n"
                   << "Or: " << gold << "\n";
         if (protectionUtilisee) {
-            std::cout << "Boost de défense: " << defenseBoost << "\n";
+            std::cout << "Boost de dÃ©fense: " << defenseBoost << "\n";
         }
         std::cout << "Arme: " << equipements[0].first << " (+ " << equipements[0].second << ")\n"
                   << "Armure: " << equipements[1].first << " (+ " << equipements[1].second << ")\n\n";
@@ -99,9 +111,9 @@ public:
         
         if (it != competences.end()) {
             competences.erase(it);
-            std::cout << "Compétence " << nom << " a été retirée.\n";
+            std::cout << "CompÃ©tence " << nom << " a Ã©tÃ© retirÃ©e.\n";
         } else {
-            std::cout << "Compétence " << nom << " non trouvée.\n";
+            std::cout << "CompÃ©tence " << nom << " non trouvÃ©e.\n";
         }
     }
 
@@ -116,12 +128,12 @@ public:
 
     void ajouterArme(const std::string& nom, int valeur) {
         inventaireArmes.emplace_back(nom, valeur);
-        std::cout << "Arme ajoutée : " << nom << " (+ " << valeur << ").\n";
+        std::cout << "Arme ajoutÃ©e : " << nom << " (+ " << valeur << ").\n";
     }
 
     void ajouterArmure(const std::string& nom, int valeur) {
         inventaireArmures.emplace_back(nom, valeur);
-        std::cout << "Armure ajoutée : " << nom << " (+ " << valeur << ").\n";
+        std::cout << "Armure ajoutÃ©e : " << nom << " (+ " << valeur << ").\n";
     }
 
 #if 0 // removed unused function
@@ -133,9 +145,9 @@ public:
         
         if (it != inventaireArmes.end()) {
             inventaireArmes.erase(it);
-            std::cout << "Arme " << nom << " a été retirée de l'inventaire.\n";
+            std::cout << "Arme " << nom << " a Ã©tÃ© retirÃ©e de l'inventaire.\n";
         } else {
-            std::cout << "Arme " << nom << " non trouvée dans l'inventaire.\n";
+            std::cout << "Arme " << nom << " non trouvÃ©e dans l'inventaire.\n";
         }
     }
 #endif
@@ -149,21 +161,21 @@ public:
         
         if (it != inventaireArmures.end()) {
             inventaireArmures.erase(it);
-            std::cout << "Armure " << nom << " a été retirée de l'inventaire.\n";
+            std::cout << "Armure " << nom << " a Ã©tÃ© retirÃ©e de l'inventaire.\n";
         } else {
-            std::cout << "Armure " << nom << " non trouvée dans l'inventaire.\n";
+            std::cout << "Armure " << nom << " non trouvÃ©e dans l'inventaire.\n";
         }
     }
 #endif
 
     void equiperArme(const std::string& nom, int valeur) {
         equipements[0] = {nom, valeur};
-        std::cout << "Arme équipée : " << nom << " (+ " << valeur << ").\n";
+        std::cout << "Arme Ã©quipÃ©e : " << nom << " (+ " << valeur << ").\n";
     }
 
     void equiperArmure(const std::string& nom, int valeur) {
         equipements[1] = {nom, valeur};
-        std::cout << "Armure équipée : " << nom << " (+ " << valeur << ").\n";
+        std::cout << "Armure Ã©quipÃ©e : " << nom << " (+ " << valeur << ").\n";
     }
 
     void afficherInventaire() const {
@@ -181,27 +193,27 @@ public:
 
     void equiperObjet() {
         afficherInventaire();
-        std::cout << "Choisissez une catégorie :\n1. Armes\n2. Armures\n";
+        std::cout << "Choisissez une catÃ©gorie :\n1. Armes\n2. Armures\n";
         int categorie;
         std::cin >> categorie;
 
         if (categorie == 1 && !inventaireArmes.empty()) {
-            std::cout << "Choisissez une arme à équiper : ";
+            std::cout << "Choisissez une arme Ã  Ã©quiper : ";
             int index;
             std::cin >> index;
             if (index > 0 && index <= static_cast<int>(inventaireArmes.size())) {
                 equiperArme(inventaireArmes[index - 1].first, inventaireArmes[index - 1].second);
-                std::cout << "Vous avez équipé l'arme " << inventaireArmes[index - 1].first << ".\n";
+                std::cout << "Vous avez Ã©quipÃ© l'arme " << inventaireArmes[index - 1].first << ".\n";
             } else {
                 std::cout << "Choix invalide.\n";
             }
         } else if (categorie == 2 && !inventaireArmures.empty()) {
-            std::cout << "Choisissez une armure à équiper : ";
+            std::cout << "Choisissez une armure Ã  Ã©quiper : ";
             int index;
             std::cin >> index;
             if (index > 0 && index <= static_cast<int>(inventaireArmures.size())) {
                 equiperArmure(inventaireArmures[index - 1].first, inventaireArmures[index - 1].second);
-                std::cout << "Vous avez équipé l'armure " << inventaireArmures[index - 1].first << ".\n";
+                std::cout << "Vous avez Ã©quipÃ© l'armure " << inventaireArmures[index - 1].first << ".\n";
             } else {
                 std::cout << "Choix invalide.\n";
             }
@@ -215,14 +227,14 @@ public:
     void attaquer(Entite& cible, char typeValeur, int valeur) {
         int degats = (typeValeur == '%') ? cible.PVmax * valeur / 100 : valeur;
         degats += equipements[0].second; // Bonus d'attaque de l'arme
-        std::cout << nom << " inflige " << degats << " dégâts à " << cible.getNom() << " !\n";
+        std::cout << nom << " inflige " << degats << " dÃ©gÃ¢ts Ã  " << cible.getNom() << " !\n";
         cible.defendre(degats);
-        // Effet d'arme: appliquer DOT si défini pour l'arme équipée
+        // Effet d'arme: appliquer DOT si dÃ©fini pour l'arme Ã©quipÃ©e
         auto __itEffW = itemEffects.find(equipements[0].first);
         if (__itEffW != itemEffects.end() && __itEffW->second.type == EffectType::DOT && __itEffW->second.value > 0 && __itEffW->second.duration > 0) {
             cible.activeEffects.push_back({EffectType::DOT, __itEffW->second.label, __itEffW->second.value, __itEffW->second.duration});
             if (!__itEffW->second.label.empty()) {
-                std::cout << cible.getNom() << " est affecté par " << __itEffW->second.label
+                std::cout << cible.getNom() << " est affectÃ© par " << __itEffW->second.label
                           << " (" << __itEffW->second.value << ", " << __itEffW->second.duration << " tours).\n";
             }
         }
@@ -242,15 +254,15 @@ public:
                 defenseBoost = valeur;
             }
             protectionUtilisee = true;
-            std::cout << nom << " augmente sa défense de " << defenseBoost << " !\n";
+            std::cout << nom << " augmente sa dÃ©fense de " << defenseBoost << " !\n";
         } else {
-            std::cout << "Protection déjà utilisée dans ce combat !\n";
+            std::cout << "Protection dÃ©jÃ  utilisÃ©e dans ce combat !\n";
         }
     }
 
     void reinitialiserProtection() {
         protectionUtilisee = false;
-        defenseBoost = 0;             // Réinitialise le bonus de protection
+        defenseBoost = 0;             // RÃ©initialise le bonus de protection
     }
 
     bool utiliserCompetence(int index, Entite& cible) {
@@ -305,7 +317,7 @@ public:
                 if (e.type == EffectType::DOT) {
                     PV -= e.value;
                     if (PV < 0) PV = 0;
-                    std::cout << nom << " subit " << e.value << " dégâts" << (e.label.empty()?"":(" ("+e.label+")")) << ".\n";
+                    std::cout << nom << " subit " << e.value << " dÃ©gÃ¢ts" << (e.label.empty()?"":(" ("+e.label+")")) << ".\n";
                 }
                 e.remaining -= 1;
             }

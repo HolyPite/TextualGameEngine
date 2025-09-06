@@ -10,6 +10,7 @@
 #include "utils.h"
 #include "Histoire.h"
 #include "Entite.h"
+#include "ui.h"
 
 namespace fs = std::filesystem;
 
@@ -20,6 +21,7 @@ int main(int argc, char** argv) {
     SetConsoleCP(CP_UTF8);
 #endif
     try { std::locale::global(std::locale("")); } catch (...) {}
+    ui::init();
 
     std::vector<std::string> fichiersClasse;
 

@@ -1,30 +1,13 @@
 Assassin
 
-PV
-70
-PM
-30
-ARM
-15
+PV;70
+PM;30
+ARM;15
+ATK;8
+SPD;14
 
 COMP
-Coup Critique
-    Attaque
-    +
-    25
-    10
-Lancer de Shuriken
-    Attaque
-    +
-    15
-    5
-Évasion
-    Protection
-    %
-    100
-    20
-Poison Mortel
-    Attaque
-    +
-    20
-    15
+Coup Critique;Attaque;+;25;10
+Lancer de Shuriken;Attaque;+;15;5
+Évasion;Protection;%;100;20
+Poison Mortel;Attaque;+;20;15

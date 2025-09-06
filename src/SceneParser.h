@@ -11,7 +11,8 @@ namespace scene {
     // Helpers to convert strings to enums used in Scene
     ItemType parseItemType(const std::string& s); // "ARME"/"ARMURE"/"arme"/"armure"
     EffectKind parseEffectKind(const std::string& s); // "DOT"/"BUFF_DEF"/"NONE"
+    // Optional: parse enemy reveal mode ("MIN"/"FULL"/"HIDE")
+    EnemyReveal parseEnemyReveal(const std::string& s);
 }
 
 #endif // SCENE_PARSER_H
-

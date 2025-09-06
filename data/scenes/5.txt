@@ -1,8 +1,8 @@
 La tour de guet grince. Un vieux mecanisme active un protecteur.
 
 *COMBAT*
-Garde automatique;14;3;4
-Sentinelle d'acier;12;4;3
+Garde automatique;14;3;4;8
+Sentinelle d'acier;12;4;3;10
 
 *PATH*
 1 Redescendre vers l'entrepot.

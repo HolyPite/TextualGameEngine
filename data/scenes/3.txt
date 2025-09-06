@@ -17,3 +17,9 @@ this ARME Pied-de-biche
 
 *REMOVE*
 2 PATH 6
+
+*ADD*
+2 SHOP
+*SHOP*
+ARME;Lame dentelée;3;25
+ARMURE;Bouclier riveté;2;22

@@ -1,25 +1,11 @@
 Guerrier
 
-PV
-100
-PM
-30
-ARM
-5
+PV;100
+PM;30
+ARM;5
+ATK;10
+SPD;10
 
 COMP
-Charge
-    Attaque
-    +
-    20
-    5
-DÃ©fense RenforcÃ©e
-    Protection
-    %
-    50
-    15
-Frappe de Base
-    Attaque
-    +
-    10
-    0
+Charge;Attaque;+;20;5
+Défense Renforcée;Protection;%;50;15

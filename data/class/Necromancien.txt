@@ -1,30 +1,13 @@
 Nécromancien
 
-PV
-80
-PM
-60
-ARM
-10
+PV;80
+PM;60
+ARM;10
+ATK;7
+SPD;9
 
 COMP
-Invocation de Squelette
-    Attaque
-    +
-    20
-    10
-Drain de Vie
-    Attaque
-    %
-    10
-    15
-Bouclier d'Ombre
-    Protection
-    +
-    15
-    20
-Malédiction
-    Attaque
-    %
-    15
-    25
+Invocation de Squelette;Attaque;+;20;10
+Drain de Vie;Attaque;%;10;15
+Bouclier d'Ombre;Protection;+;15;20
+Malédiction;Attaque;%;15;25

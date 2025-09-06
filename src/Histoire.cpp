@@ -5,8 +5,11 @@
 #include <chrono>
 #include <iostream>
 #include <sstream>
+#include "ui.h"
+#include <iomanip>
 #include <cctype>
 #include <limits>
+#include <random>
 
 void Histoire::jouer() {
     while (!sceneActuelle.empty()) {
@@ -39,12 +42,24 @@ void Histoire::chargerScene2() {
         } else if (std::holds_alternative<BlockCombat>(blk)) {
             afficherDescription(description);
             const auto& b = std::get<BlockCombat>(blk);
+            bool fled = false;
             for (const auto& e : b.enemies) {
                 if (!isRemoved(sid, "COMBAT", e.name)) {
-                    gererCombat(e.name, e.hp, e.atk, e.def, e.gold);
+                    auto outcome = gererCombat(e.name, e.hp, e.atk, e.def, e.gold, e.spd, e.reveal);
+                    if (outcome == CombatOutcome::Flee) {
+                        // Retour à la scène précédente, ne pas exécuter la suite
+                        std::string target = previousScene.empty() ? sceneActuelle : previousScene;
+                        prochaineScene = target;
+                        fled = true;
+                        break;
+                    } else if (outcome == CombatOutcome::Lose) {
+                        // Défaite: sceneActuelle a été vidée dans la fonction
+                        break;
+                    }
                 }
                 if (!hero->estVivant()) break;
             }
+            if (fled || !hero->estVivant()) break;
         } else if (std::holds_alternative<BlockItems>(blk)) {
             afficherDescription(description);
             const auto& b = std::get<BlockItems>(blk);
@@ -65,7 +80,14 @@ void Histoire::chargerScene2() {
             auto itAddCI = additions.find(sid);
             if (itAddCI != additions.end()) {
                 for (const auto& c : itAddCI->second.combats) {
-                    if (!isRemoved(sid, "COMBAT", c.nom)) gererCombat(c.nom, c.pv, c.atk, c.def, c.orGain);
+                    if (!isRemoved(sid, "COMBAT", c.nom)) {
+                        auto outcome = gererCombat(c.nom, c.pv, c.atk, c.def, c.orGain, c.spd, c.reveal);
+                        if (outcome == CombatOutcome::Flee) {
+                            std::string target = previousScene.empty() ? sceneActuelle : previousScene;
+                            sceneActuelle = target; return; // revenir immédiatement
+                        }
+                        if (outcome == CombatOutcome::Lose) break;
+                    }
                 }
                 for (const auto& it : itAddCI->second.items) {
                     std::string T = (it.type == "arme" ? "ARME" : "ARMURE");
@@ -93,11 +115,12 @@ void Histoire::chargerScene2() {
                     chemins.emplace_back(p.id, txt);
                 }
             }
+            std::cout << ui::color("\n=== Chemins ===\n", ui::CYAN);
             for (size_t i = 0; i < chemins.size(); ++i) {
-                std::cout << i + 1 << ". " << chemins[i].second << std::endl;
+                std::cout << ui::color(std::to_string(i + 1), ui::YELLOW) << ". " << chemins[i].second << std::endl;
             }
             while (true) {
-                std::cout << "\nChoisissez une option('I' pour les stats): ";
+                std::cout << "\n" << ui::color("Choisissez une option ('I' pour les stats): ", ui::BOLD);
                 std::string input; std::cin >> input;
                 if (input == "I" || input == "i") {
                     hero->afficherStats();
@@ -113,10 +136,10 @@ void Histoire::chargerScene2() {
                             prochaineScene = (dataDir / "scenes" / (std::to_string(chemins[choix-1].first) + ".txt")).string();
                             break;
                         } else {
-                            std::cout << "Choix invalide. Reessayez.\n";
+                            std::cout << ui::color("Choix invalide. Réessayez.\n", ui::RED);
                         }
                     } catch (...) {
-                        std::cout << "Entree invalide. Reessayez.\n";
+                        std::cout << ui::color("Entrée invalide. Réessayez.\n", ui::RED);
                     }
                 }
             }
@@ -149,7 +172,10 @@ void Histoire::chargerScene2() {
         }
     }
     afficherDescription(description);
-    if (!prochaineScene.empty()) sceneActuelle = prochaineScene;
+    if (!prochaineScene.empty()) {
+        previousScene = sceneActuelle;
+        sceneActuelle = prochaineScene;
+    }
 }
 
 void Histoire::gererGoldDelta(int delta) {
@@ -159,12 +185,25 @@ void Histoire::gererGoldDelta(int delta) {
 void Histoire::gererShop(const std::vector<ShopItem>& items) {
     if (items.empty()) return;
     while (true) {
-        std::cout << "\n=== Boutique (Or: " << hero->getOr() << ") ===\n";
+        std::cout << ui::color("\n=== Boutique ===\n", ui::CYAN);
+        std::cout << "Or: " << hero->getOr() << "\n";
+        std::cout << ui::color(" N°  Type     Objet                         Val   Prix\n", ui::BOLD);
         for (size_t i=0;i<items.size();++i) {
-            std::cout << i+1 << ". [" << (items[i].item.type==ItemType::Arme?"arme":"armure") << "] "
-                      << items[i].item.name << " (+" << items[i].item.value << ") - " << items[i].price << " or\n";
+            const auto& it = items[i];
+            bool afford = hero->getOr() >= it.price;
+            std::string idx = (i+1 < 10 ? " " : "") + std::to_string(i+1);
+            std::string type = (it.item.type==ItemType::Arme?"arme":"armure");
+            std::string name = it.item.name; if (name.size()>27) name = name.substr(0,27) + "…";
+            std::ostringstream line;
+            line << " " << idx << "  "
+                 << std::left << std::setw(8) << type << " "
+                 << std::left << std::setw(28) << name << " "
+                 << std::right << std::setw(3) << ("+" + std::to_string(it.item.value)) << "  "
+                 << std::right << std::setw(4) << it.price << " or";
+            if (afford) std::cout << ui::color(line.str(), ui::GREEN) << "\n";
+            else std::cout << ui::color(line.str(), ui::RED) << "\n";
         }
-        std::cout << "0. Quitter\nChoix:";
+        std::cout << ui::color("0. Quitter\nChoix: ", ui::BOLD);
         int c; if(!(std::cin>>c)){ std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); continue; }
         if (c==0) break;
         if (c<1 || c>(int)items.size()) { std::cout << "Choix invalide.\n"; continue; }
@@ -196,74 +235,133 @@ void Histoire::addRemoval(int sceneId, const std::string& type, const std::strin
     removals.insert(key);
 }
 
-void Histoire::gererCombat(const std::string& nomMonstre, int pv, int attaque, int defense, int gold) {
+Histoire::CombatOutcome Histoire::gererCombat(const std::string& nomMonstre, int pv, int attaque, int defense, int gold, int enemySpeed, EnemyReveal reveal) {
     Entite monstre(nomMonstre, pv, 0, defense);
     std::cout << "\nUn combat commence contre " << nomMonstre << " !\n";
+
+    // Simple speed model
+    int heroSpeed = hero->getSpdBase(); // valeur provenant de la classe
 
     while (hero->estVivant() && monstre.estVivant()) {
         hero->tickEffects();
         monstre.tickEffects();
         if (!hero->estVivant() || !monstre.estVivant()) break;
-        monstre.afficherStats();
-        std::cout << "C'est votre tour !\n";
-        hero->afficherStats();
 
-        // Menu d'action enrichi
-        bool aJoue = false;
-        while (!aJoue) {
-            std::cout << "\nActions :\n"
-                      << "1. Utiliser une compétence\n"
-                      << "2. Inventaire / Équipement\n"
-                      << "3. Afficher les statistiques\n"
-                      << "4. Fuir le combat\n";
-            std::cout << "Votre choix : ";
-            std::string choixAction; if (!(std::cin >> choixAction)) { std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); continue; }
-            if (choixAction == "1") {
-                std::cout << "Choisissez une compétence :\n";
-                hero->afficherCompetences();
-                int choix;
-                std::cout << "Compétence à utiliser : ";
-                if (!(std::cin >> choix)) { std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); continue; }
-                std::cout << "\n";
-                if (choix > 0 && static_cast<size_t>(choix) <= hero->getNombreCompetences() && hero->utiliserCompetence(choix - 1, monstre)) {
-                    aJoue = true;
-                } else {
-                    std::cout << "Choix invalide, veuillez réessayer.\n";
-                }
-            } else if (choixAction == "2") {
-                hero->equiperObjet();
-                // ne consomme pas le tour
-            } else if (choixAction == "3") {
-                std::cout << "\n--- Vos statistiques ---\n";
-                hero->afficherStats();
-                // ne consomme pas le tour
-            } else if (choixAction == "4") {
-                std::cout << "Vous prenez la fuite !\n";
-                hero->reinitialiserProtection();
-                return; // abandonner le combat
+        bool heroFirst = (heroSpeed >= enemySpeed);
+
+        auto printEnemy = [&]() {
+            if (reveal == EnemyReveal::Hide) return;
+            if (reveal == EnemyReveal::Full) {
+                std::cout << "\n--- Adversaire ---\n";
+                monstre.afficherStats();
             } else {
-                std::cout << "Choix invalide.\n";
+                std::cout << "\nAdversaire: " << nomMonstre
+                          << " | PV: " << monstre.getPV() << "/" << monstre.getPVmax() << "\n";
+            }
+        };
+        printEnemy();
+
+        auto tourHero = [&]() -> bool {
+            // Quick status line
+            std::cout << ui::color("[Vous] ", ui::BOLD)
+                      << "PV " << hero->getPV() << "/" << hero->getPVmax()
+                      << " | ATK " << hero->getAtkBase()
+                      << " | SPD " << heroSpeed
+                      << " | Or " << hero->getOr() << "\n";
+            // Menu d'action enrichi
+            while (true) {
+                std::cout << "\nActions :\n"
+                          << ui::color("1.", ui::YELLOW) << " Attaque de base\n"
+                          << ui::color("2.", ui::YELLOW) << " Utiliser une compétence\n"
+                          << ui::color("3.", ui::YELLOW) << " Inventaire / Équipement\n"
+                          << ui::color("4.", ui::YELLOW) << " Afficher les statistiques\n"
+                          << ui::color("5.", ui::YELLOW) << " Fuir le combat\n";
+                std::cout << ui::color("Votre choix : ", ui::BOLD);
+                std::string choixAction; if (!(std::cin >> choixAction)) { std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); continue; }
+                if (choixAction == "1") {
+                    // Attaque de base
+                    hero->attaquer(monstre, '+', hero->getAtkBase());
+                    return true; // tour consommé
+                } else if (choixAction == "2") {
+                    std::cout << ui::color("Choisissez une compétence (0 pour annuler) :\n", ui::BOLD);
+                    hero->afficherCompetences();
+                    int choix;
+                    std::cout << ui::color("Compétence à utiliser : ", ui::BOLD);
+                    if (!(std::cin >> choix)) { std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); continue; }
+                    std::cout << "\n";
+                    if (choix == 0) {
+                        // Retour au menu d'action sans consommer de tour
+                        continue;
+                    }
+                    if (choix > 0 && static_cast<size_t>(choix) <= hero->getNombreCompetences() && hero->utiliserCompetence(choix - 1, monstre)) {
+                        return true; // tour consommé
+                    } else {
+                        std::cout << ui::color("Choix invalide, veuillez réessayer.\n", ui::RED);
+                    }
+                } else if (choixAction == "3") {
+                    hero->equiperObjet();
+                    // ne consomme pas le tour
+                } else if (choixAction == "4") {
+                    std::cout << "\n--- Vos statistiques ---\n";
+                    hero->afficherStats();
+                    std::cout << "PV:  " << hero->getPV() << "/" << hero->getPVmax()
+                              << "  " << ui::bar(hero->getPV(), hero->getPVmax(), 24, '#', '-') << "\n";
+                    // ne consomme pas le tour
+                } else if (choixAction == "5") {
+                    // Chance de fuite = vJ/(vJ+vE)
+                    double chance = (double)heroSpeed / (double)(heroSpeed + std::max(1, enemySpeed));
+                    std::random_device rd; std::mt19937 gen(rd()); std::uniform_real_distribution<> dis(0.0, 1.0);
+                    double r = dis(gen);
+                    if (r < chance) {
+                        std::cout << ui::color("Vous parvenez à fuir !\n", ui::GREEN);
+                        hero->reinitialiserProtection();
+                        return false; // signale fin de combat par fuite
+                    } else {
+                        std::cout << ui::color("Échec de la fuite !\n", ui::RED);
+                        return true; // tour consommé, l'ennemi jouera
+                    }
+                } else {
+                    std::cout << ui::color("Choix invalide.\n", ui::RED);
+                }
+            }
+        };
+
+        if (heroFirst) {
+            bool continuer = tourHero();
+            if (!continuer) { return CombatOutcome::Flee; }
+            if (!monstre.estVivant()) {
+                std::cout << "Vous avez vaincu " << nomMonstre << " !\n";
+                if (gold > 0) { hero->ajouterOr(gold); }
+                hero->reinitialiserProtection();
+                return CombatOutcome::Win;
+            }
+            std::cout << nomMonstre << " attaque !\n";
+            monstre.attaquer(*hero,'%',attaque);
+        } else {
+            std::cout << nomMonstre << " attaque !\n";
+            monstre.attaquer(*hero,'%',attaque);
+            if (!hero->estVivant()) {
+                std::cout << "Vous avez ete vaincu... Fin du jeu.\n";
+                sceneActuelle.clear();
+                hero->reinitialiserProtection();
+                return CombatOutcome::Lose;
+            }
+            bool continuer = tourHero();
+            if (!continuer) { return CombatOutcome::Flee; }
+            if (!monstre.estVivant()) {
+                std::cout << "Vous avez vaincu " << nomMonstre << " !\n";
+                if (gold > 0) { hero->ajouterOr(gold); }
+                hero->reinitialiserProtection();
+                return CombatOutcome::Win;
             }
         }
 
-        if (!monstre.estVivant()) {
-            std::cout << "Vous avez vaincu " << nomMonstre << " !\n";
-            if (gold > 0) {
-                hero->ajouterOr(gold);
-            }
-            break;
-        }
-
-        std::cout << nomMonstre << " attaque !\n";
-        monstre.attaquer(*hero,'%',attaque);
-
-        if (!hero->estVivant()) {
-            std::cout << "Vous avez ete vaincu... Fin du jeu.\n";
-            sceneActuelle.clear();
-        }
     }
-
+    // sortie de boucle sans retour explicite: victoire ou défaite déjà gérée
     hero->reinitialiserProtection();
+    if (!hero->estVivant()) { return CombatOutcome::Lose; }
+    if (!monstre.estVivant()) { if (gold > 0) hero->ajouterOr(gold); return CombatOutcome::Win; }
+    return CombatOutcome::Win;
 }
 
 void Histoire::gererEquipement(const std::string& type, const std::string& nom, int valeur) {
@@ -305,7 +403,7 @@ void Histoire::appliquerAddBlock(const BlockAdd& blk) {
         if (ar.type == AddType::Path) {
             for (const auto& p : ar.paths) additions[sid].paths.emplace_back(p.id, p.text);
         } else if (ar.type == AddType::Combat) {
-            for (const auto& e : ar.combats) additions[sid].combats.push_back({e.name, e.hp, e.def, e.atk, e.gold});
+            for (const auto& e : ar.combats) additions[sid].combats.push_back({e.name, e.hp, e.def, e.atk, e.gold, e.spd, e.reveal});
         } else if (ar.type == AddType::Item) {
             for (const auto& it : ar.items) {
                 additions[sid].items.push_back({it.type==ItemType::Arme?std::string("arme"):std::string("armure"), it.name, it.value});
@@ -320,7 +418,10 @@ void Histoire::appliquerAddBlock(const BlockAdd& blk) {
 
 void Histoire::afficherDescription(std::string& description) {
     if (!description.empty()) {
-        std::cout << "\n\n******************************\n\n" << description << std::endl;
+        ui::clear();
+        std::cout << ui::color("******************************\n\n", ui::CYAN);
+        ui::typewrite(description);
+        std::cout << "\n" << ui::color("\n******************************\n", ui::CYAN);
         description.clear(); // Efface la description après affichage
     }
 }

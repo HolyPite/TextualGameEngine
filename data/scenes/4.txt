@@ -10,3 +10,4 @@ ARMURE;Bottes a clous;1;NONE;None;0;0
 
 *REMOVE*
 this ARMURE Plastron d'airain
+2 SHOP *

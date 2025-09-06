@@ -15,11 +15,12 @@ class Histoire {
 private:
     std::unique_ptr<Entite> hero;
     std::string sceneActuelle;
+    std::string previousScene;
     // Runtime removals and additions
     std::unordered_set<std::string> removals; // key: sceneId:TYPE:param
     std::filesystem::path dataDir;
 
-    struct CombatDef { std::string nom; int pv; int def; int atk; int orGain; };
+    struct CombatDef { std::string nom; int pv; int def; int atk; int orGain; int spd; EnemyReveal reveal; };
     struct ItemDef { std::string type; std::string nom; int valeur; };
     struct SceneAdditions {
         std::vector<std::pair<int,std::string>> paths;
@@ -31,6 +32,7 @@ private:
     std::unordered_map<int, SceneAdditions> additions;
 
 public:
+    enum class CombatOutcome { Win, Lose, Flee };
     Histoire(std::unique_ptr<Entite> hero, const std::filesystem::path& dataDir, int startSceneId = 0)
         : hero(std::move(hero)), dataDir(dataDir) {
         sceneActuelle = (dataDir / "scenes" / (std::to_string(startSceneId) + ".txt")).string();
@@ -41,7 +43,7 @@ public:
 private:
     void chargerScene2(); // new reader using SceneParser
     void afficherDescription(std::string& description);
-    void gererCombat(const std::string& nomMonstre, int pv, int attaque, int defense, int gold);
+    CombatOutcome gererCombat(const std::string& nomMonstre, int pv, int attaque, int defense, int gold, int enemySpeed, EnemyReveal reveal);
     void gererEquipement(const std::string& type, const std::string& nom, int valeur);
     // Directives
     void appliquerRemoveBlock(const BlockRemove& blk, int currentSceneId);

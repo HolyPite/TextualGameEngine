@@ -9,6 +9,8 @@
 // Strong types for scene content
 enum class ItemType { Arme, Armure };
 enum class EffectKind { None, DOT, BuffDef };
+// Visibility of enemy stats during combat
+enum class EnemyReveal { Min, Full, Hide };
 
 struct EffectSpec {
     EffectKind kind{EffectKind::None};
@@ -29,7 +31,9 @@ struct CombatEnemy {
     int hp{0};
     int def{0};
     int atk{0};
-    int gold{0}; // butin récupéré à la victoire
+    int gold{0}; // loot on victory
+    int spd{10}; // speed (default 10)
+    EnemyReveal reveal{EnemyReveal::Min};
 };
 
 struct PathOption {
@@ -94,3 +98,4 @@ struct Scene {
 };
 
 #endif // SCENE_H
+
