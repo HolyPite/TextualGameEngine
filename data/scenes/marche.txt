@@ -1,0 +1,18 @@
+﻿*LORE*
+Le marche regorge de camelots et d'echoppes. Un artisan vous parle d'un atelier ferme par une grille pliee.
+
+*SHOP*
+12;ARME;Couteau fin;2
+28;ARME;Marteau d'atelier;4
+18;ARMURE;Casque rivete;2
+
+*LORE*
+Un camelot vous chuchote: "Si vous trouvez une cle a rochet, le maitre des pompes paye bien."
+
+*PATH*
+atelier_grille;Examiner l'atelier ferme.
+start;Revenir vers les portes.
+caves;Descendre vers les caves.
+
+
+

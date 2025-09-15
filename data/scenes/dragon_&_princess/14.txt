@@ -1,4 +1,4 @@
-Vous contournez le chǽteau. Sur le c��tǸ, une petite entrǸe de service est gardǸe par un loup de garde.
+﻿Vous contournez le chÇ½teau. Sur le cï¿½ï¿½tÇ¸, une petite entrÇ¸e de service est gardÇ¸e par un loup de garde.
 
 *COMBAT*
 Loup de Garde
@@ -6,13 +6,14 @@ Loup de Garde
 2
 3
 
-Apr��s votre victoire, vous pǸnǸtrez dans le chǽteau par la porte de service.
+Aprï¿½ï¿½s votre victoire, vous pÇ¸nÇ¸trez dans le chÇ½teau par la porte de service.
 
 *PATH*
-19 Avancer dans un couloir sombre.
-10 Revenir en arri��re (peu judicieux).
+19;Avancer dans un couloir sombre.
+10;Revenir en arriï¿½ï¿½re (peu judicieux).
 
 *REMOVE*
-10 PATH 14
-this COMBAT Loup de Garde
+10;PATH;14
+this;COMBAT;Loup de Garde
+
 

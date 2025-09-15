@@ -1,19 +1,19 @@
-Vous vous rǸveillez au milieu d'une forǦt brumeuse. Le chant des oiseaux est ǸtouffǸ, et une vieille route de terre se divise devant vous. Vous avez entendu parler d�?Tun chǽteau lointain o�� la princesse Elwen est retenue captive par le Dragon Sombre.
+﻿Vous vous rÇ¸veillez au milieu d'une forÇ¦t brumeuse. Le chant des oiseaux est Ç¸touffÇ¸, et une vieille route de terre se divise devant vous. Vous avez entendu parler dï¿½?Tun chÇ½teau lointain oï¿½ï¿½ la princesse Elwen est retenue captive par le Dragon Sombre.
 
 *ARME*
-Poignard RouillǸ
+Poignard RouillÇ¸
 1
 
 *ARME*
-Dague cassǸe
+Dague cassÇ¸e
 3
 
 *ARME*
-Epee SacrǸe
+Epee SacrÇ¸e
 7
 
 *ARMURE*
-Ferraille RouillǸ
+Ferraille RouillÇ¸
 2
 
 *ARMURE*
@@ -25,15 +25,16 @@ Armure divine
 8
 
 *PATH*
-1 Prendre le sentier sur la gauche, menant vers une clairi��re.
-2 Suivre le sentier sur la droite, longeant un ruisseau.
-5 Faire demi-tour pour explorer les environs plus en dǸtail.
+1;Prendre le sentier sur la gauche, menant vers une clairiï¿½ï¿½re.
+2;Suivre le sentier sur la droite, longeant un ruisseau.
+5;Faire demi-tour pour explorer les environs plus en dÇ¸tail.
 
 *REMOVE*
-this ARME Poignard RouillǸ
-this ARME Dague cassǸe
-this ARME Epee SacrǸe
-this ARMURE Ferraille RouillǸ
-this ARMURE Cuir de peau
-this ARMURE Armure divine
+this;ARME;Poignard RouillÇ¸
+this;ARME;Dague cassÇ¸e
+this;ARME;Epee SacrÇ¸e
+this;ARMURE;Ferraille RouillÇ¸
+this;ARMURE;Cuir de peau
+this;ARMURE;Armure divine
+
 

@@ -1,0 +1,23 @@
+﻿*LORE*
+Vous vous reveillez aux portes de la Cite d'Airain, dans une brume cuivreuse. Devant vous, des ruelles menez vers un entrepot, un marche anime, et une vieille tour de guet.
+
+*ITEM*
+ARME;Sabre ligotant;4;DOT;Poison;3;2
+ARMURE;Veste de cuir;1;BUFF_DEF;Cuir;0;1
+
+*GOLD*
+50
+
+*LORE*
+Un crieur public scande des nouvelles contradictoires: un incendie au port, un concours d'horlogerie, et une rumeur de tunnels sous la tour.
+
+*PATH*
+entrepot;Se faufiler vers l'entrepot.
+marche;Rejoindre le marche bruyant.
+tour_de_guet;Inspecter la tour de guet.
+
+*REMOVE*
+this;ARME;Lame courte
+this;ARMURE;Veste de cuir
+
+

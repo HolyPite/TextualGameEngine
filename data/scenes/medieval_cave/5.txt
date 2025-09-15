@@ -1,4 +1,4 @@
-Vous voyez une salle sombre sur votre gauche.
+﻿Vous voyez une salle sombre sur votre gauche.
 
 1. Allez dans cette salle
 2. Continuez votre chemin.
@@ -6,3 +6,4 @@ Vous voyez une salle sombre sur votre gauche.
 *PATH*
 6
 7
+

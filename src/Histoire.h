@@ -17,25 +17,27 @@ private:
     std::string sceneActuelle;
     std::string previousScene;
     // Runtime removals and additions
-    std::unordered_set<std::string> removals; // key: sceneId:TYPE:param
+    std::unordered_set<std::string> removals; // key: sceneKey:TYPE:param
     std::filesystem::path dataDir;
+    bool clearOnNextScene{false};
 
     struct CombatDef { std::string nom; int pv; int def; int atk; int orGain; int spd; EnemyReveal reveal; };
     struct ItemDef { std::string type; std::string nom; int valeur; };
     struct SceneAdditions {
-        std::vector<std::pair<int,std::string>> paths;
+        std::vector<std::pair<std::string,std::string>> paths;
         std::vector<CombatDef> combats;
         std::vector<ItemDef> items;
         std::vector<int> goldDeltas;
         std::vector<ShopItem> shops;
+        std::vector<std::string> lores;
     };
-    std::unordered_map<int, SceneAdditions> additions;
+    std::unordered_map<std::string, SceneAdditions> additions;
 
 public:
     enum class CombatOutcome { Win, Lose, Flee };
-    Histoire(std::unique_ptr<Entite> hero, const std::filesystem::path& dataDir, int startSceneId = 0)
+    Histoire(std::unique_ptr<Entite> hero, const std::filesystem::path& dataDir, const std::string& startSceneKey = std::string("start"))
         : hero(std::move(hero)), dataDir(dataDir) {
-        sceneActuelle = (dataDir / "scenes" / (std::to_string(startSceneId) + ".txt")).string();
+        sceneActuelle = (dataDir / "scenes" / (startSceneKey + ".txt")).string();
     }
 
     void jouer();
@@ -43,14 +45,15 @@ public:
 private:
     void chargerScene2(); // new reader using SceneParser
     void afficherDescription(std::string& description);
+    void afficherLore(const std::string& text);
     CombatOutcome gererCombat(const std::string& nomMonstre, int pv, int attaque, int defense, int gold, int enemySpeed, EnemyReveal reveal);
     void gererEquipement(const std::string& type, const std::string& nom, int valeur);
     // Directives
-    void appliquerRemoveBlock(const BlockRemove& blk, int currentSceneId);
+    void appliquerRemoveBlock(const BlockRemove& blk, const std::string& currentSceneKey);
     void appliquerAddBlock(const BlockAdd& blk);
-    bool isRemoved(int sceneId, const std::string& type, const std::string& param) const;
-    static int extractSceneId(const std::string& path);
-    void addRemoval(int sceneId, const std::string& type, const std::string& param);
+    bool isRemoved(const std::string& sceneKey, const std::string& type, const std::string& param) const;
+    static std::string extractSceneKey(const std::string& path);
+    void addRemoval(const std::string& sceneKey, const std::string& type, const std::string& param);
 
     // Economie / Boutique
     void gererGoldDelta(int delta);

@@ -8,4 +8,4 @@ SPD;10
 
 COMP
 Charge;Attaque;+;20;5
-Défense Renforcée;Protection;%;50;15
+DÃ©fense RenforcÃ©e;Protection;%;50;15

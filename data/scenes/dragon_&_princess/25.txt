@@ -1,5 +1,6 @@
-Le coffre de droite contient une clé rouillée. Vous retournez vers le couloir, et grâce à la clé, vous ouvrez une porte secrète menant à une sortie secondaire du château.
+﻿Le coffre de droite contient une clÃ© rouillÃ©e. Vous retournez vers le couloir, et grÃ¢ce Ã  la clÃ©, vous ouvrez une porte secrÃ¨te menant Ã  une sortie secondaire du chÃ¢teau.
 
-A l’extérieur, le soleil brille. Bien que vous n’ayez pas sauvé la princesse, vous êtes libre. Peut-être une autre fois…
+A lâ€™extÃ©rieur, le soleil brille. Bien que vous nâ€™ayez pas sauvÃ© la princesse, vous Ãªtes libre. Peut-Ãªtre une autre foisâ€¦
 
-*VICTOIRE*
+*VICTORY*
+

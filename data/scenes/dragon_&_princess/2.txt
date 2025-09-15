@@ -1,4 +1,4 @@
-Le sentier longe un ruisseau cristallin. Vous entendez un bruit de pas légers derrière vous. Une créature apparaît : un Gobelin affamé vous attaque !
+﻿Le sentier longe un ruisseau cristallin. Vous entendez un bruit de pas lÃ©gers derriÃ¨re vous. Une crÃ©ature apparaÃ®t : un Gobelin affamÃ© vous attaque !
 
 *COMBAT*
 Gobelin
@@ -6,12 +6,14 @@ Gobelin
 1
 2
 
-Après avoir vaincu le Gobelin, vous trouvez un petit poignard rouillé.
+AprÃ¨s avoir vaincu le Gobelin, vous trouvez un petit poignard rouillÃ©.
 
 *ARME*
-Poignard Rouillé
+Poignard RouillÃ©
 1
 
 *PATH*
-6 Continuer le long du ruisseau.
-0 Remonter vers la forêt.
+6;Continuer le long du ruisseau.
+start;Remonter vers la forÃªt.
+
+

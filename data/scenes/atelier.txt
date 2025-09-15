@@ -1,0 +1,18 @@
+﻿*LORE*
+Vous forcez la grille et penetrez dans l'atelier. Des plans epingles montrent un ascenseur vers le toit.
+
+*ITEM*
+ARMURE;Plastron d'airain;3;BUFF_DEF;Airain;0;1
+ARMURE;Bottes a clous;1;NONE;None;0;0
+
+*LORE*
+Un carnet graisseux indique: "Test de charge du treuil a 3 tours/min. Ne pas monter seul."
+
+*PATH*
+toit;Prendre l'ascenseur vers le toit.
+marche;Revenir au marche.
+
+*REMOVE*
+this;ARMURE;Plastron d'airain
+marche;SHOP;*
+

@@ -1,9 +1,10 @@
-Vous tentez d�?Tinterroger le vieil homme, mais il est silencieux. Soudain, il se l��ve et disparaǩt en un Ǹclair de lumi��re. MystǸrieux !
+﻿Vous tentez dï¿½?Tinterroger le vieil homme, mais il est silencieux. Soudain, il se lï¿½ï¿½ve et disparaÇ©t en un Ç¸clair de lumiï¿½ï¿½re. MystÇ¸rieux !
 
 *PATH*
-4 Sortir de la cabane et reprendre le chemin.
-1 Rester l��, perplexe.
+4;Sortir de la cabane et reprendre le chemin.
+1;Rester lï¿½ï¿½, perplexe.
 
 *REMOVE*
-this PATH 1
+this;PATH;1
+
 

@@ -1,0 +1,9 @@
+﻿*LORE*
+L'atelier est ferme par une grille tordue. Sans outil, il sera difficile d'entrer.
+
+*LORE*
+Une bourrasque apporte l'odeur d'huile et de fumee. On dirait qu'on peut soulever la grille avec assez de levier.
+
+*PATH*
+marche;Revenir au marche.
+

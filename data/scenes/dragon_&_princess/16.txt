@@ -1,3 +1,4 @@
-Vous refusez le marché et quittez la hutte. Le marécage est hostile et vous ne trouvez aucune issue. Épuisé, vous vous enfoncez dans la boue et succombez...
+﻿Vous refusez le marchÃ© et quittez la hutte. Le marÃ©cage est hostile et vous ne trouvez aucune issue. Ã‰puisÃ©, vous vous enfoncez dans la boue et succombez...
 
-*GO*
+*END*
+

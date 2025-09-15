@@ -1,60 +1,160 @@
-# Textual Game Engine
+﻿# Text RPG Engine
 
-## Description
+Ce projet est un moteur de jeu textuel piloté par des fichiers .txt structurés. Il permet d’écrire des aventures avec scènes, choix, combats, objets et boutiques, puis de les jouer dans la console avec un rendu "écriture humaine".
 
-Ce projet est un moteur de jeu textuel permettant de créer et de jouer à des aventures narratives personnalisées. Grâce à un système de fichiers `.txt` structurés, il est possible de définir :
+## Lancer le jeu
 
-- Des **scènes** : Chaque fichier décrit une étape de l’histoire, avec textes, combats, objets (armes, armures) et choix menant à d’autres scènes.
-- Des **classes** : Chaque fichier définit une classe de personnage (PV, PM, Armure, Compétences) que le joueur peut incarner, offrant une expérience de jeu variée.
+- Place l’exécutable et le dossier data/ au même niveau.
+- Démarre sur la scène data/scenes/start.txt par défaut.
+- Option CLI: --start=<sceneKey> pour un autre point d’entrée (clé = nom de fichier sans .txt).
 
-Le programme lit ces fichiers, interprète leur contenu et exécute l’aventure en temps réel, proposant au joueur de prendre des décisions, combattre des monstres, récupérer des récompenses et progresser dans une histoire immersive.
+Exemple: jeu.exe --start=marche
 
-## Fonctionnalités
+## Organisation des données
 
-- **Scènes dynamiques** : Les scènes, définies dans `data/scene/`, sont reliées par des chemins (`*PATH*`), permettant au joueur de naviguer dans l’histoire.
-- **Combats** : Les ennemis, définis par `*COMBAT*`, affrontent le joueur selon leurs statistiques.
-- **Équipement** : Les armes (`*ARME*`) et armures (`*ARMURE*`) améliorent les capacités du joueur.
-- **Fin de l’histoire** : `*VICTOIRE*` et `*GO*` marquent la fin de l’aventure (victoire, défaite, etc.).
-- **Classes personnalisées** : Ajoutez de nouvelles classes dans `data/class/` avec leurs propres PV, PM, Armure et compétences (`*COMP*`).
+`
+data/
+  class/          # Fichiers de classes jouables
+  scenes/         # Fichiers de scènes (clé = nom de fichier sans .txt)
+`
 
-## Prérequis
-- Le dossier `data/` doit être présent dans le même répertoire que l’exécutable `.exe`.
-- Aucune installation supplémentaire n’est requise.
-- (A noter que le dossier `src/` contient les fichiers .h et .cpp. Ils ne sont **PAS NECESSAIRE** pour l'execution du projet. Ils sont fournis pour ceux qui souhaite voir et modifier les fonctionnement du projet.)
+## Scènes – Spécification
 
-## Installation
-1. Téléchargez projet a partir de la dernière [**RELEASE**](https://github.com/PGarn/jeu-cpp/releases) et extrayez-la.
-2. Ajoutez ou modifiez vos fichiers de scènes dans `data/scene/` et vos fichiers de classes dans `data/class/`(Des fichiers de base sont déjà présent pour donner un exemple de jeu).
+Règles strictes:
+- Un fichier .txt = une scène. La clé de scène = nom du fichier (sans .txt).
+- Tous les blocs de contenu doivent être avant *PATH*.
+- Il ne doit y avoir qu’un seul bloc *PATH* par scène.
+- Les blocs *REMOVE* et *ADD* doivent être après *PATH*.
+- Séparateurs obligatoires: ; (pas d’espaces comme séparateurs).
+- Pas de description libre hors blocs: tout texte affichable doit être dans un bloc (*LORE*, etc.).
+- Fins d’histoire: *VICTORY* ou *END* (terminent immédiatement la partie). Pas d’anciens *VICTOIRE*/*GO*.
 
-## Utilisation
-### Option 1 : Télécharger et utiliser l'exécutable
-1. Assurez-vous que le dossier `data/` (avec les fichiers nécessaires) se trouve dans le même répertoire que l’exécutable `.exe`.
-2. Lancez simplement le fichier `.exe`.
-3. Le programme charge automatiquement les classes et scènes disponibles.
-4. Choisissez votre classe, suivez les instructions à l’écran, prenez des décisions, et profitez de l’aventure.
+Ordre minimal recommandé:
+`
+[*LORE* | *COMBAT* | *ITEM* | *SHOP* | *GOLD* | *VICTORY* | *END*] ... (0..n)
 
-### Option 2 : Télécharger le code source et compiler
-1. Téléchargez les fichiers sources du projet C++.
-2. Compilez le code en utilisant la commande suivante dans un terminal :  
-   ```bash
-    g++ -static -o jeu src/main.cpp src/Histoire.cpp src/utils.cpp src/Competence.cpp -I .
-   ```
-3. Assurez-vous que le dossier `data/` se trouve dans le même répertoire que l’exécutable généré.
-4. Suivez les instructions à l’écran pour profiter de l’aventure.
+*PATH*
+<id>;texte
+...
 
-## Personnalisation([**GUIDE**](https://github.com/PGarn/jeu-cpp/tree/main/guides))
-- **Ajouter de nouvelles scènes** : Créez un fichier `.txt` dans `data/scene/` et suivez le format défini dans le guide.
-- **Ajouter de nouvelles classes** : Créez un fichier `.txt` dans `data/class/` et définissez PV, PM, ARM, COMP. La classe sera automatiquement proposée lors du choix initial.
+*REMOVE* ... (0..n)
+*ADD*    ... (0..n)
+`
 
-## Contributions
-- Vos contributions sont les bienvenues !
-- Proposez de nouvelles idées, corrigez des bugs ou améliorez la documentation via issues ou pull requests.
+Blocs disponibles:
 
-## Licence
+- LORE
+`
+*LORE*
+Texte sur une ou plusieurs lignes...
+`
 
-Ce projet est sous licence [MIT](https://opensource.org/licenses/MIT).  
-Vous pouvez donc utiliser, modifier et distribuer ce projet librement, tant que vous conservez la mention d'origine.
+- COMBAT
+`
+*COMBAT*
+Nom;PV;DEF;ATK[;GOLD[;SPD[;REVEAL]]]
+`
+REVEAL: MIN | FULL | HIDE (visibilité des stats adverses)
 
----
+- ITEM (équipement)
+`
+*ITEM*
+Type;Nom;Valeur[;Effet;NomEffet;Durée;ValeurEffet]
+`
+Type: ARME | ARMURE — Effet: DOT | BUFF_DEF | NONE
 
-Ce projet est en cours de développement. N’hésitez pas à apporter vos idées et suggestions !
+- SHOP (boutique)
+`
+*SHOP*
+Prix;Type;Nom;Valeur[;Effet;NomEffet;Durée;ValeurEffet]
+`
+
+- GOLD (delta d’or)
+`
+*GOLD*
+<+n|-n>
+`
+
+- PATH (un seul par scène)
+`
+*PATH*
+sceneKey;Texte du choix
+...
+`
+sceneKey = nom du fichier cible sans .txt (ex: marche, 	oit, 	our_de_guet)
+
+- REMOVE (applique des suppressions dynamiques)
+`
+*REMOVE*
+<this|sceneKey>;TYPE;param
+`
+TYPE = PATH | COMBAT | ARME | ARMURE | GOLD | SHOP | LORE  
+param pour PATH = id du choix (la sceneKey utilisée dans le *PATH*)
+
+- ADD (ajoute du contenu dynamiquement)
+`
+*ADD*
+<this|sceneKey>;PATH
+*PATH*
+sceneKey;Texte
+
+<this|sceneKey>;COMBAT
+*COMBAT*
+Nom;PV;DEF;ATK[;GOLD[;SPD[;REVEAL]]]
+
+<this|sceneKey>;ITEM
+*ITEM*
+Type;Nom;Valeur[;Effet;NomEffet;Durée;ValeurEffet]
+
+<this|sceneKey>;SHOP
+*SHOP*
+Prix;Type;Nom;Valeur[;Effet;NomEffet;Durée;ValeurEffet]
+
+<this|sceneKey>;LORE
+*LORE*
+Texte...
+`
+
+## Classes – Spécification
+
+Chaque fichier de data/class/ décrit une classe.
+
+Format moderne recommandé:
+`
+NomDeClasse
+
+PV;120
+PM;40
+ARM;15
+
+COMP
+Charge;Attaque;+;20;10
+Bouclier;Protection;%;50;15
+Soin;Soin;+;18;8
+`
+- COMP liste des compétences: Nom;Type;ValeurType;Valeur;Mana
+  - Type: Attaque | Soin | Protection
+  - ValeurType: + (valeur fixe) ou % (pourcentage)
+
+## Exemple minimal de scène
+`
+*LORE*
+Vous ouvrez la porte.
+
+*PATH*
+marche;Rejoindre le marché animé.
+atelier;Forcer l'atelier fermé.
+
+*REMOVE*
+this;PATH;atelier
+`
+
+## Conseils
+- Utilisez des sceneKey explicites (ex: entrepot, marche, caves).
+- Préférez plusieurs *LORE* courts à un gros bloc pour rythmer l’affichage.
+- *VICTORY*/*END* n’ayant pas de contenu, placez-les quand vous voulez conclure la scène (sans *PATH* ensuite).
+
+## Développement
+- --start=<sceneKey> pour démarrer ailleurs que start.
+- L’UI applique un affichage mot‑à‑mot global et lettre‑par‑lettre pour *LORE*.
+- Le moteur ignore tout texte hors blocs (warnings de parse si présent).

@@ -37,7 +37,7 @@ struct CombatEnemy {
 };
 
 struct PathOption {
-    int id{0};
+    std::string id;   // scene key (file stem)
     std::string text; // empty => default label
 };
 
@@ -46,18 +46,18 @@ struct ShopItem {
     int price{0};
 };
 
-enum class RemoveType { Path, Combat, Arme, Armure, Gold, Shop };
+enum class RemoveType { Path, Combat, Arme, Armure, Gold, Shop, Lore };
 struct RemoveRule {
     bool isThis{true};
-    int sceneId{0};
+    std::string sceneKey; // if !isThis: target scene key (file stem)
     RemoveType type{RemoveType::Path};
     std::string param; // path id (as string), monster name or item name
 };
 
-enum class AddType { Path, Combat, Item, Gold, Shop };
+enum class AddType { Path, Combat, Item, Gold, Shop, Lore };
 struct AddRule {
     bool isThis{true};
-    int sceneId{0};
+    std::string sceneKey; // if !isThis: target scene key
     AddType type{AddType::Path};
     // Payloads
     std::vector<PathOption> paths;
@@ -65,6 +65,7 @@ struct AddRule {
     std::vector<ItemSpec> items;
     int goldDelta{0};
     std::vector<ShopItem> shopItems;
+    std::vector<std::string> lores;
 };
 
 // Blocks in original order
@@ -78,6 +79,7 @@ struct BlockRemove { std::vector<RemoveRule> rules; };
 struct BlockAdd { std::vector<AddRule> rules; };
 struct BlockVictory {};
 struct BlockGo {};
+struct BlockLore { std::string text; };
 
 using SceneBlock = std::variant<
     BlockDescription,
@@ -89,7 +91,8 @@ using SceneBlock = std::variant<
     BlockRemove,
     BlockAdd,
     BlockVictory,
-    BlockGo
+    BlockGo,
+    BlockLore
 >;
 
 struct Scene {
@@ -98,4 +101,3 @@ struct Scene {
 };
 
 #endif // SCENE_H
-

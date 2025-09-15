@@ -1,4 +1,4 @@
-A peine quelques metres apres l'entree, vous tombez sur une intersection. Deux chemins s'offrent a vous, il va bien falloir avancer par l'un des deux.
+﻿A peine quelques metres apres l'entree, vous tombez sur une intersection. Deux chemins s'offrent a vous, il va bien falloir avancer par l'un des deux.
 
 1. Choisir le chemin de gauche.
 2. Choisir le chemin de droite.
@@ -6,3 +6,4 @@ A peine quelques metres apres l'entree, vous tombez sur une intersection. Deux c
 *PATH*
 2
 3
+

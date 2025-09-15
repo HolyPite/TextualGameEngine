@@ -1,15 +1,16 @@
-La tour de garde est dǸlabrǸe. A l�?TintǸrieur, vous rencontrez un chevalier mourant, qui vous remet un bouclier lǸger.
+﻿La tour de garde est dÇ¸labrÇ¸e. A lï¿½?TintÇ¸rieur, vous rencontrez un chevalier mourant, qui vous remet un bouclier lÇ¸ger.
 
 *ARMURE*
-Bouclier LǸger
+Bouclier LÇ¸ger
 2
 
 "Allez... sauvez la princesse."
 
 *PATH*
-10 Quitter la tour et continuer �� l�?TEst.
-1 Retourner en arri��re.
+10;Quitter la tour et continuer ï¿½ï¿½ lï¿½?TEst.
+1;Retourner en arriï¿½ï¿½re.
 
 *REMOVE*
-4 PATH 9
-this ARMURE Bouclier LǸger
+4;PATH;9
+this;ARMURE;Bouclier LÇ¸ger
+

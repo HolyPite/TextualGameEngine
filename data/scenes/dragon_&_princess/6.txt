@@ -1,4 +1,4 @@
-Vous continuez le long du ruisseau. Plus loin, le ruisseau se jette dans un marécage glauque. Le sol est spongieux et une créature à la peau visqueuse vous barre la route.
+﻿Vous continuez le long du ruisseau. Plus loin, le ruisseau se jette dans un marÃ©cage glauque. Le sol est spongieux et une crÃ©ature Ã  la peau visqueuse vous barre la route.
 
 *COMBAT*
 Slime
@@ -6,12 +6,14 @@ Slime
 0
 1
 
-En vainquant le Slime, vous trouvez une épée abîmée.
+En vainquant le Slime, vous trouvez une Ã©pÃ©e abÃ®mÃ©e.
 
 *ARME*
-Epée Abimée
+EpÃ©e AbimÃ©e
 2
 
 *PATH*
-11 Traverser le marécage.
-0 Revenir vers la forêt.
+11;Traverser le marÃ©cage.
+start;Revenir vers la forÃªt.
+
+

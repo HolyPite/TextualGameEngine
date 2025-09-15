@@ -1,9 +1,10 @@
-Vous fouillez la cour et trouvez une lance ancienne entre les débris.
+﻿Vous fouillez la cour et trouvez une lance ancienne entre les dÃ©bris.
 
 *ARME*
 Lance Ancienne
 3
 
 *PATH*
-17 Entrer dans le donjon.
-10 Reculer vers l’entrée du château.
+17;Entrer dans le donjon.
+10;Reculer vers lâ€™entrÃ©e du chÃ¢teau.
+

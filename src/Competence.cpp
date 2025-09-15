@@ -1,5 +1,7 @@
 #include "Competence.h"
 #include <iostream>
+#include <sstream>
+#include "ui.h"
 
 static const char* skillTypeToLabel(SkillType t) {
     switch (t) {
@@ -11,15 +13,15 @@ static const char* skillTypeToLabel(SkillType t) {
 }
 
 void Competence::afficher() const {
-    std::cout << nom << " (" << skillTypeToLabel(type) << "): \n";
+    std::ostringstream oss;
+    oss << nom << " (" << skillTypeToLabel(type) << "): \n";
     switch (type) {
-        case SkillType::Attaque: std::cout << "    Degat: "; break;
-        case SkillType::Protection: std::cout << "    Bouclier: "; break;
-        case SkillType::Soin: std::cout << "    Soin: "; break;
+        case SkillType::Attaque: oss << "    Degat: "; break;
+        case SkillType::Protection: oss << "    Bouclier: "; break;
+        case SkillType::Soin: oss << "    Soin: "; break;
     }
-    if (getValueType() == ValueType::Flat) std::cout << "+" << valeur;
-    else std::cout << valeur << "%";
-    std::cout << "\n";
-    std::cout << "    Mana: " << coutMana << "\n";
+    if (getValueType() == ValueType::Flat) oss << "+" << valeur; else oss << valeur << "%";
+    oss << "\n";
+    oss << "    Mana: " << coutMana << "\n";
+    ui::typewrite_words(oss.str(), 28, 110);
 }
-

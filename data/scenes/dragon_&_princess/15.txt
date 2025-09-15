@@ -1,9 +1,11 @@
-Vous donnez une arme à l’étranger. En échange, il vous tend une armure renforcée.
+﻿Vous donnez une arme Ã  lâ€™Ã©tranger. En Ã©change, il vous tend une armure renforcÃ©e.
 
 *ARMURE*
-Armure Renforcée
+Armure RenforcÃ©e
 3
 
 *PATH*
-0 Quitter la hutte et revenir au marécage.
-20 Chercher un autre chemin.
+start;Quitter la hutte et revenir au marÃ©cage.
+20;Chercher un autre chemin.
+
+

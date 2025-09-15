@@ -1,4 +1,4 @@
-Vous pénétrez dans le donjon. L’atmosphère est lourde, les murs suintants. Des bruits de chaînes proviennent d’une cellule. La princesse Elwen est là, enchaînée.
+﻿Vous pÃ©nÃ©trez dans le donjon. Lâ€™atmosphÃ¨re est lourde, les murs suintants. Des bruits de chaÃ®nes proviennent dâ€™une cellule. La princesse Elwen est lÃ , enchaÃ®nÃ©e.
 
 Un dragon surgit ! Le Dragon Sombre vous bloque la route !
 
@@ -8,7 +8,8 @@ Dragon Sombre
 6
 8
 
-Si vous vainquez le Dragon, vous pouvez libérer la princesse.
+Si vous vainquez le Dragon, vous pouvez libÃ©rer la princesse.
 
 *PATH*
-21 Libérer la princesse.
+21;LibÃ©rer la princesse.
+

@@ -1,4 +1,4 @@
-En fouillant les étagères, vous trouvez une vieille combinaison de protection. Elle semble encore fonctionnelle et pourrait vous protéger contre des menaces à venir.
+﻿En fouillant les Ã©tagÃ¨res, vous trouvez une vieille combinaison de protection. Elle semble encore fonctionnelle et pourrait vous protÃ©ger contre des menaces Ã  venir.
 
 *ARMURE*
 Combinaison de protection
@@ -10,3 +10,4 @@ Combinaison de protection
 *PATH*
 1
 7
+

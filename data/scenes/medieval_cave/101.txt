@@ -1,3 +1,4 @@
-Confiant en votre equilibre et ne voulant pas risquer de rater la relique vous continuez sur ce chemin. Le sol s'effondre sous votre poids. Vous tombez de plusieurs metres et vous vous empalez sur des pics de bois.
+﻿Confiant en votre equilibre et ne voulant pas risquer de rater la relique vous continuez sur ce chemin. Le sol s'effondre sous votre poids. Vous tombez de plusieurs metres et vous vous empalez sur des pics de bois.
 
-*GO*
+*END*
+

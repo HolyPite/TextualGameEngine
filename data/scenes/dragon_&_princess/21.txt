@@ -1,7 +1,8 @@
-Vous brisez les chaînes de la princesse Elwen. Elle vous remercie, les larmes aux yeux.
+﻿Vous brisez les chaÃ®nes de la princesse Elwen. Elle vous remercie, les larmes aux yeux.
 
-"Grâce à vous, je suis libre. Votre nom sera honoré dans le royaume."
+"GrÃ¢ce Ã  vous, je suis libre. Votre nom sera honorÃ© dans le royaume."
 
-Vous sortez du château aux côtés de la princesse, le Dragon Sombre vaincu, le peuple libéré.
+Vous sortez du chÃ¢teau aux cÃ´tÃ©s de la princesse, le Dragon Sombre vaincu, le peuple libÃ©rÃ©.
 
-*VICTOIRE*
+*VICTORY*
+

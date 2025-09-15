@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sstream>
 #include <optional>
 #include <algorithm>
 #include <unordered_map>
@@ -13,6 +14,7 @@
 class Entite {
 protected:
     std::string nom;
+    bool isPlayer{false};
     int PV;
     int PVmax;
     int PM;
@@ -42,13 +44,15 @@ public:
     Entite(const std::string& nom, int pv, int pm, int def)
         : nom(nom), PV(pv), PVmax(pv), PM(pm), PMmax(pm), defenseBase(def), defenseBoost(0),
           protectionUtilisee(false) {
-        // Initialisation des emplacements d'Ã©quipement
+        // Initialisation des emplacements d'équipement
         equipements.resize(2, {"Aucun", 0}); // Index 0: Arme, Index 1: Armure
     }
 
     virtual ~Entite() {}
 
     const std::string& getNom() const { return nom; }
+    void setIsPlayer(bool v) { isPlayer = v; }
+    std::string displayName() const { return ui::color(nom, isPlayer ? ui::GREEN : ui::MAGENTA); }
     int getPV() const { return PV; }
     int getPVmax() const { return PVmax; }
     int getAtkBase() const { return atkBase; }
@@ -68,22 +72,28 @@ public:
         int degatsReduits = std::max(degats - defenseTotale, 0);
         PV -= degatsReduits;
         if (PV < 0) PV = 0;
-        std::cout << nom << " subit " << degatsReduits << " dÃ©gÃ¢ts aprÃ¨s rÃ©duction par la dÃ©fense.\n";
+        {
+            std::ostringstream oss; oss << displayName() << " subit " << degatsReduits << " dégâts après réduction par la défense.\n";
+            ui::typewrite_words(oss.str(), 28, 110);
+        }
     }
 
-    virtual void afficherStats() const {
-        std::cout << "\n~~~~~~~~~ Stats : " << nom << " ~~~~~~~~~\n"
-                  << "PV: " << PV << "/" << PVmax << "\n"
-                  << "Mana: " << PM << "/" << PMmax << "\n"
-                  << "DÃ©fense: " << defenseBase << "\n"
-                  << "ATK: " << atkBase << "\n"
-                  << "SPD: " << spdBase << "\n"
-                  << "Or: " << gold << "\n";
+    virtual void afficherStats(bool colorName = false, const char* colorCode = ui::YELLOW) const {
+        std::string shownName = colorName ? ui::color(nom, colorCode) : (isPlayer ? ui::color(nom, ui::GREEN) : ui::color(nom, ui::MAGENTA));
+        std::ostringstream oss;
+        oss << "\n~~~~~~~~~ Stats : " << shownName << " ~~~~~~~~~\n"
+            << "PV: " << PV << "/" << PVmax << "\n"
+            << "Mana: " << PM << "/" << PMmax << "\n"
+            << "Défense: " << defenseBase << "\n"
+            << "ATK: " << atkBase << "\n"
+            << "SPD: " << spdBase << "\n"
+            << "Or: " << gold << "\n";
         if (protectionUtilisee) {
-            std::cout << "Boost de dÃ©fense: " << defenseBoost << "\n";
+            oss << "Boost de défense: " << defenseBoost << "\n";
         }
-        std::cout << "Arme: " << equipements[0].first << " (+ " << equipements[0].second << ")\n"
-                  << "Armure: " << equipements[1].first << " (+ " << equipements[1].second << ")\n\n";
+        oss << "Arme: " << equipements[0].first << " (+ " << equipements[0].second << ")\n"
+            << "Armure: " << equipements[1].first << " (+ " << equipements[1].second << ")\n\n";
+        ui::typewrite_words(oss.str(), 28, 110);
     }
 
     
@@ -92,8 +102,11 @@ public:
     void ajouterOr(int delta) {
         gold += delta;
         if (gold < 0) gold = 0;
-        if (delta > 0) std::cout << "+" << delta << " or obtenu.\n";
-        else if (delta < 0) std::cout << delta << " or depense.\n";
+        if (delta > 0) {
+            ui::typewrite_words("+" + std::to_string(delta) + " or obtenu.\n", 28, 110);
+        } else if (delta < 0) {
+            ui::typewrite_words(std::to_string(delta) + " or depense.\n", 28, 110);
+        }
     }
     int getOr() const { return gold; }
 
@@ -103,19 +116,7 @@ public:
         competences.push_back(competence);
     }
 
-    void enleverCompetence(const std::string& nom) {
-        auto it = std::find_if(competences.begin(), competences.end(),
-            [&nom](const Competence& competence) {
-                return competence.getNom() == nom;
-            });
-        
-        if (it != competences.end()) {
-            competences.erase(it);
-            std::cout << "CompÃ©tence " << nom << " a Ã©tÃ© retirÃ©e.\n";
-        } else {
-            std::cout << "CompÃ©tence " << nom << " non trouvÃ©e.\n";
-        }
-    }
+    
 
     void afficherCompetences() const {
         for (size_t i = 0; i < competences.size(); ++i) {
@@ -128,12 +129,12 @@ public:
 
     void ajouterArme(const std::string& nom, int valeur) {
         inventaireArmes.emplace_back(nom, valeur);
-        std::cout << "Arme ajoutÃ©e : " << nom << " (+ " << valeur << ").\n";
+        std::cout << "Arme ajoutée : " << nom << " (+ " << valeur << ").\n";
     }
 
     void ajouterArmure(const std::string& nom, int valeur) {
         inventaireArmures.emplace_back(nom, valeur);
-        std::cout << "Armure ajoutÃ©e : " << nom << " (+ " << valeur << ").\n";
+        std::cout << "Armure ajoutée : " << nom << " (+ " << valeur << ").\n";
     }
 
 #if 0 // removed unused function
@@ -145,9 +146,9 @@ public:
         
         if (it != inventaireArmes.end()) {
             inventaireArmes.erase(it);
-            std::cout << "Arme " << nom << " a Ã©tÃ© retirÃ©e de l'inventaire.\n";
+            std::cout << "Arme " << nom << " a été retirée de l'inventaire.\n";
         } else {
-            std::cout << "Arme " << nom << " non trouvÃ©e dans l'inventaire.\n";
+            std::cout << "Arme " << nom << " non trouvée dans l'inventaire.\n";
         }
     }
 #endif
@@ -161,21 +162,21 @@ public:
         
         if (it != inventaireArmures.end()) {
             inventaireArmures.erase(it);
-            std::cout << "Armure " << nom << " a Ã©tÃ© retirÃ©e de l'inventaire.\n";
+            std::cout << "Armure " << nom << " a été retirée de l'inventaire.\n";
         } else {
-            std::cout << "Armure " << nom << " non trouvÃ©e dans l'inventaire.\n";
+            std::cout << "Armure " << nom << " non trouvée dans l'inventaire.\n";
         }
     }
 #endif
 
     void equiperArme(const std::string& nom, int valeur) {
         equipements[0] = {nom, valeur};
-        std::cout << "Arme Ã©quipÃ©e : " << nom << " (+ " << valeur << ").\n";
+        std::cout << "Arme équipée : " << nom << " (+ " << valeur << ").\n";
     }
 
     void equiperArmure(const std::string& nom, int valeur) {
         equipements[1] = {nom, valeur};
-        std::cout << "Armure Ã©quipÃ©e : " << nom << " (+ " << valeur << ").\n";
+        std::cout << "Armure équipée : " << nom << " (+ " << valeur << ").\n";
     }
 
     void afficherInventaire() const {
@@ -193,27 +194,27 @@ public:
 
     void equiperObjet() {
         afficherInventaire();
-        std::cout << "Choisissez une catÃ©gorie :\n1. Armes\n2. Armures\n";
+        std::cout << "Choisissez une catégorie :\n1. Armes\n2. Armures\n";
         int categorie;
         std::cin >> categorie;
 
         if (categorie == 1 && !inventaireArmes.empty()) {
-            std::cout << "Choisissez une arme Ã  Ã©quiper : ";
+            std::cout << "Choisissez une arme à équiper : ";
             int index;
             std::cin >> index;
             if (index > 0 && index <= static_cast<int>(inventaireArmes.size())) {
                 equiperArme(inventaireArmes[index - 1].first, inventaireArmes[index - 1].second);
-                std::cout << "Vous avez Ã©quipÃ© l'arme " << inventaireArmes[index - 1].first << ".\n";
+                std::cout << "Vous avez équipé l'arme " << inventaireArmes[index - 1].first << ".\n";
             } else {
                 std::cout << "Choix invalide.\n";
             }
         } else if (categorie == 2 && !inventaireArmures.empty()) {
-            std::cout << "Choisissez une armure Ã  Ã©quiper : ";
+            std::cout << "Choisissez une armure à équiper : ";
             int index;
             std::cin >> index;
             if (index > 0 && index <= static_cast<int>(inventaireArmures.size())) {
                 equiperArmure(inventaireArmures[index - 1].first, inventaireArmures[index - 1].second);
-                std::cout << "Vous avez Ã©quipÃ© l'armure " << inventaireArmures[index - 1].first << ".\n";
+                std::cout << "Vous avez équipé l'armure " << inventaireArmures[index - 1].first << ".\n";
             } else {
                 std::cout << "Choix invalide.\n";
             }
@@ -227,15 +228,19 @@ public:
     void attaquer(Entite& cible, char typeValeur, int valeur) {
         int degats = (typeValeur == '%') ? cible.PVmax * valeur / 100 : valeur;
         degats += equipements[0].second; // Bonus d'attaque de l'arme
-        std::cout << nom << " inflige " << degats << " dÃ©gÃ¢ts Ã  " << cible.getNom() << " !\n";
+        {
+            std::ostringstream oss; oss << displayName() << " inflige " << degats << " dégâts à " << cible.displayName() << " !\n";
+            ui::typewrite_words(oss.str(), 28, 110);
+        }
         cible.defendre(degats);
-        // Effet d'arme: appliquer DOT si dÃ©fini pour l'arme Ã©quipÃ©e
+        // Effet d'arme: appliquer DOT si défini pour l'arme équipée
         auto __itEffW = itemEffects.find(equipements[0].first);
         if (__itEffW != itemEffects.end() && __itEffW->second.type == EffectType::DOT && __itEffW->second.value > 0 && __itEffW->second.duration > 0) {
             cible.activeEffects.push_back({EffectType::DOT, __itEffW->second.label, __itEffW->second.value, __itEffW->second.duration});
             if (!__itEffW->second.label.empty()) {
-                std::cout << cible.getNom() << " est affectÃ© par " << __itEffW->second.label
+                std::ostringstream oss; oss << cible.displayName() << " est affecté par " << __itEffW->second.label
                           << " (" << __itEffW->second.value << ", " << __itEffW->second.duration << " tours).\n";
+                ui::typewrite_words(oss.str(), 28, 110);
             }
         }
     }
@@ -243,7 +248,10 @@ public:
     void soigner(char typeValeur, int valeur) {
         int soin = (typeValeur == '%') ? PVmax * valeur / 100 : valeur;
         PV = std::min(PV + soin, PVmax);
-        std::cout << nom << " restaure " << soin << " PV !\n";
+        {
+            std::ostringstream oss; oss << displayName() << " restaure " << soin << " PV !\n";
+            ui::typewrite_words(oss.str(), 28, 110);
+        }
     }
 
     void proteger(char typeValeur, int valeur) {
@@ -254,15 +262,18 @@ public:
                 defenseBoost = valeur;
             }
             protectionUtilisee = true;
-            std::cout << nom << " augmente sa dÃ©fense de " << defenseBoost << " !\n";
+            {
+                std::ostringstream oss; oss << displayName() << " augmente sa défense de " << defenseBoost << " !\n";
+                ui::typewrite_words(oss.str(), 28, 110);
+            }
         } else {
-            std::cout << "Protection dÃ©jÃ  utilisÃ©e dans ce combat !\n";
+            ui::typewrite_words("Protection déjà utilisée dans ce combat !\n", 28, 110);
         }
     }
 
     void reinitialiserProtection() {
         protectionUtilisee = false;
-        defenseBoost = 0;             // RÃ©initialise le bonus de protection
+        defenseBoost = 0;             // Réinitialise le bonus de protection
     }
 
     bool utiliserCompetence(int index, Entite& cible) {
@@ -270,7 +281,7 @@ public:
 
         const Competence& comp = competences[index];
         if (PM < comp.getCoutMana()) {
-            std::cout << "Pas assez de mana pour utiliser " << comp.getNom() << " !\n";
+            ui::typewrite_words("Pas assez de mana pour utiliser " + comp.getNom() + " !\n", 28, 110);
             return false;
         }
 
@@ -317,7 +328,10 @@ public:
                 if (e.type == EffectType::DOT) {
                     PV -= e.value;
                     if (PV < 0) PV = 0;
-                    std::cout << nom << " subit " << e.value << " dÃ©gÃ¢ts" << (e.label.empty()?"":(" ("+e.label+")")) << ".\n";
+                    {
+                        std::ostringstream oss; oss << displayName() << " subit " << e.value << " dégâts" << (e.label.empty()?"":(" ("+e.label+")")) << ".\n";
+                        ui::typewrite_words(oss.str(), 28, 110);
+                    }
                 }
                 e.remaining -= 1;
             }

@@ -1,4 +1,4 @@
-#include "SceneParser.h"
+﻿#include "SceneParser.h"
 #include <fstream>
 #include <sstream>
 #include <algorithm>
@@ -68,17 +68,20 @@ Scene parse(const std::string& filepath) {
     std::string descBuf;
     long long lineNo = 0;
 
-    auto flushDesc = [&](){
-        if (!descBuf.empty()) {
-            scene.blocks.emplace_back(BlockDescription{descBuf});
-            descBuf.clear();
-        }
-    };
+    auto flushDesc = [&](){ /* free description disabled */ };
 
+    bool firstLine = true;
     while (std::getline(f, line)) { ++lineNo;
-        if (line.empty()) { descBuf += "\n"; continue; }
+        if (line.empty()) { continue; }
         std::string l = trim_copy(line);
-        if (l.empty()) { descBuf += "\n"; continue; }
+        if (firstLine) {
+            // Strip UTF-8 BOM if present
+            if (l.size() >= 3 && (unsigned char)l[0] == 0xEF && (unsigned char)l[1] == 0xBB && (unsigned char)l[2] == 0xBF) {
+                l.erase(0, 3);
+            }
+            firstLine = false;
+        }
+        if (l.empty()) { continue; }
 
         if (l.rfind("*COMBAT*", 0) == 0) {
             flushDesc();
@@ -165,15 +168,11 @@ Scene parse(const std::string& filepath) {
             std::streampos pos;
             while (true) {
                 pos = f.tellg();
-                std::string l2; if (!std::getline(f, l2)) break; ++lineNo; if (l2.empty()) break;
+                std::string l2; if (!std::getline(f, l2)) break; ++lineNo; l2 = trim_copy(l2); if (l2.empty()) break;
                 if (l2[0]=='*') { f.seekg(pos); break; }
-                std::istringstream iss(l2);
-                int id; std::string rest;
-                if (iss >> id) {
-                    std::getline(iss, rest);
-                    if (!rest.empty() && rest[0]==' ') rest.erase(0,1);
-                    options.push_back(PathOption{id, trim_copy(rest)});
-                } else { std::cerr << "Parse warning: malformed PATH at " << filepath << ":" << lineNo << "\n"; }
+                auto parts = splitSemi(l2);
+                if (parts.size() >= 2) { options.push_back(PathOption{parts[0], parts[1]}); }
+                else { std::cerr << "Parse warning: malformed PATH at " << filepath << ":" << lineNo << "\n"; }
             }
             if (!options.empty()) scene.blocks.emplace_back(BlockPath{options});
         } else if (l.rfind("*GOLD*", 0) == 0) {
@@ -192,23 +191,50 @@ Scene parse(const std::string& filepath) {
                 if (l2.empty()) break;
                 if (!l2.empty() && l2[0]=='*') { f.seekg(pos); break; }
                 auto parts = splitSemi(l2);
-                // Accept both legacy 4 fields and generic 7 fields for effects
                 if (parts.size() >= 4) {
+                    // Normalized: Prix;Type;Nom;Valeur[;Effet;NomEffet;DurÃ©e;ValeurEffet]
+                    bool priceFirst = true; int price=0; try{ price = std::stoi(parts[0]); }catch(...){ priceFirst=false; }
                     ItemSpec it;
-                    it.type = parseItemType(parts[0]);
-                    it.name = parts[1];
-                    try{ it.value = std::stoi(parts[2]); }catch(...){ it.value=0; }
-                    if (parts.size() >= 7) {
-                        EffectSpec eff; eff.kind = parseEffectKind(parts[3]); eff.label = parts[4];
-                        try{ eff.duration = std::stoi(parts[5]); }catch(...){ eff.duration=0; }
-                        try{ eff.value = std::stoi(parts[6]); }catch(...){ eff.value=0; }
-                        if (eff.kind != EffectKind::None) it.effect = eff;
+                    if (priceFirst) {
+                        it.type = parseItemType(parts[1]); it.name = parts[2];
+                        try{ it.value = std::stoi(parts[3]); }catch(...){ it.value=0; }
+                        if (parts.size() >= 8) {
+                            EffectSpec eff; eff.kind = parseEffectKind(parts[4]); eff.label = parts[5];
+                            try{ eff.duration = std::stoi(parts[6]); }catch(...){ eff.duration=0; }
+                            try{ eff.value = std::stoi(parts[7]); }catch(...){ eff.value=0; }
+                            if (eff.kind != EffectKind::None) it.effect = eff;
+                        }
+                    } else {
+                        // Back-compat: Type;Nom;Valeur[;Effet;NomEffet;DurÃ©e;ValeurEffet];Prix
+                        it.type = parseItemType(parts[0]); it.name = parts[1];
+                        try{ it.value = std::stoi(parts[2]); }catch(...){ it.value=0; }
+                        if (parts.size() >= 7) {
+                            EffectSpec eff; eff.kind = parseEffectKind(parts[3]); eff.label = parts[4];
+                            try{ eff.duration = std::stoi(parts[5]); }catch(...){ eff.duration=0; }
+                            try{ eff.value = std::stoi(parts[6]); }catch(...){ eff.value=0; }
+                            if (eff.kind != EffectKind::None) it.effect = eff;
+                        }
+                        try{ price = std::stoi(parts.back()); }catch(...){ price=0; }
                     }
-                    int price = 0; try{ price = std::stoi(parts.back()); }catch(...){ price = 0; }
                     items.push_back(ShopItem{it, price});
                 } else { std::cerr << "Parse warning: malformed SHOP at " << filepath << ":" << lineNo << "\n"; }
             }
             if (!items.empty()) scene.blocks.emplace_back(BlockShop{items});
+        } else if (l.rfind("*LORE*", 0) == 0) {
+            // Lore text block: accumulate lines until blank or next tag
+            flushDesc();
+            std::ostringstream oss;
+            std::streampos pos;
+            while (true) {
+                pos = f.tellg();
+                std::string l2; if (!std::getline(f, l2)) break; ++lineNo;
+                if (l2.empty()) break;
+                std::string t = trim_copy(l2);
+                if (!t.empty() && t[0] == '*') { f.seekg(pos); break; }
+                oss << l2 << "\n";
+            }
+            std::string lore = oss.str();
+            if (!lore.empty()) scene.blocks.emplace_back(BlockLore{lore});
         } else if (l.rfind("*REMOVE*", 0) == 0) {
             flushDesc();
             std::vector<RemoveRule> rules;
@@ -218,14 +244,21 @@ Scene parse(const std::string& filepath) {
                 std::string l2; if (!std::getline(f, l2)) break; ++lineNo; l2 = trim_copy(l2);
                 if (l2.empty()) break;
                 if (!l2.empty() && l2[0]=='*') { f.seekg(pos); break; }
-                std::istringstream iss(l2);
-                std::string sceneTok, type, param; if (!(iss>>sceneTok>>type)) continue;
-                std::getline(iss, param); if (!param.empty() && param[0]==' ') param.erase(0,1);
+                auto rparts = splitSemi(l2);
+                if (rparts.size() < 3) { std::cerr<<"Parse warning: malformed REMOVE at "<<filepath<<":"<<lineNo<<"\n"; continue; }
+                std::string sceneTok = rparts[0]; std::string type = rparts[1]; std::string param = rparts[2];
                 RemoveRule r;
-                if (sceneTok=="this") { r.isThis = true; r.sceneId=0; }
-                else { r.isThis = false; try{ r.sceneId = std::stoi(sceneTok);}catch(...){ r.sceneId=0; } }
+                if (sceneTok=="this") { r.isThis = true; r.sceneKey.clear(); }
+                else { r.isThis = false; r.sceneKey = sceneTok; }
                 for (auto& c : type) c=(char)std::toupper((unsigned char)c);
-                if (type=="PATH") r.type=RemoveType::Path; else if (type=="COMBAT") r.type=RemoveType::Combat; else if (type=="ARME") r.type=RemoveType::Arme; else if (type=="ARMURE") r.type=RemoveType::Armure; else if (type=="GOLD") r.type=RemoveType::Gold; else if (type=="SHOP") r.type=RemoveType::Shop; else { std::cerr<<"Parse warning: unknown REMOVE type at "<<filepath<<":"<<lineNo<<"\n"; continue; }
+                if (type=="PATH") r.type=RemoveType::Path;
+                else if (type=="COMBAT") r.type=RemoveType::Combat;
+                else if (type=="ARME") r.type=RemoveType::Arme;
+                else if (type=="ARMURE") r.type=RemoveType::Armure;
+                else if (type=="GOLD") r.type=RemoveType::Gold;
+                else if (type=="SHOP") r.type=RemoveType::Shop;
+                else if (type=="LORE") r.type=RemoveType::Lore;
+                else { std::cerr<<"Parse warning: unknown REMOVE type at "<<filepath<<":"<<lineNo<<"\n"; continue; }
                 r.param = param; rules.push_back(r);
             }
             if (!rules.empty()) scene.blocks.emplace_back(BlockRemove{rules});
@@ -238,9 +271,10 @@ Scene parse(const std::string& filepath) {
                 std::string l2; if (!std::getline(f, l2)) break; ++lineNo; l2 = trim_copy(l2);
                 if (l2.empty()) break;
                 if (!l2.empty() && l2[0]=='*') { f.seekg(pos); break; }
-                std::istringstream iss(l2);
-                std::string sceneTok, type; if (!(iss>>sceneTok>>type)) continue;
-                AddRule ar; if (sceneTok=="this") { ar.isThis = true; ar.sceneId = 0; } else { ar.isThis=false; try{ ar.sceneId=std::stoi(sceneTok);}catch(...){ar.sceneId=0;} }
+                auto head = splitSemi(l2);
+                if (head.size() < 2) { std::cerr<<"Parse warning: malformed ADD at "<<filepath<<":"<<lineNo<<"\n"; continue; }
+                std::string sceneTok = head[0]; std::string type = head[1];
+                AddRule ar; if (sceneTok=="this") { ar.isThis = true; ar.sceneKey.clear(); } else { ar.isThis=false; ar.sceneKey = sceneTok; }
                 for (auto& c : type) c=(char)std::toupper((unsigned char)c);
 
                 // Expect a following header *PATH* / *COMBAT* / *ITEM* or *ARME*/ *ARMURE*
@@ -254,9 +288,9 @@ Scene parse(const std::string& filepath) {
                     std::streampos p3;
                     while (true) {
                         p3 = f.tellg();
-                        std::string l3; if (!std::getline(f, l3)) break; ++lineNo; if (l3.empty()) break; if (!l3.empty() && l3[0]=='*'){ f.seekg(p3); break; }
-                        std::istringstream iss2(l3);
-                        int id; std::string rest; if (iss2>>id){ std::getline(iss2, rest); if (!rest.empty() && rest[0]==' ') rest.erase(0,1); ar.paths.push_back(PathOption{id, trim_copy(rest)}); }
+                        std::string l3; if (!std::getline(f, l3)) break; ++lineNo; l3 = trim_copy(l3); if (l3.empty()) break; if (!l3.empty() && l3[0]=='*'){ f.seekg(p3); break; }
+                        auto pparts = splitSemi(l3);
+                        if (pparts.size() >= 2) { ar.paths.push_back(PathOption{pparts[0], pparts[1]}); }
                     }
                     rules.push_back(ar);
                 } else if (type=="COMBAT" && header.find("*COMBAT*")!=std::string::npos) {
@@ -324,18 +358,45 @@ Scene parse(const std::string& filepath) {
                         if (l3[0]=='*'){ f.seekg(p3); break; }
                         auto parts = splitSemi(l3);
                         if (parts.size() >= 4) {
-                            ItemSpec it; it.type = parseItemType(parts[0]); it.name = parts[1];
-                            try{ it.value = std::stoi(parts[2]); }catch(...){ it.value=0; }
-                            if (parts.size() >= 7) {
-                                EffectSpec eff; eff.kind = parseEffectKind(parts[3]); eff.label = parts[4];
-                                try{ eff.duration = std::stoi(parts[5]); }catch(...){ eff.duration=0; }
-                                try{ eff.value = std::stoi(parts[6]); }catch(...){ eff.value=0; }
-                                if (eff.kind != EffectKind::None) it.effect = eff;
+                            bool priceFirst = true; int price=0; try{ price = std::stoi(parts[0]); }catch(...){ priceFirst=false; }
+                            ItemSpec it;
+                            if (priceFirst) {
+                                it.type = parseItemType(parts[1]); it.name = parts[2]; try{ it.value = std::stoi(parts[3]); }catch(...){ it.value=0; }
+                                if (parts.size() >= 8) {
+                                    EffectSpec eff; eff.kind = parseEffectKind(parts[4]); eff.label = parts[5];
+                                    try{ eff.duration = std::stoi(parts[6]); }catch(...){ eff.duration=0; }
+                                    try{ eff.value = std::stoi(parts[7]); }catch(...){ eff.value=0; }
+                                    if (eff.kind != EffectKind::None) it.effect = eff;
+                                }
+                            } else {
+                                it.type = parseItemType(parts[0]); it.name = parts[1]; try{ it.value = std::stoi(parts[2]); }catch(...){ it.value=0; }
+                                if (parts.size() >= 7) {
+                                    EffectSpec eff; eff.kind = parseEffectKind(parts[3]); eff.label = parts[4];
+                                    try{ eff.duration = std::stoi(parts[5]); }catch(...){ eff.duration=0; }
+                                    try{ eff.value = std::stoi(parts[6]); }catch(...){ eff.value=0; }
+                                    if (eff.kind != EffectKind::None) it.effect = eff;
+                                }
+                                try{ price = std::stoi(parts.back()); }catch(...){ price=0; }
                             }
-                            int price=0; try{ price = std::stoi(parts.back()); }catch(...){ price=0; }
                             ar.shopItems.push_back(ShopItem{it, price});
                         }
                     }
+                    rules.push_back(ar);
+                } else if (type=="LORE" && header.find("*LORE*")!=std::string::npos) {
+                    ar.type = AddType::Lore;
+                    // Read text lines until blank or next tag
+                    std::ostringstream lore;
+                    std::streampos p3;
+                    while (true) {
+                        p3 = f.tellg();
+                        std::string l3; if (!std::getline(f, l3)) break; ++lineNo;
+                        if (l3.empty()) break;
+                        std::string t3 = trim_copy(l3);
+                        if (!t3.empty() && t3[0]=='*'){ f.seekg(p3); break; }
+                        lore << l3 << "\n";
+                    }
+                    std::string L = lore.str();
+                    if (!L.empty()) ar.lores.push_back(L);
                     rules.push_back(ar);
                 } else {
                     // mismatch header; rewind
@@ -343,13 +404,13 @@ Scene parse(const std::string& filepath) {
                 }
             }
             if (!rules.empty()) scene.blocks.emplace_back(BlockAdd{rules});
-        } else if (l.rfind("*VICTOIRE*", 0) == 0) {
+        } else if (l.rfind("*VICTORY*", 0) == 0) {
             flushDesc(); scene.blocks.emplace_back(BlockVictory{});
-        } else if (l.rfind("*GO*", 0) == 0) {
+        } else if (l.rfind("*END*", 0) == 0) {
             flushDesc(); scene.blocks.emplace_back(BlockGo{});
         } else {
-            // part of description
-            descBuf += line + "\n";
+            // Free description is not allowed anymore; ignore stray lines
+            std::cerr << "Parse warning: ignored text outside block at " << filepath << ":" << lineNo << "\n";
         }
     }
     flushDesc();
@@ -357,3 +418,4 @@ Scene parse(const std::string& filepath) {
 }
 
 } // namespace scene
+

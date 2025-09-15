@@ -1,5 +1,6 @@
-Vous sortez de la cabane et poursuivez votre chemin vers l'Est. Le sentier devient rocailleux. Au loin, vous apercevez une tour de garde en ruines.
+﻿Vous sortez de la cabane et poursuivez votre chemin vers l'Est. Le sentier devient rocailleux. Au loin, vous apercevez une tour de garde en ruines.
 
 *PATH*
-9 Explorer la tour de garde.
-10 Continuer vers l'Est en direction du château.
+9;Explorer la tour de garde.
+10;Continuer vers l'Est en direction du chÃ¢teau.
+

@@ -16,7 +16,7 @@ int main() {
         "*COMBAT*\nGob;10;1;2\n\n"
         "*ITEM*\nARME;Epee;3;DOT;Poison;2;1\n\n"
         "*GOLD*\n5\n\n"
-        "*SHOP*\nARME;Dague;1;10\n\n"
+        "*SHOP*\n10;ARME;Dague;1\n\n"
         "*PATH*\n2 Continuer\n");
 
     auto sc1 = scene::parse("tests/data/s1.txt");
@@ -35,7 +35,7 @@ int main() {
     writeFile("tests/data/s2.txt",
         "*REMOVE*\nthis PATH 2\nthis COMBAT Gob\nthis GOLD *\nthis SHOP *\n\n"
         "*ADD*\nthis GOLD\n*GOLD*\n10\n\n"
-        "this SHOP\n*SHOP*\nARME;Hache;2;20\n\n");
+        "this SHOP\n*SHOP*\n20;ARME;Hache;2\n\n");
     auto sc2 = scene::parse("tests/data/s2.txt");
     bool hasAdd=false, hasRemove=false;
     for (const auto& b : sc2.blocks) {

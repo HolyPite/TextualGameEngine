@@ -1,0 +1,22 @@
+﻿*LORE*
+La tour de guet grince. Un vieux mecanisme active un protecteur.
+
+*COMBAT*
+Garde automatique;14;3;4;8;9;HIDE
+Sentinelle d'acier;12;4;3;10;7;FULL
+
+*LORE*
+Un cadran bat la mesure. A chaque tic, les plaques du sol se retractent un peu, revelant des engrenages voraces.
+
+*PATH*
+entrepot;Redescendre vers l'entrepot.
+start;Revenir vers les portes.
+
+*REMOVE*
+this;COMBAT;Garde automatique
+start;PATH;tour_de_guet
+
+
+
+
+

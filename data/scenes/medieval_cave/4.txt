@@ -1,4 +1,4 @@
-L'objet qui ressemblait a un coffre commence a se mouvoir. Il vous attaque.
+﻿L'objet qui ressemblait a un coffre commence a se mouvoir. Il vous attaque.
 
 *COMBAT*
 Mimic
@@ -16,3 +16,4 @@ Apres ce rude combat, vous choisissez de continuer votre route.
 *PATH*
 5
 5
+

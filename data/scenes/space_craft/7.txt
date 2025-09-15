@@ -1,10 +1,11 @@
-Vous entrez dans une immense salle, probablement le centre de contrôle du vaisseau. Une énorme créature mécanique vous barre la route, ses yeux rouges fixés sur vous.
+﻿Vous entrez dans une immense salle, probablement le centre de contrÃ´le du vaisseau. Une Ã©norme crÃ©ature mÃ©canique vous barre la route, ses yeux rouges fixÃ©s sur vous.
 
 *COMBAT*
 Sentinelle
 50
 10
 
-Après une bataille acharnée, vous trouvez une clé pour activer la capsule de sauvetage. C'est votre seule chance de survie.
+AprÃ¨s une bataille acharnÃ©e, vous trouvez une clÃ© pour activer la capsule de sauvetage. C'est votre seule chance de survie.
 
-*VICTOIRE*
+*VICTORY*
+

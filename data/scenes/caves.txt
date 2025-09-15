@@ -1,0 +1,33 @@
+﻿*LORE*
+Les caves sont sombres. Des tuyaux sifflent. Vous trouvez un outil utile sous un tas de ferraille.
+
+*ITEM*
+ARME;Pied-de-biche;3
+ARMURE;Gants huiles;1
+
+*LORE*
+En deplacant la ferraille, vous tombez sur une cle a rochet rouillee. Elle grince mais tourne encore.
+
+*PATH*
+marche;Remonter au marche.
+
+*REMOVE*
+this;ARME;Pied-de-biche
+
+*ADD*
+marche;PATH
+*PATH*
+atelier;Ouvrir la grille de l'atelier (grace au pied-de-biche).
+
+*REMOVE*
+marche;PATH;atelier_grille
+
+*ADD*
+marche;SHOP
+*SHOP*
+25;ARME;Lame dentelÃ©e;3
+22;ARMURE;Bouclier rivetÃ©;2
+
+
+
+

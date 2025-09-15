@@ -82,22 +82,21 @@ int main(int argc, char** argv) {
     // Charge la classe sélectionnée
     try {
         hero = chargerClasse((classesDir / fichiersClasse[choixClasse - 1]).string());
+        if (hero) hero->setIsPlayer(true);
     } catch (const std::exception& e) {
         std::cerr << "Erreur lors du chargement de la classe : " << e.what() << "\n";
         return 1;
     }
 
-    // Optional start scene via CLI: --start=N
-    int startId = 0;
+    // Optional start scene via CLI: --start=KEY (file stem)
+    std::string startKey = "start";
     for (int i=1;i<argc;i++) {
         std::string arg = argv[i];
         const std::string pre = "--start=";
-        if (arg.rfind(pre,0)==0) {
-            try { startId = std::stoi(arg.substr(pre.size())); } catch (...) {}
-        }
+        if (arg.rfind(pre,0)==0) { startKey = arg.substr(pre.size()); }
     }
 
-    Histoire histoire(std::move(hero), dataDir, startId);
+    Histoire histoire(std::move(hero), dataDir, startKey);
     histoire.jouer();
 
     return 0;

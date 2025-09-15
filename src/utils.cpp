@@ -31,9 +31,6 @@ static SkillType parseSkillType(const std::string& s) {
     return SkillType::Protection;
 }
 
-static ValueType parseValueType(char c) {
-    return (c == '%') ? ValueType::Percent : ValueType::Flat;
-}
 
 static ValueType parseValueTypeToken(const std::string& s) {
     if (s.empty()) return ValueType::Flat;

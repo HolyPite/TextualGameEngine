@@ -1,4 +1,4 @@
-Vous attaquez le vieil homme. Il se révèle être un mage puissant !
+﻿Vous attaquez le vieil homme. Il se rÃ©vÃ¨le Ãªtre un mage puissant !
 
 *COMBAT*
 Mage Errant
@@ -6,12 +6,13 @@ Mage Errant
 2
 4
 
-Après un combat difficile, vous le vainquez. Le mage laisse tomber un bâton gravé de runes.
+AprÃ¨s un combat difficile, vous le vainquez. Le mage laisse tomber un bÃ¢ton gravÃ© de runes.
 
 *ARME*
-Bâton Gravé
+BÃ¢ton GravÃ©
 3
 
 *PATH*
-7 Fouiller la cabane en détail.
-4 Sortir précipitamment.
+7;Fouiller la cabane en dÃ©tail.
+4;Sortir prÃ©cipitamment.
+

@@ -1,3 +1,4 @@
-Le coffre de gauche contient un piège ! Des flèches jaillissent et vous transpercent.
+﻿Le coffre de gauche contient un piÃ¨ge ! Des flÃ¨ches jaillissent et vous transpercent.
 
-*GO*
+*END*
+
