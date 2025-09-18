@@ -3,6 +3,8 @@
 
 #include <string>
 
+class GameUI;
+
 enum class SkillType { Attaque, Soin, Protection };
 enum class ValueType { Flat, Percent };
 
@@ -24,7 +26,7 @@ public:
     int getValeur() const { return valeur; }
     int getCoutMana() const { return coutMana; }
 
-    void afficher() const;
+    void afficher(GameUI& ui) const;
 };
 
 #endif // COMPETENCE_H

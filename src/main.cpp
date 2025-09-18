@@ -11,6 +11,7 @@
 #include "Histoire.h"
 #include "Entite.h"
 #include "ui.h"
+#include "GameUI.h"
 
 namespace fs = std::filesystem;
 
@@ -22,6 +23,10 @@ int main(int argc, char** argv) {
 #endif
     try { std::locale::global(std::locale("")); } catch (...) {}
     ui::init();
+
+    ConsoleGameUI consoleUI;
+    setActiveGameUI(&consoleUI);
+    GameUI& io = activeGameUI();
 
     std::vector<std::string> fichiersClasse;
 
@@ -55,34 +60,37 @@ int main(int argc, char** argv) {
     }
 
     // Affichage des options
-    std::cout << "Bienvenue dans le jeu RPG ! Choisissez votre classe :\n";
+    io.printLine("Bienvenue dans le jeu RPG ! Choisissez votre classe :");
     for (size_t i = 0; i < fichiersClasse.size(); ++i) {
-        std::cout << i + 1 << ". " << fichiersClasse[i].substr(0, fichiersClasse[i].find_last_of('.')) << "\n";
+        io.printLine(std::to_string(i + 1) + ". " + fichiersClasse[i].substr(0, fichiersClasse[i].find_last_of('.')));
     }
 
-    int choixClasse;
+    int choixClasse = 0;
     std::unique_ptr<Entite> hero;
 
     // Boucle pour demander une saisie valide
     while (true) {
-        std::cout << "\nVotre choix : ";
-        if (std::cin >> choixClasse) { // Vérifie que l'entrée est un entier
-            if (choixClasse > 0 && choixClasse <= static_cast<int>(fichiersClasse.size())) {
-                break; // Sort de la boucle si la saisie est valide
-            } else {
-                std::cout << "Choix invalide. Veuillez choisir un nombre entre 1 et " << fichiersClasse.size() << ".\n";
-            }
+        io.print("\nVotre choix : " );
+        if (!io.readInt(choixClasse)) {
+            io.discardLine();
+            io.printLine("Entr�e invalide. Veuillez entrer un nombre entier.");
+            continue;
+        }
+        io.discardLine();
+        if (choixClasse > 0 && choixClasse <= static_cast<int>(fichiersClasse.size())) {
+            break;
         } else {
-            std::cout << "Entrée invalide. Veuillez entrer un nombre entier.\n";
-            std::cin.clear(); // Efface le flag d'erreur
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore la mauvaise saisie
+            io.printLine("Choix invalide. Veuillez choisir un nombre valide.");
         }
     }
 
     // Charge la classe sélectionnée
     try {
         hero = chargerClasse((classesDir / fichiersClasse[choixClasse - 1]).string());
-        if (hero) hero->setIsPlayer(true);
+        if (hero) {
+            hero->setIsPlayer(true);
+            hero->setUI(&io);
+        }
     } catch (const std::exception& e) {
         std::cerr << "Erreur lors du chargement de la classe : " << e.what() << "\n";
         return 1;
@@ -101,3 +109,5 @@ int main(int argc, char** argv) {
 
     return 0;
 }
+
+

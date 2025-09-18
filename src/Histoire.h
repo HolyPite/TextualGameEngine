@@ -2,7 +2,6 @@
 #define HISTOIRE_H
 
 #include <vector>
-#include <iostream>
 #include <string>
 #include <memory>
 #include <unordered_set>
@@ -50,14 +49,44 @@ private:
     void gererEquipement(const std::string& type, const std::string& nom, int valeur);
     // Directives
     void appliquerRemoveBlock(const BlockRemove& blk, const std::string& currentSceneKey);
-    void appliquerAddBlock(const BlockAdd& blk);
+    void appliquerAddBlock(const BlockAdd& blk, const std::string& currentSceneKey);
     bool isRemoved(const std::string& sceneKey, const std::string& type, const std::string& param) const;
     static std::string extractSceneKey(const std::string& path);
     void addRemoval(const std::string& sceneKey, const std::string& type, const std::string& param);
 
     // Economie / Boutique
+    enum class BlockFlow { Continue, Break, Return };
+    struct SceneState {
+        std::string description;
+        std::string prochaineScene;
+        std::string sid;
+        int loreIndex{0};
+        std::vector<const BlockRemove*> deferredRemoves;
+        std::vector<const BlockAdd*> deferredAdds;
+    };
+
+    void flushDeferredDirectives(SceneState& state);
+    BlockFlow processBlock(const SceneBlock& blk, SceneState& state);
+    BlockFlow handleBlock(const BlockDescription& blk, SceneState& state);
+    BlockFlow handleBlock(const BlockLore& blk, SceneState& state);
+    BlockFlow handleBlock(const BlockCombat& blk, SceneState& state);
+    BlockFlow handleBlock(const BlockItems& blk, SceneState& state);
+    BlockFlow handleBlock(const BlockPath& blk, SceneState& state);
+    BlockFlow handleBlock(const BlockGold& blk, SceneState& state);
+    BlockFlow handleBlock(const BlockShop& blk, SceneState& state);
+    BlockFlow handleBlock(const BlockRemove& blk, SceneState& state);
+    BlockFlow handleBlock(const BlockAdd& blk, SceneState& state);
+    BlockFlow handleBlock(const BlockVictory& blk, SceneState& state);
+    BlockFlow handleBlock(const BlockGo& blk, SceneState& state);
     void gererGoldDelta(int delta);
     void gererShop(const std::vector<ShopItem>& items);
 };
 
 #endif // HISTOIRE_H
+
+
+
+
+
+
+

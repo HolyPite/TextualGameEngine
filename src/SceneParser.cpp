@@ -1,7 +1,9 @@
-﻿#include "SceneParser.h"
+#include "SceneParser.h"
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <utility>
+#include <unordered_set>
 #include <cctype>
 #include <limits>
 #include <iostream>
@@ -17,6 +19,55 @@ namespace {
         std::vector<std::string> out; std::string cur;
         for(char ch: s){ if(ch==';'){ out.push_back(trim_copy(cur)); cur.clear(); } else cur.push_back(ch);} out.push_back(trim_copy(cur));
         return out;
+    }
+    struct RemoveScanResult {
+        std::vector<BlockRemove> blocks;
+        std::unordered_set<size_t> ruleLineIndices;
+    };
+
+    static RemoveScanResult scanRemoveBlocks(const std::string& filepath) {
+        RemoveScanResult result;
+        std::ifstream in(filepath);
+        if (!in.is_open()) { return result; }
+        std::vector<std::string> lines;
+        std::string raw;
+        while (std::getline(in, raw)) { lines.push_back(raw); }
+        const size_t n = lines.size();
+        for (size_t i = 0; i < n; ++i) {
+            std::string line = trim_copy(lines[i]);
+            if (line.rfind("*REMOVE*", 0) != 0) { continue; }
+            std::vector<RemoveRule> rules;
+            size_t j = i + 1;
+            while (j < n) {
+                std::string ruleLine = trim_copy(lines[j]);
+                if (ruleLine.empty()) { break; }
+                if (!ruleLine.empty() && ruleLine[0] == '*') { break; }
+                auto parts = splitSemi(ruleLine);
+                if (parts.size() < 3) { ++j; continue; }
+                RemoveRule r;
+                if (parts[0] == "this") { r.isThis = true; r.sceneKey.clear(); }
+                else { r.isThis = false; r.sceneKey = parts[0]; }
+                std::string type = parts[1];
+                for (auto& c : type) { c = static_cast<char>(std::toupper(static_cast<unsigned char>(c))); }
+                if (type == "PATH") r.type = RemoveType::Path;
+                else if (type == "COMBAT") r.type = RemoveType::Combat;
+                else if (type == "ARME") r.type = RemoveType::Arme;
+                else if (type == "ARMURE") r.type = RemoveType::Armure;
+                else if (type == "GOLD") r.type = RemoveType::Gold;
+                else if (type == "SHOP") r.type = RemoveType::Shop;
+                else if (type == "LORE") r.type = RemoveType::Lore;
+                else { ++j; continue; }
+                r.param = parts[2];
+                rules.push_back(r);
+                result.ruleLineIndices.insert(j);
+                ++j;
+            }
+            if (!rules.empty()) {
+                result.blocks.emplace_back(BlockRemove{rules});
+            }
+            if (j > i + 1) { i = j - 1; }
+        }
+        return result;
     }
 }
 
@@ -69,9 +120,12 @@ Scene parse(const std::string& filepath) {
     long long lineNo = 0;
 
     auto flushDesc = [&](){ /* free description disabled */ };
+    RemoveScanResult removeScan = scanRemoveBlocks(filepath);
+    const auto& removeRuleLines = removeScan.ruleLineIndices;
 
     bool firstLine = true;
     while (std::getline(f, line)) { ++lineNo;
+        if (removeRuleLines.find(static_cast<size_t>(lineNo - 1)) != removeRuleLines.end()) { continue; }
         if (line.empty()) { continue; }
         std::string l = trim_copy(line);
         if (firstLine) {
@@ -192,7 +246,7 @@ Scene parse(const std::string& filepath) {
                 if (!l2.empty() && l2[0]=='*') { f.seekg(pos); break; }
                 auto parts = splitSemi(l2);
                 if (parts.size() >= 4) {
-                    // Normalized: Prix;Type;Nom;Valeur[;Effet;NomEffet;DurÃ©e;ValeurEffet]
+                    // Normalized: Prix;Type;Nom;Valeur[;Effet;NomEffet;Durée;ValeurEffet]
                     bool priceFirst = true; int price=0; try{ price = std::stoi(parts[0]); }catch(...){ priceFirst=false; }
                     ItemSpec it;
                     if (priceFirst) {
@@ -205,7 +259,7 @@ Scene parse(const std::string& filepath) {
                             if (eff.kind != EffectKind::None) it.effect = eff;
                         }
                     } else {
-                        // Back-compat: Type;Nom;Valeur[;Effet;NomEffet;DurÃ©e;ValeurEffet];Prix
+                        // Back-compat: Type;Nom;Valeur[;Effet;NomEffet;Durée;ValeurEffet];Prix
                         it.type = parseItemType(parts[0]); it.name = parts[1];
                         try{ it.value = std::stoi(parts[2]); }catch(...){ it.value=0; }
                         if (parts.size() >= 7) {
@@ -414,6 +468,22 @@ Scene parse(const std::string& filepath) {
         }
     }
     flushDesc();
+    if (!scene.blocks.empty()) {
+        const auto& rescannedRemoves = removeScan.blocks;
+        if (!rescannedRemoves.empty()) {
+            std::vector<SceneBlock> reordered;
+            reordered.reserve(rescannedRemoves.size() + scene.blocks.size());
+            for (const auto& br : rescannedRemoves) {
+                reordered.emplace_back(br);
+            }
+            for (auto& b : scene.blocks) {
+                if (!std::holds_alternative<BlockRemove>(b)) {
+                    reordered.emplace_back(std::move(b));
+                }
+            }
+            scene.blocks = std::move(reordered);
+        }
+    }
     return scene;
 }
 
