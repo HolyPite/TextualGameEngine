@@ -3,7 +3,6 @@
 #include <sstream>
 #include <algorithm>
 #include <utility>
-#include <unordered_set>
 #include <cctype>
 #include <limits>
 #include <iostream>
@@ -20,55 +19,7 @@ namespace {
         for(char ch: s){ if(ch==';'){ out.push_back(trim_copy(cur)); cur.clear(); } else cur.push_back(ch);} out.push_back(trim_copy(cur));
         return out;
     }
-    struct RemoveScanResult {
-        std::vector<BlockRemove> blocks;
-        std::unordered_set<size_t> ruleLineIndices;
-    };
 
-    static RemoveScanResult scanRemoveBlocks(const std::string& filepath) {
-        RemoveScanResult result;
-        std::ifstream in(filepath);
-        if (!in.is_open()) { return result; }
-        std::vector<std::string> lines;
-        std::string raw;
-        while (std::getline(in, raw)) { lines.push_back(raw); }
-        const size_t n = lines.size();
-        for (size_t i = 0; i < n; ++i) {
-            std::string line = trim_copy(lines[i]);
-            if (line.rfind("*REMOVE*", 0) != 0) { continue; }
-            std::vector<RemoveRule> rules;
-            size_t j = i + 1;
-            while (j < n) {
-                std::string ruleLine = trim_copy(lines[j]);
-                if (ruleLine.empty()) { break; }
-                if (!ruleLine.empty() && ruleLine[0] == '*') { break; }
-                auto parts = splitSemi(ruleLine);
-                if (parts.size() < 3) { ++j; continue; }
-                RemoveRule r;
-                if (parts[0] == "this") { r.isThis = true; r.sceneKey.clear(); }
-                else { r.isThis = false; r.sceneKey = parts[0]; }
-                std::string type = parts[1];
-                for (auto& c : type) { c = static_cast<char>(std::toupper(static_cast<unsigned char>(c))); }
-                if (type == "PATH") r.type = RemoveType::Path;
-                else if (type == "COMBAT") r.type = RemoveType::Combat;
-                else if (type == "ARME") r.type = RemoveType::Arme;
-                else if (type == "ARMURE") r.type = RemoveType::Armure;
-                else if (type == "GOLD") r.type = RemoveType::Gold;
-                else if (type == "SHOP") r.type = RemoveType::Shop;
-                else if (type == "LORE") r.type = RemoveType::Lore;
-                else { ++j; continue; }
-                r.param = parts[2];
-                rules.push_back(r);
-                result.ruleLineIndices.insert(j);
-                ++j;
-            }
-            if (!rules.empty()) {
-                result.blocks.emplace_back(BlockRemove{rules});
-            }
-            if (j > i + 1) { i = j - 1; }
-        }
-        return result;
-    }
 }
 
 namespace scene {
@@ -116,16 +67,11 @@ Scene parse(const std::string& filepath) {
     if (!f.is_open()) return scene;
 
     std::string line;
-    std::string descBuf;
     long long lineNo = 0;
 
-    auto flushDesc = [&](){ /* free description disabled */ };
-    RemoveScanResult removeScan = scanRemoveBlocks(filepath);
-    const auto& removeRuleLines = removeScan.ruleLineIndices;
 
     bool firstLine = true;
     while (std::getline(f, line)) { ++lineNo;
-        if (removeRuleLines.find(static_cast<size_t>(lineNo - 1)) != removeRuleLines.end()) { continue; }
         if (line.empty()) { continue; }
         std::string l = trim_copy(line);
         if (firstLine) {
@@ -138,7 +84,6 @@ Scene parse(const std::string& filepath) {
         if (l.empty()) { continue; }
 
         if (l.rfind("*COMBAT*", 0) == 0) {
-            flushDesc();
             std::vector<CombatEnemy> enemies;
             // Try strict multi-line Nom;PV;DEF;ATK[;GOLD[;SPD[;REVEAL]]] until blank or next tag
             std::streampos pos;
@@ -170,7 +115,6 @@ Scene parse(const std::string& filepath) {
             }
             scene.blocks.emplace_back(BlockCombat{enemies});
         } else if (l.rfind("*ARME*", 0) == 0 || l.rfind("*ARMURE*", 0) == 0) {
-            flushDesc();
             ItemType t = (l.rfind("*ARME*",0)==0)?ItemType::Arme:ItemType::Armure;
             std::vector<ItemSpec> items;
             std::streampos pos;
@@ -204,7 +148,6 @@ Scene parse(const std::string& filepath) {
             }
             if (!items.empty()) scene.blocks.emplace_back(BlockItems{items});
         } else if (l.rfind("*ITEM*", 0) == 0) {
-            flushDesc();
             std::vector<ItemSpec> items;
             std::streampos pos;
             while (true) {
@@ -217,7 +160,6 @@ Scene parse(const std::string& filepath) {
             }
             if (!items.empty()) scene.blocks.emplace_back(BlockItems{items});
         } else if (l.rfind("*PATH*", 0) == 0) {
-            flushDesc();
             std::vector<PathOption> options;
             std::streampos pos;
             while (true) {
@@ -230,13 +172,11 @@ Scene parse(const std::string& filepath) {
             }
             if (!options.empty()) scene.blocks.emplace_back(BlockPath{options});
         } else if (l.rfind("*GOLD*", 0) == 0) {
-            flushDesc();
             std::string v; if (std::getline(f, v)) { ++lineNo;
                 v = trim_copy(v); int d=0; try{ d = std::stoi(v);}catch(...){ d=0; }
                 scene.blocks.emplace_back(BlockGold{d});
             }
         } else if (l.rfind("*SHOP*", 0) == 0) {
-            flushDesc();
             std::vector<ShopItem> items;
             std::streampos pos;
             while (true) {
@@ -276,7 +216,6 @@ Scene parse(const std::string& filepath) {
             if (!items.empty()) scene.blocks.emplace_back(BlockShop{items});
         } else if (l.rfind("*LORE*", 0) == 0) {
             // Lore text block: accumulate lines until blank or next tag
-            flushDesc();
             std::ostringstream oss;
             std::streampos pos;
             while (true) {
@@ -290,7 +229,6 @@ Scene parse(const std::string& filepath) {
             std::string lore = oss.str();
             if (!lore.empty()) scene.blocks.emplace_back(BlockLore{lore});
         } else if (l.rfind("*REMOVE*", 0) == 0) {
-            flushDesc();
             std::vector<RemoveRule> rules;
             std::streampos pos;
             while (true) {
@@ -317,7 +255,6 @@ Scene parse(const std::string& filepath) {
             }
             if (!rules.empty()) scene.blocks.emplace_back(BlockRemove{rules});
         } else if (l.rfind("*ADD*", 0) == 0) {
-            flushDesc();
             std::vector<AddRule> rules;
             std::streampos pos;
             while (true) {
@@ -459,29 +396,12 @@ Scene parse(const std::string& filepath) {
             }
             if (!rules.empty()) scene.blocks.emplace_back(BlockAdd{rules});
         } else if (l.rfind("*VICTORY*", 0) == 0) {
-            flushDesc(); scene.blocks.emplace_back(BlockVictory{});
+     scene.blocks.emplace_back(BlockVictory{});
         } else if (l.rfind("*END*", 0) == 0) {
-            flushDesc(); scene.blocks.emplace_back(BlockGo{});
+     scene.blocks.emplace_back(BlockGo{});
         } else {
             // Free description is not allowed anymore; ignore stray lines
             std::cerr << "Parse warning: ignored text outside block at " << filepath << ":" << lineNo << "\n";
-        }
-    }
-    flushDesc();
-    if (!scene.blocks.empty()) {
-        const auto& rescannedRemoves = removeScan.blocks;
-        if (!rescannedRemoves.empty()) {
-            std::vector<SceneBlock> reordered;
-            reordered.reserve(rescannedRemoves.size() + scene.blocks.size());
-            for (const auto& br : rescannedRemoves) {
-                reordered.emplace_back(br);
-            }
-            for (auto& b : scene.blocks) {
-                if (!std::holds_alternative<BlockRemove>(b)) {
-                    reordered.emplace_back(std::move(b));
-                }
-            }
-            scene.blocks = std::move(reordered);
         }
     }
     return scene;

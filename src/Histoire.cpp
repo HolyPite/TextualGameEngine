@@ -67,7 +67,6 @@ void Histoire::chargerScene2() {
     }
 
     flushDeferredDirectives(state);
-    afficherDescription(state.description);
     if (!state.prochaineScene.empty()) {
         previousSceneId = sceneActuelleId;
         sceneActuelleId = state.prochaineScene;
@@ -80,13 +79,7 @@ Histoire::BlockFlow Histoire::processBlock(const SceneBlock& blk, SceneState& st
     }, blk);
 }
 
-Histoire::BlockFlow Histoire::handleBlock(const BlockDescription& blk, SceneState& state) {
-    state.description += blk.text;
-    return BlockFlow::Continue;
-}
-
 Histoire::BlockFlow Histoire::handleBlock(const BlockLore& blk, SceneState& state) {
-    afficherDescription(state.description);
     std::string keyIndex = std::to_string(++state.loreIndex);
     if (!isRemoved(state.sid, "LORE", "*") && !isRemoved(state.sid, "LORE", keyIndex)) {
         afficherLore(blk.text);
@@ -95,7 +88,6 @@ Histoire::BlockFlow Histoire::handleBlock(const BlockLore& blk, SceneState& stat
 }
 
 Histoire::BlockFlow Histoire::handleBlock(const BlockCombat& blk, SceneState& state) {
-    afficherDescription(state.description);
     for (const auto& enemy : blk.enemies) {
         if (isRemoved(state.sid, "COMBAT", enemy.name)) {
             continue;
@@ -119,7 +111,6 @@ Histoire::BlockFlow Histoire::handleBlock(const BlockCombat& blk, SceneState& st
 }
 
 Histoire::BlockFlow Histoire::handleBlock(const BlockItems& blk, SceneState& state) {
-    afficherDescription(state.description);
     for (const auto& it : blk.items) {
         std::string typeStr = (it.type == ItemType::Arme ? "ARME" : "ARMURE");
         if (isRemoved(state.sid, typeStr, it.name)) {
@@ -140,65 +131,87 @@ Histoire::BlockFlow Histoire::handleBlock(const BlockItems& blk, SceneState& sta
 }
 
 Histoire::BlockFlow Histoire::handleBlock(const BlockPath& blk, SceneState& state) {
-    GameUI& io = activeGameUI();
-    afficherDescription(state.description);
-
     std::vector<std::pair<std::string, std::string>> chemins;
+    BlockFlow flow = applySceneAdditionsForPaths(state, chemins);
+    if (flow != BlockFlow::Continue) {
+        return flow;
+    }
+    ajouterCheminsDepuisBloc(blk, state, chemins);
+    if (chemins.empty()) {
+        activeGameUI().typewriteWords(ui::color("Aucun chemin disponible.\n", ui::RED), 28, 110);
+        return BlockFlow::Break;
+    }
+    afficherChemins(chemins);
+    return gererChoixChemin(state, chemins);
+}
+
+Histoire::BlockFlow Histoire::applySceneAdditionsForPaths(SceneState& state, std::vector<std::pair<std::string, std::string>>& chemins) {
     auto itAdd = additions.find(state.sid);
-    if (itAdd != additions.end()) {
-        const auto& add = itAdd->second;
-        if (!isRemoved(state.sid, "LORE", "*")) {
-            for (const auto& text : add.lores) {
-                std::string idxStr = std::to_string(++state.loreIndex);
-                if (!isRemoved(state.sid, "LORE", idxStr)) {
-                    afficherLore(text);
-                }
-            }
-        }
-        for (const auto& enemy : add.combats) {
-            if (isRemoved(state.sid, "COMBAT", enemy.nom)) {
-                continue;
-            }
-            auto outcome = gererCombat(enemy.nom, enemy.pv, enemy.atk, enemy.def, enemy.orGain, enemy.spd, enemy.reveal);
-            if (outcome == CombatOutcome::Flee) {
-                std::string target = previousSceneId.empty() ? sceneActuelleId : previousSceneId;
-                sceneActuelleId = target;
-                return BlockFlow::Return;
-            }
-            if (outcome == CombatOutcome::Lose) {
-                return BlockFlow::Return;
-            }
-        }
-        for (const auto& item : add.items) {
-            std::string typeKey = (item.type == "arme" ? "ARME" : "ARMURE");
-            if (!isRemoved(state.sid, typeKey, item.nom)) {
-                gererEquipement(item.type, item.nom, item.valeur);
-            }
-        }
-        for (int gd : add.goldDeltas) {
-            if (!isRemoved(state.sid, "GOLD", "*") && !isRemoved(state.sid, "GOLD", std::to_string(gd))) {
-                gererGoldDelta(gd);
-            }
-        }
-        if (!isRemoved(state.sid, "SHOP", "*") && !add.shops.empty()) {
-            std::vector<ShopItem> filtered;
-            for (const auto& sh : add.shops) {
-                if (!isRemoved(state.sid, "SHOP", sh.item.name)) {
-                    filtered.push_back(sh);
-                }
-            }
-            if (!filtered.empty()) {
-                gererShop(filtered);
-            }
-        }
-        for (const auto& p : add.paths) {
-            if (!isRemoved(state.sid, "PATH", p.first)) {
-                std::string label = p.second.empty() ? std::string("Continuer") : p.second;
-                chemins.emplace_back(p.first, label);
+    if (itAdd == additions.end()) {
+        return BlockFlow::Continue;
+    }
+    const auto& add = itAdd->second;
+
+    if (!isRemoved(state.sid, "LORE", "*")) {
+        for (const auto& text : add.lores) {
+            std::string idxStr = std::to_string(++state.loreIndex);
+            if (!isRemoved(state.sid, "LORE", idxStr)) {
+                afficherLore(text);
             }
         }
     }
 
+    for (const auto& enemy : add.combats) {
+        if (isRemoved(state.sid, "COMBAT", enemy.nom)) {
+            continue;
+        }
+        auto outcome = gererCombat(enemy.nom, enemy.pv, enemy.atk, enemy.def, enemy.orGain, enemy.spd, enemy.reveal);
+        if (outcome == CombatOutcome::Flee) {
+            std::string target = previousSceneId.empty() ? sceneActuelleId : previousSceneId;
+            sceneActuelleId = target;
+            return BlockFlow::Return;
+        }
+        if (outcome == CombatOutcome::Lose) {
+            return BlockFlow::Return;
+        }
+    }
+
+    for (const auto& item : add.items) {
+        std::string typeKey = (item.type == "arme" ? "ARME" : "ARMURE");
+        if (!isRemoved(state.sid, typeKey, item.nom)) {
+            gererEquipement(item.type, item.nom, item.valeur);
+        }
+    }
+
+    for (int delta : add.goldDeltas) {
+        if (!isRemoved(state.sid, "GOLD", "*") && !isRemoved(state.sid, "GOLD", std::to_string(delta))) {
+            gererGoldDelta(delta);
+        }
+    }
+
+    if (!isRemoved(state.sid, "SHOP", "*") && !add.shops.empty()) {
+        std::vector<ShopItem> filtered;
+        for (const auto& shopItem : add.shops) {
+            if (!isRemoved(state.sid, "SHOP", shopItem.item.name)) {
+                filtered.push_back(shopItem);
+            }
+        }
+        if (!filtered.empty()) {
+            gererShop(filtered);
+        }
+    }
+
+    for (const auto& p : add.paths) {
+        if (!isRemoved(state.sid, "PATH", p.first)) {
+            std::string label = p.second.empty() ? std::string("Continuer") : p.second;
+            chemins.emplace_back(p.first, label);
+        }
+    }
+
+    return BlockFlow::Continue;
+}
+
+void Histoire::ajouterCheminsDepuisBloc(const BlockPath& blk, SceneState& state, std::vector<std::pair<std::string, std::string>>& chemins) {
     for (const auto& option : blk.options) {
         if (!isRemoved(state.sid, "PATH", option.id)) {
             std::string label = option.text.empty() ? std::string("Continuer") : option.text;
@@ -212,18 +225,19 @@ Histoire::BlockFlow Histoire::handleBlock(const BlockPath& blk, SceneState& stat
 #endif
         }
     }
+}
 
-    if (chemins.empty()) {
-        io.typewriteWords(ui::color("Aucun chemin disponible.\n", ui::RED), 28, 110);
-        return BlockFlow::Break;
-    }
-
+void Histoire::afficherChemins(const std::vector<std::pair<std::string, std::string>>& chemins) {
+    GameUI& io = activeGameUI();
     io.typewriteWords(ui::color("\n=== Chemins ===\n", ui::CYAN), 28, 110);
     for (size_t i = 0; i < chemins.size(); ++i) {
         std::string line = ui::color(std::to_string(i + 1), ui::YELLOW) + ". " + chemins[i].second + "\n";
         io.typewriteWords(line, 28, 110);
     }
+}
 
+Histoire::BlockFlow Histoire::gererChoixChemin(SceneState& state, const std::vector<std::pair<std::string, std::string>>& chemins) {
+    GameUI& io = activeGameUI();
     while (true) {
         io.typewriteWords("\n" + ui::color("Choisissez une option ('I' pour les stats): ", ui::BOLD), 28, 110);
         std::string input;
@@ -233,19 +247,7 @@ Histoire::BlockFlow Histoire::handleBlock(const BlockPath& blk, SceneState& stat
         }
         io.discardLine();
         if (input == "I" || input == "i") {
-            hero->afficherStats();
-            io.typewriteWords("\nOptions disponibles :\n", 28, 110);
-            io.typewriteWords("1. Retour au choix precedent\n", 28, 110);
-            io.typewriteWords("2. Afficher l'inventaire\n", 28, 110);
-            std::string choix;
-            if (!io.readToken(choix)) {
-                io.discardLine();
-                continue;
-            }
-            io.discardLine();
-            if (choix == "2") {
-                hero->equiperObjet();
-            }
+            afficherMenuInformationsChemin();
             continue;
         }
         try {
@@ -259,6 +261,26 @@ Histoire::BlockFlow Histoire::handleBlock(const BlockPath& blk, SceneState& stat
         } catch (...) {
             io.typewriteWords(ui::color("Entree invalide. Reessayez.\n", ui::RED), 28, 110);
         }
+    }
+}
+
+void Histoire::afficherMenuInformationsChemin() {
+    if (!hero) {
+        return;
+    }
+    GameUI& io = activeGameUI();
+    hero->afficherStats();
+    io.typewriteWords("\nOptions disponibles :\n", 28, 110);
+    io.typewriteWords("1. Retour au choix precedent\n", 28, 110);
+    io.typewriteWords("2. Afficher l'inventaire\n", 28, 110);
+    std::string choix;
+    if (!io.readToken(choix)) {
+        io.discardLine();
+        return;
+    }
+    io.discardLine();
+    if (choix == "2") {
+        hero->equiperObjet();
     }
 }
 
@@ -298,7 +320,6 @@ Histoire::BlockFlow Histoire::handleBlock(const BlockAdd& blk, SceneState& state
 
 Histoire::BlockFlow Histoire::handleBlock(const BlockVictory& blk, SceneState& state) {
     (void)blk;
-    afficherDescription(state.description);
     activeGameUI().typewriteWords("Felicitations, vous avez termine l'aventure avec succes !\n", 28, 110);
     sceneActuelleId.clear();
     return BlockFlow::Return;
@@ -306,7 +327,6 @@ Histoire::BlockFlow Histoire::handleBlock(const BlockVictory& blk, SceneState& s
 
 Histoire::BlockFlow Histoire::handleBlock(const BlockGo& blk, SceneState& state) {
     (void)blk;
-    afficherDescription(state.description);
     activeGameUI().typewriteWords("C'est la fin de votre aventure...\n", 28, 110);
     sceneActuelleId.clear();
     return BlockFlow::Return;
@@ -460,8 +480,7 @@ Histoire::CombatOutcome Histoire::gererCombat(const std::string& nomMonstre, int
                 } else if (choixAction == "5") {
                     // Chance de fuite = vJ/(vJ+vE)
                     double chance = (double)heroSpeed / (double)(heroSpeed + std::max(1, enemySpeed));
-                    std::random_device rd; std::mt19937 gen(rd()); std::uniform_real_distribution<> dis(0.0, 1.0);
-                    double r = dis(gen);
+                    double r = fleeDistribution(rng);
                     if (r < chance) {
                         io.typewriteWords(ui::color("Vous parvenez à fuir !\n", ui::GREEN), 28, 110);
                         hero->reinitialiserProtection();
@@ -586,20 +605,7 @@ void Histoire::flushDeferredDirectives(SceneState& state) {
     state.deferredAdds.clear();
 }
 
-void Histoire::afficherDescription(std::string& description) {
-    GameUI& io = activeGameUI();
-    if (!description.empty()) {
-        bool onlyWS = true; for (char c : description) { if (!std::isspace((unsigned char)c)) { onlyWS = false; break; } }
-        if (onlyWS) { description.clear(); return; }
-        io.hr(u8"-", ui::CYAN);
-        io.print("\n");
-        // Human-like pacing: small pause on spaces, longer on newlines
-        io.typewriteWords(description, 28, 110);
-        io.print("\n");
-        io.hr(u8"-", ui::CYAN);
-        description.clear(); // Efface la description après affichage
-    }
-}
+
 
 void Histoire::afficherLore(const std::string& text) {
     if (text.empty()) return;

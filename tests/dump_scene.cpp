@@ -8,11 +8,7 @@ int main(int argc, char** argv){
     int i=0;
     for (const auto& b : sc.blocks) {
         std::cout << ++i << ": ";
-        if (std::holds_alternative<BlockDescription>(b)) {
-            std::cout << "DESC: ";
-            std::string t = std::get<BlockDescription>(b).text; for(char& c: t) if(c=='\n') c=' ';
-            std::cout << t << "\n";
-        } else if (std::holds_alternative<BlockLore>(b)) {
+        if (std::holds_alternative<BlockLore>(b)) {
             std::cout << "LORE: ";
             std::string t = std::get<BlockLore>(b).text; for(char& c: t) if(c=='\n') c=' ';
             std::cout << t << "\n";

@@ -69,7 +69,6 @@ struct AddRule {
 };
 
 // Blocks in original order
-struct BlockDescription { std::string text; };
 struct BlockCombat { std::vector<CombatEnemy> enemies; };
 struct BlockItems { std::vector<ItemSpec> items; };
 struct BlockPath { std::vector<PathOption> options; };
@@ -82,7 +81,6 @@ struct BlockGo {};
 struct BlockLore { std::string text; };
 
 using SceneBlock = std::variant<
-    BlockDescription,
     BlockCombat,
     BlockItems,
     BlockPath,

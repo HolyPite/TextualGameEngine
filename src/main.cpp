@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <vector>
 #include <string>
+#include <algorithm>
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -29,7 +30,7 @@ int main(int argc, char** argv) {
     setActiveGameUI(&consoleUI);
     GameUI& io = activeGameUI();
 
-    std::vector<std::string> fichiersClasse;
+    std::vector<fs::path> fichiersClasse;
 
     // Resolve data directory relative to executable
     std::filesystem::path exePath;
@@ -57,7 +58,7 @@ int main(int argc, char** argv) {
     try {
         for (const auto& entry : fs::directory_iterator(classesDir)) {
             if (entry.is_regular_file() && entry.path().extension() == ".txt") {
-                fichiersClasse.push_back(entry.path().filename().string());
+                fichiersClasse.push_back(entry.path().filename());
             }
         }
     } catch (const std::exception& e) {
@@ -66,6 +67,10 @@ int main(int argc, char** argv) {
     }
 
     // Vérifie si des fichiers de classe existent
+    std::sort(fichiersClasse.begin(), fichiersClasse.end(), [](const fs::path& a, const fs::path& b) {
+        return a.stem().string() < b.stem().string();
+    });
+
     if (fichiersClasse.empty()) {
         std::cerr << "Aucune classe disponible dans le dossier " << classesDir.string() << ".\n";
         return 1;
@@ -74,7 +79,8 @@ int main(int argc, char** argv) {
     // Affichage des options
     io.printLine("Bienvenue dans le jeu RPG ! Choisissez votre classe :");
     for (size_t i = 0; i < fichiersClasse.size(); ++i) {
-        io.printLine(std::to_string(i + 1) + ". " + fichiersClasse[i].substr(0, fichiersClasse[i].find_last_of('.')));
+        const auto& entry = fichiersClasse[i];
+        io.printLine(std::to_string(i + 1) + ". " + entry.stem().string());
     }
 
     int choixClasse = 0;

@@ -8,6 +8,8 @@
 #include <unordered_map>
 #include <filesystem>
 
+#include <random>
+
 #include "Entite.h"
 #include "Scene.h"
 #include "SceneWorld.h"
@@ -34,6 +36,8 @@ private:
         std::vector<std::string> lores;
     };
     std::unordered_map<std::string, SceneAdditions> additions;
+    std::mt19937 rng{std::random_device{}()};
+    std::uniform_real_distribution<double> fleeDistribution{0.0, 1.0};
 
 public:
     enum class CombatOutcome { Win, Lose, Flee };
@@ -46,7 +50,6 @@ public:
 
 private:
     void chargerScene2(); // new reader using SceneParser
-    void afficherDescription(std::string& description);
     void afficherLore(const std::string& text);
     CombatOutcome gererCombat(const std::string& nomMonstre, int pv, int attaque, int defense, int gold, int enemySpeed, EnemyReveal reveal);
     void gererEquipement(const std::string& type, const std::string& nom, int valeur);
@@ -59,7 +62,6 @@ private:
     // Economie / Boutique
     enum class BlockFlow { Continue, Break, Return };
     struct SceneState {
-        std::string description;
         std::string prochaineScene;
         std::string sid;
         int loreIndex{0};
@@ -69,11 +71,15 @@ private:
 
     void flushDeferredDirectives(SceneState& state);
     BlockFlow processBlock(const SceneBlock& blk, SceneState& state);
-    BlockFlow handleBlock(const BlockDescription& blk, SceneState& state);
     BlockFlow handleBlock(const BlockLore& blk, SceneState& state);
     BlockFlow handleBlock(const BlockCombat& blk, SceneState& state);
     BlockFlow handleBlock(const BlockItems& blk, SceneState& state);
     BlockFlow handleBlock(const BlockPath& blk, SceneState& state);
+    BlockFlow applySceneAdditionsForPaths(SceneState& state, std::vector<std::pair<std::string,std::string>>& chemins);
+    void ajouterCheminsDepuisBloc(const BlockPath& blk, SceneState& state, std::vector<std::pair<std::string,std::string>>& chemins);
+    void afficherChemins(const std::vector<std::pair<std::string,std::string>>& chemins);
+    BlockFlow gererChoixChemin(SceneState& state, const std::vector<std::pair<std::string,std::string>>& chemins);
+    void afficherMenuInformationsChemin();
     BlockFlow handleBlock(const BlockGold& blk, SceneState& state);
     BlockFlow handleBlock(const BlockShop& blk, SceneState& state);
     BlockFlow handleBlock(const BlockRemove& blk, SceneState& state);
