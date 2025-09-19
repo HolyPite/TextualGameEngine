@@ -1,0 +1,24 @@
+*LORE*
+﻿Le sentier longe un ruisseau cristallin. Vous entendez un bruit de pas lÃ©gers derriÃ¨re vous. Une crÃ©ature apparaÃ®t : un Gobelin affamÃ© vous attaque !
+
+*COMBAT*
+*LORE*
+Gobelin
+8
+1
+2
+
+*LORE*
+AprÃ¨s avoir vaincu le Gobelin, vous trouvez un petit poignard rouillÃ©.
+
+*ARME*
+*LORE*
+Poignard RouillÃ©
+1
+
+*PATH*
+*LORE*
+6;Continuer le long du ruisseau.
+start;Remonter vers la forÃªt.
+
+

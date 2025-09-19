@@ -1,0 +1,8 @@
+*LORE*
+﻿Vous vous enfoncez dans la nature Ã  la recherche dâ€™un autre chemin. Mais le terrain est impraticable, vous vous perdez.
+
+*LORE*
+AprÃ¨s des heures de marche, vous tombez dâ€™Ã©puisement. Votre aventure se termine ici.
+
+*END*
+

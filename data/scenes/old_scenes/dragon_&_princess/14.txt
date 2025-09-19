@@ -1,0 +1,24 @@
+*LORE*
+﻿Vous contournez le chÇ½teau. Sur le cï¿½ï¿½tÇ¸, une petite entrÇ¸e de service est gardÇ¸e par un loup de garde.
+
+*COMBAT*
+*LORE*
+Loup de Garde
+10
+2
+3
+
+*LORE*
+Aprï¿½ï¿½s votre victoire, vous pÇ¸nÇ¸trez dans le chÇ½teau par la porte de service.
+
+*PATH*
+*LORE*
+19;Avancer dans un couloir sombre.
+10;Revenir en arriï¿½ï¿½re (peu judicieux).
+
+*REMOVE*
+*LORE*
+10;PATH;14
+this;COMBAT;Loup de Garde
+
+

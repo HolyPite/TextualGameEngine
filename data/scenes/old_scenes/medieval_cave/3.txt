@@ -1,0 +1,7 @@
+*LORE*
+En prennant le chemin de droite, vous vous engoufrez dans une multitude de galleries labyrinthique. Vous etes trop loin, et il vous semble impossible de faire demi-tour sans vous perdre. Vous commencez a regretter de ne pas avoir pris le chemin de gauche lorsque vous appercevez un coffre dans un coin. Celui vous semble bien trop simple pour contenir la relique, mais il semble bien conserve par rapport au reste du temple.
+
+*PATH*
+*LORE*
+4;Ouvrir le coffre.
+5;Continuer votre chemin.

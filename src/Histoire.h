@@ -7,14 +7,17 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <filesystem>
+
 #include "Entite.h"
 #include "Scene.h"
+#include "SceneWorld.h"
 
 class Histoire {
 private:
     std::unique_ptr<Entite> hero;
-    std::string sceneActuelle;
-    std::string previousScene;
+    const scene::SceneWorld* world{nullptr};
+    std::string sceneActuelleId;
+    std::string previousSceneId;
     // Runtime removals and additions
     std::unordered_set<std::string> removals; // key: sceneKey:TYPE:param
     std::filesystem::path dataDir;
@@ -34,10 +37,10 @@ private:
 
 public:
     enum class CombatOutcome { Win, Lose, Flee };
-    Histoire(std::unique_ptr<Entite> hero, const std::filesystem::path& dataDir, const std::string& startSceneKey = std::string("start"))
-        : hero(std::move(hero)), dataDir(dataDir) {
-        sceneActuelle = (dataDir / "scenes" / (startSceneKey + ".txt")).string();
-    }
+    Histoire(std::unique_ptr<Entite> hero,
+             const scene::SceneWorld& worldRef,
+             const std::filesystem::path& dataDir,
+             const std::string& startSceneKey = std::string("start"));
 
     void jouer();
 
@@ -51,7 +54,6 @@ private:
     void appliquerRemoveBlock(const BlockRemove& blk, const std::string& currentSceneKey);
     void appliquerAddBlock(const BlockAdd& blk, const std::string& currentSceneKey);
     bool isRemoved(const std::string& sceneKey, const std::string& type, const std::string& param) const;
-    static std::string extractSceneKey(const std::string& path);
     void addRemoval(const std::string& sceneKey, const std::string& type, const std::string& param);
 
     // Economie / Boutique
@@ -83,10 +85,3 @@ private:
 };
 
 #endif // HISTOIRE_H
-
-
-
-
-
-
-

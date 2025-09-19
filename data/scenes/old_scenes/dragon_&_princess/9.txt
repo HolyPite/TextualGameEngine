@@ -1,0 +1,21 @@
+*LORE*
+﻿La tour de garde est dÇ¸labrÇ¸e. A lï¿½?TintÇ¸rieur, vous rencontrez un chevalier mourant, qui vous remet un bouclier lÇ¸ger.
+
+*ARMURE*
+*LORE*
+Bouclier LÇ¸ger
+2
+
+*LORE*
+"Allez... sauvez la princesse."
+
+*PATH*
+*LORE*
+10;Quitter la tour et continuer ï¿½ï¿½ lï¿½?TEst.
+1;Retourner en arriï¿½ï¿½re.
+
+*REMOVE*
+*LORE*
+4;PATH;9
+this;ARMURE;Bouclier LÇ¸ger
+

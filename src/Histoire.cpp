@@ -1,5 +1,4 @@
 #include "Histoire.h"
-#include "SceneParser.h"
 #include <vector>
 #include <thread>
 #include <chrono>
@@ -13,9 +12,24 @@
 #include <variant>
 #include <iostream>
 
+
+Histoire::Histoire(std::unique_ptr<Entite> hero,
+                   const scene::SceneWorld& worldRef,
+                   const std::filesystem::path& dataDir,
+                   const std::string& startSceneKey)
+    : hero(std::move(hero)),
+      world(&worldRef),
+      sceneActuelleId(startSceneKey),
+      dataDir(dataDir) {
+    if (!world || !world->getScene(sceneActuelleId)) {
+        std::cerr << "Impossible de trouver la scene de depart \"" << startSceneKey << "\"." << std::endl;
+        sceneActuelleId.clear();
+    }
+}
+
 void Histoire::jouer() {
     GameUI& io = activeGameUI();
-    while (!sceneActuelle.empty()) {
+    while (!sceneActuelleId.empty()) {
         chargerScene2();
     }
 
@@ -31,17 +45,17 @@ void Histoire::chargerScene2() {
     GameUI& io = activeGameUI();
     if (hero) hero->setUI(&io);
     if (clearOnNextScene) { io.clear(); clearOnNextScene = false; }
-    auto sc = scene::parse(sceneActuelle);
-    if (sc.blocks.empty()) {
-        std::cerr << "Impossible de charger la scene : " << sceneActuelle << std::endl;
-        sceneActuelle.clear();
+    const Scene* sc = (world ? world->getScene(sceneActuelleId) : nullptr);
+    if (!sc) {
+        std::cerr << "Impossible de charger la scene : " << sceneActuelleId << std::endl;
+        sceneActuelleId.clear();
         return;
     }
 
     SceneState state;
-    state.sid = extractSceneKey(sceneActuelle);
+    state.sid = sceneActuelleId;
 
-    for (const auto& blk : sc.blocks) {
+    for (const auto& blk : sc->blocks) {
         BlockFlow flow = processBlock(blk, state);
         if (flow == BlockFlow::Return) {
             flushDeferredDirectives(state);
@@ -55,8 +69,8 @@ void Histoire::chargerScene2() {
     flushDeferredDirectives(state);
     afficherDescription(state.description);
     if (!state.prochaineScene.empty()) {
-        previousScene = sceneActuelle;
-        sceneActuelle = state.prochaineScene;
+        previousSceneId = sceneActuelleId;
+        sceneActuelleId = state.prochaineScene;
     }
 }
 
@@ -88,7 +102,7 @@ Histoire::BlockFlow Histoire::handleBlock(const BlockCombat& blk, SceneState& st
         }
         auto outcome = gererCombat(enemy.name, enemy.hp, enemy.atk, enemy.def, enemy.gold, enemy.spd, enemy.reveal);
         if (outcome == CombatOutcome::Flee) {
-            state.prochaineScene = previousScene.empty() ? sceneActuelle : previousScene;
+            state.prochaineScene = previousSceneId.empty() ? sceneActuelleId : previousSceneId;
             return BlockFlow::Break;
         }
         if (outcome == CombatOutcome::Lose) {
@@ -147,8 +161,8 @@ Histoire::BlockFlow Histoire::handleBlock(const BlockPath& blk, SceneState& stat
             }
             auto outcome = gererCombat(enemy.nom, enemy.pv, enemy.atk, enemy.def, enemy.orGain, enemy.spd, enemy.reveal);
             if (outcome == CombatOutcome::Flee) {
-                std::string target = previousScene.empty() ? sceneActuelle : previousScene;
-                sceneActuelle = target;
+                std::string target = previousSceneId.empty() ? sceneActuelleId : previousSceneId;
+                sceneActuelleId = target;
                 return BlockFlow::Return;
             }
             if (outcome == CombatOutcome::Lose) {
@@ -237,7 +251,7 @@ Histoire::BlockFlow Histoire::handleBlock(const BlockPath& blk, SceneState& stat
         try {
             int choix = std::stoi(input);
             if (choix > 0 && choix <= static_cast<int>(chemins.size())) {
-                state.prochaineScene = (dataDir / "scenes" / (chemins[choix - 1].first + ".txt")).string();
+                state.prochaineScene = chemins[choix - 1].first;
                 clearOnNextScene = true;
                 return BlockFlow::Continue;
             }
@@ -286,7 +300,7 @@ Histoire::BlockFlow Histoire::handleBlock(const BlockVictory& blk, SceneState& s
     (void)blk;
     afficherDescription(state.description);
     activeGameUI().typewriteWords("Felicitations, vous avez termine l'aventure avec succes !\n", 28, 110);
-    sceneActuelle.clear();
+    sceneActuelleId.clear();
     return BlockFlow::Return;
 }
 
@@ -294,7 +308,7 @@ Histoire::BlockFlow Histoire::handleBlock(const BlockGo& blk, SceneState& state)
     (void)blk;
     afficherDescription(state.description);
     activeGameUI().typewriteWords("C'est la fin de votre aventure...\n", 28, 110);
-    sceneActuelle.clear();
+    sceneActuelleId.clear();
     return BlockFlow::Return;
 }
 void Histoire::gererGoldDelta(int delta) {
@@ -341,13 +355,6 @@ void Histoire::gererShop(const std::vector<ShopItem>& items) {
         if (it.item.type == ItemType::Arme) hero->ajouterArme(it.item.name, it.item.value);
         else hero->ajouterArmure(it.item.name, it.item.value);
     }
-}
-
-std::string Histoire::extractSceneKey(const std::string& path) {
-    size_t slash = path.find_last_of("/\\");
-    std::string fname = (slash == std::string::npos) ? path : path.substr(slash + 1);
-    size_t dot = fname.find('.');
-    return (dot == std::string::npos) ? fname : fname.substr(0, dot);
 }
 
 void Histoire::addRemoval(const std::string& sceneKey, const std::string& type, const std::string& param) {
@@ -485,7 +492,7 @@ Histoire::CombatOutcome Histoire::gererCombat(const std::string& nomMonstre, int
             monstre.attaquer(*hero,'%',attaque);
             if (!hero->estVivant()) {
                 io.typewriteWords("Vous avez été vaincu... Fin du jeu.\n", 28, 110);
-                sceneActuelle.clear();
+                sceneActuelleId.clear();
                 hero->reinitialiserProtection();
                 return CombatOutcome::Lose;
             }
@@ -604,6 +611,7 @@ void Histoire::afficherLore(const std::string& text) {
     io.print("\n");
     io.hr(u8"-", ui::CYAN);
 }
+
 
 
 

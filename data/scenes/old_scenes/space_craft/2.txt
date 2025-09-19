@@ -1,0 +1,24 @@
+*LORE*
+Vous entrez dans la salle des machines. Les murs sont couverts de tuyaux, et un bruit sourd de vapeur s'echappe d'une valve cassee. Une creature apparait soudain entre les ombres, vous attaquant violemment.
+
+*COMBAT*
+*LORE*
+Drone Defectueux
+20
+5
+
+*LORE*
+Apres avoir detruit le drone, vous trouvez un module d'energie.
+
+*ARME*
+*LORE*
+Module d'energie
+3
+
+*LORE*
+Deux issues se dessinent devant vous.
+
+*PATH*
+*LORE*
+4;S'engager vers les conduits d'aeration.
+1;Revenir dans le couloir.

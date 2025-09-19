@@ -1,4 +1,4 @@
-﻿*LORE*
+*LORE*
 Les caves sont sombres. Des tuyaux sifflent. Vous trouvez un outil utile sous un tas de ferraille.
 
 *ITEM*

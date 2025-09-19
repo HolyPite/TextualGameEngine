@@ -1,0 +1,7 @@
+*LORE*
+Vous entrez dans un couloir sombre. Des cables pendent du plafond, et une lumiere vacillante eclaire a peine le chemin. Deux portes s'offrent a vous :
+
+*PATH*
+*LORE*
+2;Pousser la porte de la salle des machines.
+3;Entrer dans le laboratoire.

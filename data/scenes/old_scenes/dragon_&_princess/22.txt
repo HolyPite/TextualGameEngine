@@ -1,0 +1,9 @@
+*LORE*
+﻿Au bout du couloir, une porte mÃ¨ne dans une salle circulaire. Trois coffres y sont posÃ©s :
+
+*PATH*
+*LORE*
+23;Ouvrir le coffre de gauche.
+24;Ouvrir le coffre du centre.
+25;Ouvrir le coffre de droite.
+

@@ -1,0 +1,18 @@
+*LORE*
+﻿Vous avancez vers lâ€™Est. La silhouette dâ€™un chÃ¢teau sombre apparaÃ®t Ã  lâ€™horizon. Le pont-levis est relevÃ©, et deux gardes orcs montent la garde.
+
+*COMBAT*
+*LORE*
+Orc Garde
+15
+4
+4
+
+*LORE*
+AprÃ¨s avoir vaincu lâ€™orc, lâ€™autre sâ€™enfuit. Vous pouvez dÃ©sormais entrer dans la cour du chÃ¢teau.
+
+*PATH*
+*LORE*
+13;Entrer dans la cour du chÃ¢teau.
+14;Faire le tour du chÃ¢teau.
+

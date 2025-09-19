@@ -1,0 +1,8 @@
+*LORE*
+﻿Le coffre de droite contient une clÃ© rouillÃ©e. Vous retournez vers le couloir, et grÃ¢ce Ã  la clÃ©, vous ouvrez une porte secrÃ¨te menant Ã  une sortie secondaire du chÃ¢teau.
+
+*LORE*
+A lâ€™extÃ©rieur, le soleil brille. Bien que vous nâ€™ayez pas sauvÃ© la princesse, vous Ãªtes libre. Peut-Ãªtre une autre foisâ€¦
+
+*VICTORY*
+

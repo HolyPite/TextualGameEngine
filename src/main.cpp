@@ -10,6 +10,7 @@
 #include "utils.h"
 #include "Histoire.h"
 #include "Entite.h"
+#include "SceneWorld.h"
 #include "ui.h"
 #include "GameUI.h"
 
@@ -40,6 +41,17 @@ int main(int argc, char** argv) {
         if (std::filesystem::exists("data")) dataDir = std::filesystem::path("data");
     }
     std::filesystem::path classesDir = dataDir / "class";
+    std::filesystem::path scenesDir = dataDir / "scenes";
+    scene::SceneWorld world = scene::loadSceneWorld(scenesDir);
+    for (const auto& warning : world.diagnostics().warnings) {
+        std::cerr << "[Scene warning] " << warning << "\n";
+    }
+    for (const auto& err : world.diagnostics().errors) {
+        std::cerr << "[Scene error] " << err << "\n";
+    }
+    if (!world.diagnostics().errors.empty() && world.scenes().empty()) {
+        return 1;
+    }
 
     // Recherche des fichiers dans le dossier
     try {
@@ -104,7 +116,11 @@ int main(int argc, char** argv) {
         if (arg.rfind(pre,0)==0) { startKey = arg.substr(pre.size()); }
     }
 
-    Histoire histoire(std::move(hero), dataDir, startKey);
+    if (!world.getScene(startKey)) {
+        std::cerr << "[Scene error] Scene de depart introuvable: " << startKey << "\n";
+        return 1;
+    }
+    Histoire histoire(std::move(hero), world, dataDir, startKey);
     histoire.jouer();
 
     return 0;

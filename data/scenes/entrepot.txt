@@ -1,4 +1,4 @@
-﻿*LORE*
+*LORE*
 L'entrepot sent l'huile et la poussiere. Des caisses eventrees laissent filer des pieces d'engrenages et des traces de morsures.
 
 *COMBAT*
@@ -23,6 +23,3 @@ atelier;Forcer la trappe et ramper dans le conduit.
 *REMOVE*
 this;COMBAT;Rat geant
 this;ARME;Couteau de chasse
-
-
-

@@ -1,0 +1,11 @@
+*LORE*
+﻿Vous brisez les chaÃ®nes de la princesse Elwen. Elle vous remercie, les larmes aux yeux.
+
+*LORE*
+"GrÃ¢ce Ã  vous, je suis libre. Votre nom sera honorÃ© dans le royaume."
+
+*LORE*
+Vous sortez du chÃ¢teau aux cÃ´tÃ©s de la princesse, le Dragon Sombre vaincu, le peuple libÃ©rÃ©.
+
+*VICTORY*
+

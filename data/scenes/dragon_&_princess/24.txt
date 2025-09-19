@@ -1,6 +1,0 @@
-﻿Le coffre du centre renferme un parchemin ancien. HÃ©las, rien nâ€™indique comment sortir dâ€™ici, et vous semblez enfermÃ©.
-
-Vous restez bloquÃ© dans cette salle sans issue.
-
-*END*
-

@@ -1,0 +1,7 @@
+*LORE*
+Vous voyez une salle sombre sur votre gauche.
+
+*PATH*
+*LORE*
+6;Entrer dans la salle sombre.
+7;Continuer votre chemin.

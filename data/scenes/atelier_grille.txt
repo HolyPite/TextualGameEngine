@@ -1,4 +1,4 @@
-﻿*LORE*
+*LORE*
 L'atelier est ferme par une grille tordue. Sans outil, il sera difficile d'entrer.
 
 *LORE*

@@ -1,0 +1,24 @@
+*LORE*
+﻿Vous continuez le long du ruisseau. Plus loin, le ruisseau se jette dans un marÃ©cage glauque. Le sol est spongieux et une crÃ©ature Ã  la peau visqueuse vous barre la route.
+
+*COMBAT*
+*LORE*
+Slime
+5
+0
+1
+
+*LORE*
+En vainquant le Slime, vous trouvez une Ã©pÃ©e abÃ®mÃ©e.
+
+*ARME*
+*LORE*
+EpÃ©e AbimÃ©e
+2
+
+*PATH*
+*LORE*
+11;Traverser le marÃ©cage.
+start;Revenir vers la forÃªt.
+
+

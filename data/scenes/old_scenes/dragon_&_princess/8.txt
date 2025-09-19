@@ -1,0 +1,23 @@
+*LORE*
+﻿Vous attaquez le vieil homme. Il se rÃ©vÃ¨le Ãªtre un mage puissant !
+
+*COMBAT*
+*LORE*
+Mage Errant
+12
+2
+4
+
+*LORE*
+AprÃ¨s un combat difficile, vous le vainquez. Le mage laisse tomber un bÃ¢ton gravÃ© de runes.
+
+*ARME*
+*LORE*
+BÃ¢ton GravÃ©
+3
+
+*PATH*
+*LORE*
+7;Fouiller la cabane en dÃ©tail.
+4;Sortir prÃ©cipitamment.
+

@@ -1,4 +1,4 @@
-﻿*LORE*
+*LORE*
 Vous vous reveillez aux portes de la Cite d'Airain, dans une brume cuivreuse. Devant vous, des ruelles menez vers un entrepot, un marche anime, et une vieille tour de guet.
 
 *ITEM*

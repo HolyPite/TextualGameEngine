@@ -1,0 +1,39 @@
+*LORE*
+﻿Vous entrez dans la cabane. A lï¿½?TintÇ¸rieur, un vieil homme est assis sur un tabouret, son visage cachÇ¸ sous une capuche. Il vous tend un parchemin.
+
+*LORE*
+"Prenez ceci," dit-il, "La route vers le chÇ½teau est semÇ¸e dï¿½?TembÇ¯ches."
+
+*LORE*
+Vous obtenez une information prÇ¸cieuse : la princesse est retenue au ChÇ½teau du Dragon, ï¿½ï¿½ lï¿½?TEst.
+
+*PATH*
+*LORE*
+4;Le remercier et sortir.
+7;Tenter de fouiller la cabane.
+8;Lï¿½?Tattaquer (par mÇ¸fiance).
+
+*ADD*
+*LORE*
+4;PATH
+*PATH*
+*LORE*
+12;Revenir discuter avec le vieil homme.
+
+*LORE*
+this;COMBAT
+*COMBAT*
+*LORE*
+Bandit embusquÃ©
+8
+2
+3
+
+*LORE*
+this;ARMURE
+*ARMURE*
+*LORE*
+Cape poussiÃ©reuse
+1
+
+

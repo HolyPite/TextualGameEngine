@@ -1,9 +1,0 @@
-﻿Le laboratoire est plongÃ© dans l'obscuritÃ©. Des Ã©prouvettes brisÃ©es jonchent le sol, et une Ã©trange odeur chimique emplit l'air. Vous remarquez un terminal encore actif dans un coin.
-
-1. Examiner le terminal.
-2. Fouiller les Ã©tagÃ¨res.
-
-*PATH*
-5
-6
-

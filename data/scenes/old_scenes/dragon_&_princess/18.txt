@@ -1,0 +1,13 @@
+*LORE*
+﻿Vous fouillez la cour et trouvez une lance ancienne entre les dÃ©bris.
+
+*ARME*
+*LORE*
+Lance Ancienne
+3
+
+*PATH*
+*LORE*
+17;Entrer dans le donjon.
+10;Reculer vers lâ€™entrÃ©e du chÃ¢teau.
+

@@ -1,0 +1,6 @@
+*LORE*
+Apres des jours a deriver dans l'espace, votre vaisseau s'approche d'un gigantesque vaisseau abandonne. Vous decidez de monter a bord pour chercher de quoi reparer votre capsule de sauvetage. L'atmosphere a l'interieur est oppressante, et le silence est seulement interrompu par des bruits etranges dans les conduits. Vous avancez prudemment.
+
+*PATH*
+*LORE*
+1;S'enfoncer dans le vaisseau.

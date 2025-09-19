@@ -1,0 +1,7 @@
+*LORE*
+Le laboratoire est plonge dans l'obscurite. Des eprouvettes brisees jonchent le sol, et une etrange odeur chimique emplit l'air. Vous remarquez un terminal encore actif dans un coin.
+
+*PATH*
+*LORE*
+5;Examiner le terminal.
+6;Fouiller les etageres.

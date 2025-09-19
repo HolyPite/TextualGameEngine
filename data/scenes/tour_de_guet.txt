@@ -1,4 +1,4 @@
-﻿*LORE*
+*LORE*
 La tour de guet grince. Un vieux mecanisme active un protecteur.
 
 *COMBAT*
@@ -15,8 +15,3 @@ start;Revenir vers les portes.
 *REMOVE*
 this;COMBAT;Garde automatique
 start;PATH;tour_de_guet
-
-
-
-
-

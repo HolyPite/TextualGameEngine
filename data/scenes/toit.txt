@@ -1,4 +1,4 @@
-﻿*LORE*
+*LORE*
 Le toit de la Cite d'Airain offre une vue sur les toits et cheminÃ©es. Le Chef des Voleurs vous attend, arme d'un sabre et d'un bouclier scintillant.
 
 *COMBAT*

@@ -1,0 +1,13 @@
+*LORE*
+Vous entrez dans une immense salle, probablement le centre de controle du vaisseau. Une enorme creature mecanique vous barre la route, ses yeux rouges fixes sur vous.
+
+*COMBAT*
+*LORE*
+Sentinelle
+50
+10
+
+*LORE*
+Apres une bataille acharnee, vous trouvez une cle pour activer la capsule de sauvetage. C'est votre seule chance de survie.
+
+*VICTORY*

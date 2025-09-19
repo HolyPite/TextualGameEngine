@@ -1,4 +1,4 @@
-﻿*LORE*
+*LORE*
 Vous forcez la grille et penetrez dans l'atelier. Des plans epingles montrent un ascenseur vers le toit.
 
 *ITEM*

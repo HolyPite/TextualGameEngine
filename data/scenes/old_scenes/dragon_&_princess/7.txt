@@ -1,0 +1,8 @@
+*LORE*
+﻿Vous fouillez la cabane. Vous trouvez quelques herbes mÃ©dicinales (effet narratif).
+
+*PATH*
+*LORE*
+4;Sortir et reprendre la route.
+12;Tenter dâ€™interroger le vieil homme Ã  nouveau.
+

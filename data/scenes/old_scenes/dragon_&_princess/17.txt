@@ -1,0 +1,20 @@
+*LORE*
+﻿Vous pÃ©nÃ©trez dans le donjon. Lâ€™atmosphÃ¨re est lourde, les murs suintants. Des bruits de chaÃ®nes proviennent dâ€™une cellule. La princesse Elwen est lÃ , enchaÃ®nÃ©e.
+
+*LORE*
+Un dragon surgit ! Le Dragon Sombre vous bloque la route !
+
+*COMBAT*
+*LORE*
+Dragon Sombre
+30
+6
+8
+
+*LORE*
+Si vous vainquez le Dragon, vous pouvez libÃ©rer la princesse.
+
+*PATH*
+*LORE*
+21;LibÃ©rer la princesse.
+

@@ -1,0 +1,14 @@
+*LORE*
+﻿Vous donnez une arme Ã  lâ€™Ã©tranger. En Ã©change, il vous tend une armure renforcÃ©e.
+
+*ARMURE*
+*LORE*
+Armure RenforcÃ©e
+3
+
+*PATH*
+*LORE*
+start;Quitter la hutte et revenir au marÃ©cage.
+20;Chercher un autre chemin.
+
+

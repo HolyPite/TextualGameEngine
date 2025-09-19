@@ -1,8 +1,0 @@
-﻿Vous pÃ©nÃ©trez dans une clairiÃ¨re humide, oÃ¹ une vieille cabane dÃ©labrÃ©e se dresse. Une odeur de mousse et de champignons flotte dans lâ€™air.
-
-*PATH*
-3;Entrer dans la cabane.
-4;Ignorer la cabane et continuer votre route.
-start;Revenir sur vos pas.
-
-

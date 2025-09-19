@@ -1,0 +1,24 @@
+*LORE*
+Les conduits d'aeration sont etroits et sombres. Vous avancez lentement, mais vous entendez quelque chose ramper derriere vous. Une creature jaillit soudainement pour vous attaquer !
+
+*COMBAT*
+*LORE*
+Parasite
+25
+6
+
+*LORE*
+Apres avoir elimine la menace, vous trouvez un kit de reparation laisse par un membre d'equipage precedent.
+
+*ARMURE*
+*LORE*
+Kit de reparation
+5
+
+*LORE*
+Un embranchement vous permet soit de revenir en arriere, soit de vous enfoncer plus loin.
+
+*PATH*
+*LORE*
+1;Sortir des conduits vers la salle des machines.
+7;Continuer plus profondement dans les conduits.

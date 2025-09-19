@@ -1,4 +1,4 @@
-﻿*LORE*
+*LORE*
 Le marche regorge de camelots et d'echoppes. Un artisan vous parle d'un atelier ferme par une grille pliee.
 
 *SHOP*

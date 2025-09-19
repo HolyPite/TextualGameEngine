@@ -1,0 +1,7 @@
+*LORE*
+A peine quelques metres apres l'entree, vous tombez sur une intersection. Deux chemins s'offrent a vous, il va bien falloir avancer par l'un des deux.
+
+*PATH*
+*LORE*
+2;Prendre le chemin de gauche.
+3;Prendre le chemin de droite.

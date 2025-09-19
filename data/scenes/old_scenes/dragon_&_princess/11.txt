@@ -1,0 +1,11 @@
+*LORE*
+﻿Vous traversez le marÃ©cage et tombez sur une petite hutte sur pilotis. Un personnage mystÃ©rieux sâ€™y tient, vous proposant un marchÃ©.
+
+*LORE*
+"Donnez-moi quelque chose en Ã©change, et je vous offrirai une armure meilleure."
+
+*PATH*
+*LORE*
+15;Donner une arme (si vous en avez plusieurs, sacrifice narratif).
+16;Refuser et partir.
+

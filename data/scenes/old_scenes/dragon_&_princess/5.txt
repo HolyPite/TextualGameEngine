@@ -1,0 +1,13 @@
+*LORE*
+﻿Vous faites demi-tour et explorez les environs. Vous trouvez un arbre creux renfermant une vieille armure.
+
+*ARMURE*
+*LORE*
+Armure de Cuir
+1
+
+*PATH*
+*LORE*
+1;Retourner au point de dÃ©part et prendre le chemin de gauche.
+2;Retourner au point de dÃ©part et prendre le chemin de droite.
+

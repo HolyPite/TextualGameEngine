@@ -1,0 +1,15 @@
+*LORE*
+En fouillant les etageres, vous trouvez une vieille combinaison de protection. Elle semble encore fonctionnelle et pourrait vous proteger contre des menaces a venir.
+
+*ARMURE*
+*LORE*
+Combinaison de protection
+7
+
+*LORE*
+Rassure, vous pesez vos options.
+
+*PATH*
+*LORE*
+1;Retourner au couloir.
+7;Avancer vers une salle inconnue.
