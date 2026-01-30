@@ -34,6 +34,9 @@ EffectKind parseEffectKind(const std::string& ss) {
     std::string s = ss; for (auto& c : s) c = (char)std::toupper((unsigned char)c);
     if (s == "DOT") return EffectKind::DOT;
     if (s == "BUFF_DEF") return EffectKind::BuffDef;
+    if (s == "LIFESTEAL") return EffectKind::LifeSteal;
+    if (s == "LIFE_STEAL") return EffectKind::LifeSteal;
+    if (s == "STUN") return EffectKind::Stun;
     return EffectKind::None;
 }
 

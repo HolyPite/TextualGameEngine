@@ -2,6 +2,38 @@
 #include <algorithm>
 #include <optional>
 #include <sstream>
+#include <iomanip>
+#include <stdexcept>
+#include <memory>
+namespace {
+Entite::EffectType readEffectType(int raw) {
+    switch (raw) {
+        case 0: return Entite::EffectType::None;
+        case 1: return Entite::EffectType::DOT;
+        case 2: return Entite::EffectType::BUFF_DEF;
+        default: throw std::runtime_error("Invalid effect type value");
+    }
+}
+
+SkillType readSkillType(int raw) {
+    switch (raw) {
+        case 0: return SkillType::Attaque;
+        case 1: return SkillType::Soin;
+        case 2: return SkillType::Protection;
+        default: throw std::runtime_error("Invalid skill type value");
+    }
+}
+
+ValueType readValueType(int raw) {
+    switch (raw) {
+        case 0: return ValueType::Flat;
+        case 1: return ValueType::Percent;
+        default: throw std::runtime_error("Invalid value type value");
+    }
+}
+}
+
+
 
 Entite::Entite(const std::string& nom_, int pv, int pm, int def)
     : nom(nom_), PV(pv), PVmax(pv), PM(pm), PMmax(pm), defenseBase(def), defenseBoost(0),
@@ -10,6 +42,162 @@ Entite::Entite(const std::string& nom_, int pv, int pm, int def)
 }
 
 Entite::~Entite() = default;
+
+void Entite::serialize(std::ostream& out) const {
+    out << "ENTITE\n";
+    out << std::quoted(nom) << ' '
+        << (isPlayer ? 1 : 0) << ' '
+        << PV << ' ' << PVmax << ' ' << PM << ' ' << PMmax << ' '
+        << defenseBase << ' ' << defenseBoost << ' '
+        << atkBase << ' ' << spdBase << ' '
+        << (protectionUtilisee ? 1 : 0) << ' '
+        << gold << '\n';
+
+    out << activeEffects.size() << '\n';
+    for (const auto& eff : activeEffects) {
+        out << static_cast<int>(eff.type) << ' ' << std::quoted(eff.label) << ' ' << eff.value << ' ' << eff.remaining << '\n';
+    }
+
+    out << itemEffects.size() << '\n';
+    for (const auto& kv : itemEffects) {
+        out << std::quoted(kv.first) << ' '
+            << static_cast<int>(kv.second.type) << ' '
+            << std::quoted(kv.second.label) << ' '
+            << kv.second.value << ' ' << kv.second.duration << '\n';
+    }
+
+    auto writePairs = [&](const std::vector<std::pair<std::string, int>>& vec) {
+        out << vec.size() << '\n';
+        for (const auto& entry : vec) {
+            out << std::quoted(entry.first) << ' ' << entry.second << '\n';
+        }
+    };
+
+    writePairs(inventaireArmes);
+    writePairs(inventaireArmures);
+    writePairs(equipements);
+
+    out << competences.size() << '\n';
+    for (const auto& comp : competences) {
+        out << std::quoted(comp.getNom()) << ' '
+            << static_cast<int>(comp.getType()) << ' '
+            << static_cast<int>(comp.getValueType()) << ' '
+            << comp.getValeur() << ' ' << comp.getCoutMana() << '\n';
+    }
+
+    out << "ENDENTITE\n";
+}
+
+std::unique_ptr<Entite> Entite::deserialize(std::istream& in, GameUI* ui) {
+    std::string header;
+    if (!(in >> header) || header != "ENTITE") {
+        throw std::runtime_error("Invalid entity header");
+    }
+
+    std::string nomLu;
+    int isPlayerFlag = 0;
+    int pv = 0, pvMaxLu = 0, pm = 0, pmMaxLu = 0;
+    int defBaseLu = 0, defBoostLu = 0, atkBaseLu = 0, spdBaseLu = 0;
+    int protectionFlag = 0;
+    int goldLu = 0;
+
+    if (!(in >> std::quoted(nomLu) >> isPlayerFlag >> pv >> pvMaxLu >> pm >> pmMaxLu
+          >> defBaseLu >> defBoostLu >> atkBaseLu >> spdBaseLu >> protectionFlag >> goldLu)) {
+        throw std::runtime_error("Invalid entity core data");
+    }
+
+    auto ent = std::unique_ptr<Entite>(new Entite(nomLu, pvMaxLu, pmMaxLu, defBaseLu));
+    ent->PV = pv;
+    ent->PVmax = pvMaxLu;
+    ent->PM = pm;
+    ent->PMmax = pmMaxLu;
+    ent->defenseBase = defBaseLu;
+    ent->defenseBoost = defBoostLu;
+    ent->atkBase = atkBaseLu;
+    ent->spdBase = spdBaseLu;
+    ent->protectionUtilisee = (protectionFlag != 0);
+    ent->gold = goldLu;
+    ent->isPlayer = (isPlayerFlag != 0);
+    ent->uiIface = ui;
+
+    std::size_t activeCount = 0;
+    if (!(in >> activeCount)) {
+        throw std::runtime_error("Invalid entity active effect count");
+    }
+    ent->activeEffects.clear();
+    ent->activeEffects.reserve(activeCount);
+    for (std::size_t i = 0; i < activeCount; ++i) {
+        int typeRaw = 0;
+        std::string label;
+        int value = 0, remaining = 0;
+        if (!(in >> typeRaw >> std::quoted(label) >> value >> remaining)) {
+            throw std::runtime_error("Invalid entity active effect entry");
+        }
+        ent->activeEffects.push_back({readEffectType(typeRaw), label, value, remaining});
+    }
+
+    std::size_t effectCount = 0;
+    if (!(in >> effectCount)) {
+        throw std::runtime_error("Invalid entity item effect count");
+    }
+    ent->itemEffects.clear();
+    for (std::size_t i = 0; i < effectCount; ++i) {
+        std::string key;
+        int typeRaw = 0;
+        std::string label;
+        int value = 0, duration = 0;
+        if (!(in >> std::quoted(key) >> typeRaw >> std::quoted(label) >> value >> duration)) {
+            throw std::runtime_error("Invalid entity item effect entry");
+        }
+        ent->itemEffects[key] = {readEffectType(typeRaw), label, value, duration};
+    }
+
+    auto readPairs = [&](std::vector<std::pair<std::string, int>>& vec) {
+        std::size_t count = 0;
+        if (!(in >> count)) {
+            throw std::runtime_error("Invalid entity inventory count");
+        }
+        vec.clear();
+        vec.reserve(count);
+        for (std::size_t i = 0; i < count; ++i) {
+            std::string name;
+            int value = 0;
+            if (!(in >> std::quoted(name) >> value)) {
+                throw std::runtime_error("Invalid entity inventory entry");
+            }
+            vec.emplace_back(std::move(name), value);
+        }
+    };
+
+    readPairs(ent->inventaireArmes);
+    readPairs(ent->inventaireArmures);
+    readPairs(ent->equipements);
+    if (ent->equipements.size() < 2) {
+        ent->equipements.resize(2, {"Aucun", 0});
+    }
+
+    std::size_t compCount = 0;
+    if (!(in >> compCount)) {
+        throw std::runtime_error("Invalid entity competence count");
+    }
+    ent->competences.clear();
+    ent->competences.reserve(compCount);
+    for (std::size_t i = 0; i < compCount; ++i) {
+        std::string nomComp;
+        int typeRaw = 0, valTypeRaw = 0, valeur = 0, mana = 0;
+        if (!(in >> std::quoted(nomComp) >> typeRaw >> valTypeRaw >> valeur >> mana)) {
+            throw std::runtime_error("Invalid entity competence entry");
+        }
+        ent->competences.emplace_back(nomComp, readSkillType(typeRaw), readValueType(valTypeRaw), valeur, mana);
+    }
+
+    std::string footer;
+    if (!(in >> footer) || footer != "ENDENTITE") {
+        throw std::runtime_error("Invalid entity footer");
+    }
+
+    return ent;
+}
 
 void Entite::setUI(GameUI* ui) {
     uiIface = ui;

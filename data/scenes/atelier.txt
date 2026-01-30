@@ -3,7 +3,7 @@ Vous forcez la grille et penetrez dans l'atelier. Des plans epingles montrent un
 
 *ITEM*
 ARMURE;Plastron d'airain;3;BUFF_DEF;Airain;0;1
-ARMURE;Bottes a clous;1;NONE;None;0;0
+ARMURE;Bottes a clous;1;BUFF_DEF;Clous;0;1
 
 *LORE*
 Un carnet graisseux indique: "Test de charge du treuil a 3 tours/min. Ne pas monter seul."

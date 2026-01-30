@@ -8,7 +8,7 @@
 
 // Strong types for scene content
 enum class ItemType { Arme, Armure };
-enum class EffectKind { None, DOT, BuffDef };
+enum class EffectKind { None, DOT, BuffDef, LifeSteal, Stun };
 // Visibility of enemy stats during combat
 enum class EnemyReveal { Min, Full, Hide };
 

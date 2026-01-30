@@ -13,21 +13,15 @@ marche;Remonter au marche.
 
 *REMOVE*
 this;ARME;Pied-de-biche
+marche;PATH;atelier_grille
 
 *ADD*
 marche;PATH
 *PATH*
 atelier;Ouvrir la grille de l'atelier (grace au pied-de-biche).
 
-*REMOVE*
-marche;PATH;atelier_grille
-
 *ADD*
 marche;SHOP
 *SHOP*
-25;ARME;Lame dentelÃ©e;3
-22;ARMURE;Bouclier rivetÃ©;2
-
-
-
-
+25;ARME;Lame dentelee;3;DOT;Saignement;2;3
+22;ARMURE;Bouclier rivete;2;BUFF_DEF;Renfort;0;2

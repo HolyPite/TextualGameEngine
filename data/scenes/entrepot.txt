@@ -10,7 +10,7 @@ Sous les caisses, des traces de griffe s'enfoncent dans le bois. Un murmure semb
 
 *ITEM*
 ARME;Couteau de chasse;1;NONE;None;0;0
-ARME;Dague de poche;1;NONE;None;0;0
+ARME;Dague de poche;1;STUN;Assommer;1;0
 
 *LORE*
 Une lanterne vacille, projetant des silhouettes d'engrenages sur le mur. Vous remarquez une trappe entrouverte.

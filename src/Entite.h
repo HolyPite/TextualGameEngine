@@ -6,11 +6,28 @@
 #include <optional>
 #include <unordered_map>
 #include <utility>
+#include <iosfwd>
+#include <memory>
 #include "Competence.h"
 #include "GameUI.h"
 #include "ui.h"
 
 class Entite {
+public:
+    enum class EffectType { None, DOT, BUFF_DEF };
+    struct EffectDef {
+        EffectType type{EffectType::None};
+        std::string label;
+        int value{0};
+        int duration{0};
+    };
+    struct ActiveEffect {
+        EffectType type{EffectType::None};
+        std::string label;
+        int value{0};
+        int remaining{0};
+    };
+
 protected:
     std::string nom;
     bool isPlayer{false};
@@ -26,20 +43,6 @@ protected:
     bool protectionUtilisee;
     int gold{0};
 
-    enum class EffectType { None, DOT, BUFF_DEF };
-    struct EffectDef {
-        EffectType type{EffectType::None};
-        std::string label;
-        int value{0};
-        int duration{0};
-    };
-    struct ActiveEffect {
-        EffectType type{EffectType::None};
-        std::string label;
-        int value{0};
-        int remaining{0};
-    };
-
     std::vector<ActiveEffect> activeEffects;
     std::unordered_map<std::string, EffectDef> itemEffects;
     std::vector<std::pair<std::string, int>> inventaireArmes;
@@ -52,6 +55,9 @@ public:
 
     Entite(const std::string& nom, int pv, int pm, int def);
     virtual ~Entite();
+
+    void serialize(std::ostream& out) const;
+    static std::unique_ptr<Entite> deserialize(std::istream& in, GameUI* ui);
 
     void setUI(GameUI* ui);
     GameUI& out() const;
